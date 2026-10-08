@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\mandal.ico</ApplicationIcon>
+    <AssemblyName>Mandal</AssemblyName>
+    <RootNamespace>Mandal</RootNamespace>
+    <Version>1.0.0</Version>
+    <Product>Mandal</Product>
+    <Description>Çamaşır ipi tarzı ekran alıntısı aracı</Description>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <!-- DPI ayarı WPF için app.manifest'te (PerMonitorV2); WinForms çözümleyicisinin uyarısı geçersiz. -->
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- WinForms'un örtük using'leri WPF türleriyle çakışıyor; her dosya kendi using'ini yazar. -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+    <Using Include="System.IO" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\mandal.ico" />
+  </ItemGroup>
+
+</Project>

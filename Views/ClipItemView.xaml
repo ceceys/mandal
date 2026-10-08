@@ -1,0 +1,99 @@
+<UserControl x:Class="Mandal.Views.ClipItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Margin="12,0" Cursor="Hand" Background="Transparent"
+             RenderTransformOrigin="0.5,0"
+             ToolTip="{Binding Tooltip}" ToolTipService.InitialShowDelay="700">
+    <UserControl.RenderTransform>
+        <RotateTransform Angle="{Binding Tilt}"/>
+    </UserControl.RenderTransform>
+
+    <UserControl.Resources>
+        <Style x:Key="DeleteButtonStyle" TargetType="Button">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse x:Name="Bg" Fill="{StaticResource DangerBrush}" Stroke="White" StrokeThickness="2"/>
+                            <TextBlock Text="✕" Foreground="White" FontSize="11" FontWeight="Bold"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-1,0,0"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Fill" Value="#C73A40"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                    <Setter Property="Opacity" Value="1"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Header="Kopyala" Click="Copy_Click"/>
+            <MenuItem Header="Aç" Click="Open_Click"/>
+            <MenuItem Header="Farklı kaydet…" Click="SaveAs_Click"/>
+            <MenuItem Header="Klasörde göster" Click="ShowInFolder_Click"/>
+            <Separator/>
+            <MenuItem Header="Sil" Click="Delete_Click"/>
+        </ContextMenu>
+    </UserControl.ContextMenu>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Fotoğraf: beyaz çerçeveli kart -->
+        <Border x:Name="Photo" Grid.Row="1" Background="White" Padding="4" CornerRadius="2" Margin="0,-6,0,0"
+                HorizontalAlignment="Center" SnapsToDevicePixels="True"
+                PreviewMouseLeftButtonDown="Photo_MouseDown"
+                PreviewMouseMove="Photo_MouseMove"
+                PreviewMouseLeftButtonUp="Photo_MouseUp">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.35"/>
+            </Border.Effect>
+            <Image x:Name="ThumbImage" Source="{Binding Thumb}" MaxHeight="120" MaxWidth="260" MinWidth="36" MinHeight="24"
+                   Stretch="Uniform" StretchDirection="DownOnly"
+                   RenderOptions.BitmapScalingMode="HighQuality"/>
+        </Border>
+
+        <!-- Mandal -->
+        <Canvas Grid.Row="0" Width="14" Height="32" HorizontalAlignment="Center" VerticalAlignment="Top"
+                Panel.ZIndex="2" Margin="0,0,0,-6" IsHitTestVisible="False">
+            <Rectangle Width="14" Height="32" RadiusX="3" RadiusY="3">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#E2B97E" Offset="0"/>
+                        <GradientStop Color="#C89A5C" Offset="0.5"/>
+                        <GradientStop Color="#A97C44" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle Canvas.Left="6.5" Canvas.Top="17" Width="1" Height="15" Fill="#7A5A33"/>
+            <Rectangle Canvas.Left="1.5" Canvas.Top="12" Width="11" Height="5" RadiusX="2.5" RadiusY="2.5"
+                       Fill="#B9BCC2" Stroke="#7F848C" StrokeThickness="0.8"/>
+        </Canvas>
+
+        <!-- Sil -->
+        <Button x:Name="DeleteButton" Grid.Row="1" Style="{StaticResource DeleteButtonStyle}" Width="22" Height="22"
+                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-14,-9,0" Panel.ZIndex="3"
+                Click="Delete_Click" ToolTip="İpten ve diskten sil"/>
+
+        <!-- Kopyalandı -->
+        <Border x:Name="CopiedBadge" Grid.Row="1" Background="#D91F8F4A" CornerRadius="12" Padding="12,4" Opacity="0"
+                HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" Panel.ZIndex="4">
+            <TextBlock Text="Kopyalandı" Foreground="White" FontWeight="SemiBold" FontSize="13"/>
+        </Border>
+    </Grid>
+</UserControl>
