@@ -4,10 +4,92 @@
              ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
         <SolidColorBrush x:Key="PanelBrush" Color="#F7F2E8"/>
+        <SolidColorBrush x:Key="PaperBrush" Color="#FBF8F2"/>
         <SolidColorBrush x:Key="RopeBrush" Color="#8B6B45"/>
         <SolidColorBrush x:Key="InkBrush" Color="#4A4036"/>
         <SolidColorBrush x:Key="MutedBrush" Color="#9A8E80"/>
+        <SolidColorBrush x:Key="LineBrush" Color="#E3D9C7"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#B8803F"/>
         <SolidColorBrush x:Key="DangerBrush" Color="#E5484D"/>
         <SolidColorBrush x:Key="OkBrush" Color="#1F8F4A"/>
+
+        <!-- Çamaşır mandalı: her asılı kartın üstünde -->
+        <ControlTemplate x:Key="PinTemplate" TargetType="ContentControl">
+            <Canvas Width="14" Height="32" IsHitTestVisible="False">
+                <Rectangle Width="14" Height="32" RadiusX="3" RadiusY="3">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#E2B97E" Offset="0"/>
+                            <GradientStop Color="#C89A5C" Offset="0.5"/>
+                            <GradientStop Color="#A97C44" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Rectangle Canvas.Left="6.5" Canvas.Top="17" Width="1" Height="15" Fill="#7A5A33"/>
+                <Rectangle Canvas.Left="1.5" Canvas.Top="12" Width="11" Height="5" RadiusX="2.5" RadiusY="2.5"
+                           Fill="#B9BCC2" Stroke="#7F848C" StrokeThickness="0.8"/>
+            </Canvas>
+        </ControlTemplate>
+
+        <!-- Beyaz çerçeveli kart gölgesi -->
+        <DropShadowEffect x:Key="CardShadow" BlurRadius="12" ShadowDepth="3" Opacity="0.35"/>
+
+        <!-- Kart üzerindeki düz düğme -->
+        <Style x:Key="CardButton" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg" Background="Transparent" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#EFE7D8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#E3D8C3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Ayarlar penceresi düğmesi -->
+        <Style x:Key="DialogButton" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="18,7"/>
+            <Setter Property="MinWidth" Value="96"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg" Background="#EFE7D8" BorderBrush="#D9CBB3" BorderThickness="1" CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#E3D8C3"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#D4C6AB"/>
+                            </Trigger>
+                            <Trigger Property="IsDefault" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="{StaticResource AccentBrush}"/>
+                                <Setter TargetName="Bg" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

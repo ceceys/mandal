@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -13,12 +14,26 @@ public partial class LineWindow : Window
     private const double RopeY = 28;
     private static readonly Duration SlideDuration = new(TimeSpan.FromMilliseconds(220));
 
+    /// <summary>Yatay kaydırma animasyonu için yardımcı özellik.</summary>
+    private static readonly DependencyProperty ScrollOffsetProperty = DependencyProperty.Register(
+        nameof(ScrollOffset), typeof(double), typeof(LineWindow),
+        new PropertyMetadata(0.0, (d, e) => ((LineWindow)d).Scroller.ScrollToHorizontalOffset((double)e.NewValue)));
+
+    private double ScrollOffset
+    {
+        get => (double)GetValue(ScrollOffsetProperty);
+        set => SetValue(ScrollOffsetProperty, value);
+    }
+
     private readonly ClipStore _store;
     private readonly DispatcherTimer _autoHide = new();
     private bool _shown;
     private bool _temporary;
 
     public bool IsShown => _shown;
+
+    /// <summary>İp indi (true) / kalktı (false).</summary>
+    public event Action<bool>? ShownChanged;
 
     /// <summary>Sürükleme sürerken otomatik gizleme ertelenir.</summary>
     public bool IsDragging { get; set; }
@@ -36,11 +51,23 @@ public partial class LineWindow : Window
             HideAnimated();
         };
 
-        store.Items.CollectionChanged += (_, _) => UpdateEmptyHint();
-        UpdateEmptyHint();
+        store.Items.CollectionChanged += (_, _) => { UpdateEmptyCard(); Relayout(); };
+        Scroller.SizeChanged += (_, _) => Relayout();
+        UpdateEmptyCard();
+        RefreshTexts();
+        Loc.Current.LanguageChanged += RefreshTexts;
 
         SourceInitialized += (_, _) =>
             NativeMethods.MakeNoActivateToolWindow(new WindowInteropHelper(this).Handle);
+    }
+
+    /// <summary>Dil veya kısayol değişince metinleri yeniler.</summary>
+    public void RefreshTexts()
+    {
+        var hotkey = App.Current.Settings.HotkeyRegion;
+        if (string.IsNullOrWhiteSpace(hotkey)) hotkey = App.Current.Settings.HotkeyRegionAlt;
+        EmptyText.Text = Loc.F("Line_EmptyCard", hotkey);
+        Relayout();
     }
 
     private void Place()
@@ -78,9 +105,11 @@ public partial class LineWindow : Window
             Slide.Y = -Height;
             Show();
         }
+        bool was = _shown;
         _shown = true;
         Scroller.ScrollToHorizontalOffset(0);
         Animate(0, null);
+        if (!was) ShownChanged?.Invoke(true);
     }
 
     public void HideAnimated(TimeSpan? delay = null)
@@ -89,6 +118,7 @@ public partial class LineWindow : Window
         _temporary = false;
         if (!_shown) return;
         _shown = false;
+        ShownChanged?.Invoke(false);
 
         if (delay is { } d && d > TimeSpan.Zero)
         {
@@ -110,10 +140,12 @@ public partial class LineWindow : Window
     {
         _autoHide.Stop();
         _temporary = false;
+        bool was = _shown;
         _shown = false;
         Slide.BeginAnimation(TranslateTransform.YProperty, null);
         Slide.Y = -Height;
         Hide();
+        if (was) ShownChanged?.Invoke(false);
     }
 
     public void Toggle()
@@ -140,10 +172,38 @@ public partial class LineWindow : Window
             $"M 11,{RopeY} Q {w / 2:F1},{RopeY + 10} {w - 11:F1},{RopeY}"));
         Rope.Data = data;
         RopeHighlight.Data = data;
+        RopeShadow.Data = data;
     }
 
-    private void UpdateEmptyHint()
-        => EmptyHint.Visibility = _store.Items.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+    /// <summary>"Uzayan ip": öğe sayısına ve genişliğe göre kart boyutlarını hesaplar.</summary>
+    private void Relayout()
+    {
+        double available = Scroller.ActualWidth;
+        if (available <= 0) return;
+        LineLayout.Current.Update(_store.Items.Count, available, App.Current.Settings.ThumbnailHeight);
+    }
+
+    private void UpdateEmptyCard()
+        => EmptyCard.Visibility = _store.Items.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+    private void UpdateArrows()
+    {
+        bool overflow = Scroller.ScrollableWidth > 1;
+        LeftArrow.Visibility = overflow && Scroller.HorizontalOffset > 1 ? Visibility.Visible : Visibility.Collapsed;
+        RightArrow.Visibility = overflow && Scroller.HorizontalOffset < Scroller.ScrollableWidth - 1 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    /// <summary>Slider gibi: bir görünüm genişliği kadar sağa/sola kayar.</summary>
+    private void Page(int direction)
+    {
+        double step = Scroller.ViewportWidth * 0.85;
+        double target = Math.Clamp(Scroller.HorizontalOffset + direction * step, 0, Scroller.ScrollableWidth);
+        var anim = new DoubleAnimation(Scroller.HorizontalOffset, target, new Duration(TimeSpan.FromMilliseconds(260)))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut },
+        };
+        BeginAnimation(ScrollOffsetProperty, anim);
+    }
 
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e) => UpdateRope();
 
@@ -159,11 +219,14 @@ public partial class LineWindow : Window
 
     private void Scroller_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
     {
+        BeginAnimation(ScrollOffsetProperty, null);
         Scroller.ScrollToHorizontalOffset(Scroller.HorizontalOffset - e.Delta);
         e.Handled = true;
     }
 
-    private void Capture_Click(object sender, RoutedEventArgs e) => App.Current.CaptureRegion();
+    private void Scroller_ScrollChanged(object sender, ScrollChangedEventArgs e) => UpdateArrows();
 
-    private void Hide_Click(object sender, RoutedEventArgs e) => HideAnimated();
+    private void LeftArrow_Click(object sender, RoutedEventArgs e) => Page(-1);
+
+    private void RightArrow_Click(object sender, RoutedEventArgs e) => Page(+1);
 }

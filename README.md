@@ -1,42 +1,73 @@
-# Mandal
+<p align="center">
+  <img src="docs/logo-512.png" width="128" alt="Mandal logo">
+</p>
 
-Çamaşır ipi tarzı ekran alıntısı aracı (Windows 10/11). Alıntılar ekranın üstündeki ipe mandalla asılır; lazım olunca tıklayıp kopyalar ya da sürükleyip başka uygulamaya bırakırsın.
+<h1 align="center">Mandal</h1>
 
-## Kısayollar (varsayılan)
+<p align="center">A clothesline for your screenshots. Capture, pin it on the line, grab it when you need it.</p>
 
-| İşlev | Tuş |
+<p align="center"><a href="README.tr.md">Türkçe</a></p>
+
+![Mandal line with pinned captures](docs/screenshot.png)
+
+**Mandal** (Turkish for *clothespin*) is a small Windows tool. Every capture is pinned to a clothesline at the top of the screen. The line stays out of the way until you call it; then you click a card to copy it, drag it into another app, or take it down with the ✕.
+
+## Features
+
+- **Capture** a region (`Ctrl+Shift+S` or `PrtScn`), the full screen (`Ctrl+Shift+F`) or the active window (`Ctrl+Shift+W`).
+- **Clipboard watching**: any image copied by another tool (e.g. `Win+Shift+S`) is pinned too.
+- **One click copies** the card to the clipboard (image + file), **drag and drop** works into Explorer, Word, browsers, chat apps.
+- **Convert an image to text** with the `Aa` button (Windows built-in OCR, offline). The text becomes its own card.
+- **Per-item shortcuts**: assign e.g. `Ctrl+Alt+1` to a card; pressing it copies that card, even after a restart.
+- **Stretching line**: cards shrink as you pin more (12 → 16 → 24 → 32 → 40 → 50 → 60 per screen); beyond that, slide with the arrows or the mouse wheel.
+- **Persistent**: captures are stored as PNG/TXT in day folders and come back after a restart.
+- **12 languages**: Türkçe, English, Deutsch, Français, Español, Italiano, Português, Русский, العربية, 中文, 日本語, 한국어.
+- **Private**: no network, no telemetry. See [docs/SECURITY.md](docs/SECURITY.md).
+
+## Install
+
+Download from [Releases](../../releases):
+
+- `Mandal-Setup-x.y.z.exe` — installer (per-user, no admin rights needed, includes the .NET runtime).
+- `Mandal.exe` — portable single file; needs the [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0).
+
+Windows 10 version 2004 or newer. The executable is not code-signed, so SmartScreen may warn on first run; choose *More info → Run anyway*.
+
+## Using the line
+
+| Action | How |
 |---|---|
-| Bölge seç ve as | Ctrl+Shift+S veya PrtScn |
-| Tam ekran (imlecin olduğu ekran) | Ctrl+Shift+F |
-| Aktif pencere | Ctrl+Shift+W |
-| İpi indir / kaldır | Ctrl+Shift+Space (veya tepsi simgesine tık) |
+| Show / hide the line | `Ctrl+Shift+Space`, the tray icon, the small tab at the top-left corner, or move the mouse into the top-left corner |
+| Copy a card | Click it |
+| Move a card into another app | Drag it |
+| Image → text | Hover the card, click `Aa` |
+| Delete | Hover the card, click ✕ |
+| Open, save as, show in folder, assign shortcut | Right-click the card |
+| Capture / Settings / Put away | Buttons on the fixed card at the right end |
 
-Kısayollar `%APPDATA%\Mandal\settings.json` dosyasından değiştirilir (tepsi menüsü → Ayarlar dosyasını aç). Değişiklik için uygulama yeniden başlatılır.
+All shortcuts can be changed in **Settings** (tray menu or the right-end card).
 
-## İpteki alıntı
+## Build
 
-- **Tek tık**: panoya kopyalar (görüntü + dosya). İp kendiliğinden kalkar, Ctrl+V ile yapıştır.
-- **Sürükle**: Explorer, Word, tarayıcı, WhatsApp gibi uygulamalara bırak.
-- **Üzerine gel → kırmızı çarpı**: ipten ve diskten siler.
-- **Çift tık**: varsayılan görüntüleyicide açar. **Sağ tık**: Kopyala, Aç, Farklı kaydet, Klasörde göster, Sil.
-- Fare tekerleği ipi yatay kaydırır.
-
-## Pano izleme
-
-Açıkken (varsayılan) Win+Shift+S veya başka bir araçla panoya düşen her görüntü otomatik ipe asılır. Tepsi menüsünden kapatılabilir.
-
-## Dosyalar
-
-- Alıntılar: `Resimler\Mandal\yyyy-MM-dd_HH-mm-ss.png`
-- Ayarlar ve günlük: `%APPDATA%\Mandal\`
-
-## Derleme
-
-.NET 8 SDK gerekir.
+Requires the .NET 8 SDK.
 
 ```
 dotnet build -c Release
-dotnet publish -c Release -o publish
+dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o publish
 ```
 
-`publish\Mandal.exe` tek dosyadır; kurulu .NET 8 Desktop çalışma zamanını kullanır.
+Installer (needs [Inno Setup 6](https://jrsoftware.org/isinfo.php)):
+
+```
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
+iscc /DAppVersion=1.1.0 setup\Mandal.iss
+```
+
+## Files
+
+- Captures: `%APPDATA%\Mandal\Clips\yyyy-MM-dd\` (changeable in Settings)
+- Settings, item shortcuts, log: `%APPDATA%\Mandal\`
+
+## License
+
+[MIT](LICENSE)

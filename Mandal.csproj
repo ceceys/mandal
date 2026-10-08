@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <!-- Windows 10 2004+ : Windows.Media.Ocr (yerleşik metin tanıma) için WinRT projeksiyonları -->
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
@@ -19,6 +21,8 @@
     <SelfContained>false</SelfContained>
     <!-- DPI ayarı WPF için app.manifest'te (PerMonitorV2); WinForms çözümleyicisinin uyarısı geçersiz. -->
     <NoWarn>$(NoWarn);WFAC010</NoWarn>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +34,8 @@
 
   <ItemGroup>
     <Resource Include="Assets\mandal.ico" />
+    <!-- WithCulture=false: "Strings.en.json" uydu derlemeye değil, ana derlemeye gömülsün -->
+    <EmbeddedResource Include="Resources\Strings.*.json" WithCulture="false" LogicalName="Mandal.Resources.%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

@@ -35,7 +35,7 @@ public sealed class HotkeyManager : IDisposable
 
         if (!TryParse(gesture, out uint mods, out uint vk))
         {
-            error = $"'{gesture}' anlaşılamadı";
+            error = Loc.F("Msg_HotkeyInvalid", gesture);
             return false;
         }
 
@@ -43,9 +43,9 @@ public sealed class HotkeyManager : IDisposable
         if (!RegisterHotKey(_window.Handle, id, mods | MOD_NOREPEAT, vk))
         {
             int code = Marshal.GetLastWin32Error();
-            error = code == 1409
-                ? $"{gesture} başka bir program tarafından kullanılıyor"
-                : $"{gesture} kaydedilemedi ({new Win32Exception(code).Message})";
+            error = code == 1409 // ERROR_HOTKEY_ALREADY_REGISTERED
+                ? Loc.F("Msg_HotkeyInUse", gesture)
+                : Loc.F("Msg_HotkeyFailed", gesture, new Win32Exception(code).Message);
             return false;
         }
 

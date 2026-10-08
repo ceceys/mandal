@@ -5,8 +5,10 @@ namespace Mandal.Services;
 
 public sealed class Settings
 {
-    public string ClipFolder { get; set; } =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "Mandal");
+    /// <summary>"auto" = sistem dili; yoksa Loc.Languages'daki kodlardan biri (tr, en, de, ...).</summary>
+    public string Language { get; set; } = Loc.Auto;
+
+    public string ClipFolder { get; set; } = DefaultClipFolder;
 
     /// <summary>Panoya gelen görüntüler otomatik ipe asılsın.</summary>
     public bool WatchClipboard { get; set; } = true;
@@ -18,6 +20,12 @@ public sealed class Settings
     /// <summary>Tıkla-kopyala veya sürükle sonrası ip kendiliğinden kalksın.</summary>
     public bool HideLineAfterCopy { get; set; } = true;
 
+    /// <summary>Fare sol üst köşeye değince ip açılsın.</summary>
+    public bool HotCorner { get; set; } = true;
+
+    /// <summary>Sol üst köşede tıklanabilir küçük mandal dursun.</summary>
+    public bool CornerTab { get; set; } = true;
+
     public int ThumbnailHeight { get; set; } = 120;
 
     public string HotkeyRegion { get; set; } = "Ctrl+Shift+S";
@@ -25,6 +33,9 @@ public sealed class Settings
     public string HotkeyFullScreen { get; set; } = "Ctrl+Shift+F";
     public string HotkeyWindow { get; set; } = "Ctrl+Shift+W";
     public string HotkeyToggleLine { get; set; } = "Ctrl+Shift+Space";
+
+    /// <summary>Varsayılan: %APPDATA%\Mandal\Clips (içinde gün klasörleri).</summary>
+    public static string DefaultClipFolder => Path.Combine(Dir, "Clips");
 
     public static string Dir =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mandal");
@@ -35,6 +46,8 @@ public sealed class Settings
     {
         WriteIndented = true,
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        AllowTrailingCommas = true,
+        ReadCommentHandling = JsonCommentHandling.Skip,
     };
 
     public static Settings Load()
@@ -46,8 +59,7 @@ public sealed class Settings
                 var s = JsonSerializer.Deserialize<Settings>(File.ReadAllText(FilePath), JsonOptions);
                 if (s is not null)
                 {
-                    if (string.IsNullOrWhiteSpace(s.ClipFolder)) s.ClipFolder = new Settings().ClipFolder;
-                    if (s.ThumbnailHeight < 40) s.ThumbnailHeight = 40;
+                    s.Normalize();
                     return s;
                 }
             }
@@ -61,6 +73,49 @@ public sealed class Settings
         fresh.Save();
         return fresh;
     }
+
+    /// <summary>Dosyadan gelen değerleri güvenli aralıklara çeker.</summary>
+    public void Normalize()
+    {
+        Language = string.IsNullOrWhiteSpace(Language) ? Loc.Auto : Language.Trim();
+        if (string.IsNullOrWhiteSpace(ClipFolder)) ClipFolder = DefaultClipFolder;
+        ThumbnailHeight = Math.Clamp(ThumbnailHeight, 40, 400);
+        ShowOnCaptureSeconds = double.IsFinite(ShowOnCaptureSeconds) ? Math.Clamp(ShowOnCaptureSeconds, 0.5, 30) : 2.5;
+        HotkeyRegion = CleanHotkey(HotkeyRegion);
+        HotkeyRegionAlt = CleanHotkey(HotkeyRegionAlt);
+        HotkeyFullScreen = CleanHotkey(HotkeyFullScreen);
+        HotkeyWindow = CleanHotkey(HotkeyWindow);
+        HotkeyToggleLine = CleanHotkey(HotkeyToggleLine);
+    }
+
+    private static string CleanHotkey(string? s)
+    {
+        s = (s ?? "").Trim();
+        return s.Length > 64 ? "" : s;
+    }
+
+    /// <summary>
+    /// Alıntı klasörünü oluşturmayı dener. Olmazsa varsayılana döner ve true verir (çağıran kullanıcıyı uyarır).
+    /// </summary>
+    public bool EnsureClipFolder()
+    {
+        try
+        {
+            var full = Path.GetFullPath(ClipFolder);
+            Directory.CreateDirectory(full);
+            ClipFolder = full;
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Log.Write(ex, $"Alıntı klasörü kullanılamadı: {ClipFolder}");
+            ClipFolder = DefaultClipFolder;
+            Directory.CreateDirectory(ClipFolder);
+            return true;
+        }
+    }
+
+    public Settings Clone() => (Settings)MemberwiseClone();
 
     public void Save()
     {

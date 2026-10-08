@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using Mandal.Models;
+using Mandal.Services;
 
 namespace Mandal.Views;
 
@@ -14,10 +15,20 @@ public partial class ClipItemView : UserControl
     public ClipItemView()
     {
         InitializeComponent();
-        Loaded += (_, _) => ThumbImage.MaxHeight = App.Current.Settings.ThumbnailHeight;
+        Loaded += (_, _) =>
+        {
+            RefreshTooltip();
+            Loc.Current.LanguageChanged += RefreshTooltip;
+        };
+        Unloaded += (_, _) => Loc.Current.LanguageChanged -= RefreshTooltip;
     }
 
     private ClipItem? Item => DataContext as ClipItem;
+
+    private void RefreshTooltip()
+    {
+        if (Item is { } it) ToolTip = it.Summary + "\n\n" + Loc.T("Item_Hint");
+    }
 
     private void Photo_MouseDown(object sender, MouseButtonEventArgs e)
     {
@@ -68,6 +79,26 @@ public partial class ClipItemView : UserControl
         if (Item is null) return;
         App.Current.CopyItem(Item);
         ShowCopied();
+    }
+
+    private async void Ocr_Click(object sender, RoutedEventArgs e)
+    {
+        if (Item is null || !Item.IsImage) return;
+        Cursor = Cursors.Wait;
+        try
+        {
+            if (await App.Current.OcrItemAsync(Item)) ShowCopied();
+        }
+        finally
+        {
+            Cursor = Cursors.Hand;
+        }
+    }
+
+    private void AssignHotkey_Click(object sender, RoutedEventArgs e)
+    {
+        if (Item is null) return;
+        new HotkeyAssignWindow(Item).ShowDialog();
     }
 
     private void Open_Click(object sender, RoutedEventArgs e)

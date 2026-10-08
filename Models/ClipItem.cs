@@ -1,35 +1,99 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows.Media.Imaging;
+using Mandal.Services;
 
 namespace Mandal.Models;
 
-/// <summary>İpe asılı tek bir alıntı: diskteki PNG + küçük resmi.</summary>
-public sealed class ClipItem
+public enum ClipKind { Image, Text }
+
+/// <summary>İpe asılı tek bir öğe: diskteki PNG (görsel) veya TXT (metin).</summary>
+public sealed class ClipItem : INotifyPropertyChanged
 {
+    public const int MaxTextBytes = 1024 * 1024;
+    private const int PreviewChars = 400;
+
     public string Path { get; }
     public DateTime Time { get; }
+    public ClipKind Kind { get; }
     public int Width { get; }
     public int Height { get; }
-    public BitmapSource Thumb { get; }
+    public BitmapSource? Thumb { get; }
+    public string? Text { get; }
 
     /// <summary>İpte hafif eğik dursun diye derece cinsinden sabit küçük açı (-3..+3).</summary>
     public double Tilt { get; }
 
+    private string? _hotkey;
+
+    /// <summary>Bu öğeyi panoya kopyalayan kalıcı kısayol (varsa).</summary>
+    public string? Hotkey
+    {
+        get => _hotkey;
+        set
+        {
+            if (_hotkey == value) return;
+            _hotkey = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(HasHotkey));
+        }
+    }
+
+    public bool HasHotkey => !string.IsNullOrEmpty(_hotkey);
+    public bool IsImage => Kind == ClipKind.Image;
+    public bool IsText => Kind == ClipKind.Text;
     public string FileName => System.IO.Path.GetFileName(Path);
 
-    public string Tooltip =>
-        $"{Time:dd.MM.yyyy HH:mm:ss}  ·  {Width}×{Height} px\n{FileName}\n\nTıkla: kopyala  ·  Sürükle: taşı  ·  Çift tık: aç";
+    public string Preview
+    {
+        get
+        {
+            if (Text is null) return "";
+            var t = Text.Trim();
+            return t.Length <= PreviewChars ? t : t[..PreviewChars] + "…";
+        }
+    }
 
-    private ClipItem(string path, DateTime time, int width, int height, BitmapSource thumb, double tilt)
+    /// <summary>Zaman, boyut ve dosya adı; ipucu metninin dilden bağımsız kısmı.</summary>
+    public string Summary => IsImage
+        ? $"{Time:G}  ·  {Width}×{Height} px\n{FileName}"
+        : $"{Time:G}  ·  {Loc.F("Item_TextChars", Text?.Length ?? 0)}\n{FileName}";
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string? name = null)
+        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+    private ClipItem(string path, DateTime time, ClipKind kind, int width, int height, BitmapSource? thumb, string? text)
     {
         Path = path;
         Time = time;
+        Kind = kind;
         Width = width;
         Height = height;
         Thumb = thumb;
-        Tilt = tilt;
+        Text = text;
+        Tilt = TiltFor(System.IO.Path.GetFileName(path));
     }
 
     public static ClipItem Load(string path, int thumbHeightDip, int thumbMaxWidthDip = 260)
+    {
+        var ext = System.IO.Path.GetExtension(path);
+        if (ext.Equals(".txt", StringComparison.OrdinalIgnoreCase)) return LoadText(path);
+        if (ext.Equals(".png", StringComparison.OrdinalIgnoreCase)) return LoadImage(path, thumbHeightDip, thumbMaxWidthDip);
+        throw new NotSupportedException($"Desteklenmeyen dosya: {ext}");
+    }
+
+    private static ClipItem LoadText(string path)
+    {
+        var info = new FileInfo(path);
+        if (info.Length > MaxTextBytes) throw new InvalidDataException("Metin dosyası çok büyük");
+        var text = File.ReadAllText(path, Encoding.UTF8);
+        return new ClipItem(path, info.LastWriteTime, ClipKind.Text, 0, 0, null, text);
+    }
+
+    private static ClipItem LoadImage(string path, int thumbHeightDip, int thumbMaxWidthDip)
     {
         using var fs = File.OpenRead(path);
         var frame = BitmapFrame.Create(fs, BitmapCreateOptions.DelayCreation, BitmapCacheOption.None);
@@ -55,8 +119,7 @@ public sealed class ClipItem
         bi.EndInit();
         bi.Freeze();
 
-        var time = File.GetLastWriteTime(path);
-        return new ClipItem(path, time, w, h, bi, TiltFor(System.IO.Path.GetFileName(path)));
+        return new ClipItem(path, File.GetLastWriteTime(path), ClipKind.Image, w, h, bi, null);
     }
 
     /// <summary>Tam çözünürlüklü görüntü (kopyalama ve sürükleme için).</summary>

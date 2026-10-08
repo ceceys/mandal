@@ -8,25 +8,35 @@ using WF = System.Windows.Forms;
 
 namespace Mandal.Services;
 
-/// <summary>Panoya düşen görüntüleri yakalar; kendi kopyalarımızı ve tekrarları ayıklar.</summary>
+/// <summary>Panoya düşen görüntüleri yakalar; kendi kopyalarımızı, tekrarları ve geçersiz veriyi ayıklar.</summary>
 public sealed class ClipboardWatcher : IDisposable
 {
     private readonly MessageWindow _window;
-    private readonly string _ownFolder;
+    private string _ownFolder;
     private bool _enabled;
     private DateTime _suppressUntil = DateTime.MinValue;
     private string? _lastHash;
     private int _retries;
 
-    /// <summary>PNG baytları ile tetiklenir.</summary>
+    /// <summary>Doğrulanmış PNG baytları ile tetiklenir.</summary>
     public event Action<byte[]>? ImageArrived;
 
     public ClipboardWatcher(MessageWindow window, string ownFolder)
     {
         _window = window;
-        _ownFolder = Path.GetFullPath(ownFolder).TrimEnd('\\') + "\\";
+        _ownFolder = NormalizeFolder(ownFolder);
         _window.Message += OnMessage;
     }
+
+    /// <summary>Kendi alıntı klasörümüz: buradan kopyalanan dosyalar yeniden asılmaz.</summary>
+    public string OwnFolder
+    {
+        get => _ownFolder;
+        set => _ownFolder = NormalizeFolder(value);
+    }
+
+    private static string NormalizeFolder(string folder)
+        => Path.GetFullPath(folder).TrimEnd('\\') + "\\";
 
     public bool Enabled
     {
@@ -89,33 +99,37 @@ public sealed class ClipboardWatcher : IDisposable
         if (data is null) return null;
 
         // Kendi klasörümüzden dosya kopyalanmışsa (bizim tıkla-kopyala dahil) yeniden asma.
+        // Yollar yalnızca karşılaştırılır, açılmaz.
         if (data.GetDataPresent(DataFormats.FileDrop) &&
             data.GetData(DataFormats.FileDrop) is string[] files &&
             files.Any(f => f.StartsWith(_ownFolder, StringComparison.OrdinalIgnoreCase)))
             return null;
 
-        // 1) Doğrudan PNG (Snipping Tool, tarayıcılar, çoğu araç bunu da koyar)
+        // 1) Doğrudan PNG (Snipping Tool, tarayıcılar, çoğu araç bunu da koyar). İmza + boyut doğrulanır.
         if (data.GetDataPresent("PNG"))
         {
-            var obj = data.GetData("PNG");
-            if (obj is MemoryStream ms) return ms.ToArray();
-            if (obj is Stream s)
+            var bytes = ReadStream(data.GetData("PNG"));
+            if (bytes is not null)
             {
-                using var buf = new MemoryStream();
-                s.CopyTo(buf);
-                return buf.ToArray();
+                if (Png.HasSignature(bytes)) return bytes;
+                Log.Write("Panodaki 'PNG' verisi geçersiz, bitmap yoluna düşüldü");
             }
         }
 
         if (!data.GetDataPresent(DataFormats.Bitmap) && !data.GetDataPresent(DataFormats.Dib))
             return null;
 
-        // 2) WinForms DIB okuması (alfa sorunu yaşamaz)
+        // 2) WinForms DIB okuması (alfa sorunu yaşamaz); yeniden PNG'ye kodlanır.
         try
         {
             using var img = WF.Clipboard.GetImage();
             if (img is not null)
             {
+                if ((long)img.Width * img.Height > Png.MaxPixels)
+                {
+                    Log.Write($"Pano görüntüsü çok büyük, atlandı: {img.Width}×{img.Height}");
+                    return null;
+                }
                 using var buf = new MemoryStream();
                 img.Save(buf, System.Drawing.Imaging.ImageFormat.Png);
                 return buf.ToArray();
@@ -129,11 +143,39 @@ public sealed class ClipboardWatcher : IDisposable
         // 3) WPF yedek yolu
         var bs = Clipboard.GetImage();
         if (bs is null) return null;
+        if ((long)bs.PixelWidth * bs.PixelHeight > Png.MaxPixels) return null;
         var enc = new PngBitmapEncoder();
         enc.Frames.Add(BitmapFrame.Create(bs));
         using var outStream = new MemoryStream();
         enc.Save(outStream);
         return outStream.ToArray();
+    }
+
+    private static byte[]? ReadStream(object? obj)
+    {
+        switch (obj)
+        {
+            case MemoryStream ms:
+                if (ms.Length > Png.MaxBytes) { Log.Write("Panodaki PNG çok büyük, atlandı"); return null; }
+                return ms.ToArray();
+            case Stream s:
+            {
+                if (s.CanSeek && s.Length > Png.MaxBytes) { Log.Write("Panodaki PNG çok büyük, atlandı"); return null; }
+                using var buf = new MemoryStream();
+                var chunk = new byte[81920];
+                long total = 0;
+                int n;
+                while ((n = s.Read(chunk, 0, chunk.Length)) > 0)
+                {
+                    total += n;
+                    if (total > Png.MaxBytes) { Log.Write("Panodaki PNG çok büyük, atlandı"); return null; }
+                    buf.Write(chunk, 0, n);
+                }
+                return buf.ToArray();
+            }
+            default:
+                return null;
+        }
     }
 
     public void Dispose()
