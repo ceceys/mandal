@@ -9,7 +9,7 @@ public static class About
     public const string GitHubUrl = "https://github.com/ceceys/mandal";
 
     /// <summary>Boşsa LinkedIn bağlantısı gösterilmez.</summary>
-    public const string LinkedInUrl = "";
+    public const string LinkedInUrl = "https://www.linkedin.com/in/cuma-ali-dirik";
 
     public static string Version
     {
