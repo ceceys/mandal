@@ -27,6 +27,13 @@ public partial class SettingsWindow : Window
         DaysSlider.Value = Math.Clamp(_copy.AutoDeleteDays, 1, 365);
         UpdateStorageUi();
         FillCorners();
+
+        VersionRun.Text = "Mandal " + About.Version;
+        if (string.IsNullOrEmpty(About.LinkedInUrl))
+        {
+            LinkedInSep.Text = "";
+            LinkedInLink.Inlines.Clear();
+        }
         Loc.Current.LanguageChanged += UpdateStorageUi;
         Loc.Current.LanguageChanged += FillCorners;
         Closed += (_, _) => { Loc.Current.LanguageChanged -= UpdateStorageUi; Loc.Current.LanguageChanged -= FillCorners; };
@@ -157,4 +164,8 @@ public partial class SettingsWindow : Window
     }
 
     private void Cancel_Click(object sender, RoutedEventArgs e) => Close();
+
+    private void GitHub_Click(object sender, RoutedEventArgs e) => About.Open(About.GitHubUrl);
+
+    private void LinkedIn_Click(object sender, RoutedEventArgs e) => About.Open(About.LinkedInUrl);
 }
