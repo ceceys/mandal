@@ -13,7 +13,7 @@
     <ApplicationIcon>Assets\mandal.ico</ApplicationIcon>
     <AssemblyName>Mandal</AssemblyName>
     <RootNamespace>Mandal</RootNamespace>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
     <Product>Mandal</Product>
     <Description>Çamaşır ipi tarzı ekran alıntısı aracı</Description>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>

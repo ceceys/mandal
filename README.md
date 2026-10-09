@@ -24,7 +24,8 @@
 - **Stretching line**: cards shrink as you pin more (12 → 16 → 24 → 32 → 40 → 50 → 60 per screen); beyond that, slide with the arrows or the mouse wheel.
 - **Persistent**: captures are stored as PNG/TXT in day folders and come back after a restart.
 - **12 languages**: Türkçe, English, Deutsch, Français, Español, Italiano, Português, Русский, العربية, 中文, 日本語, 한국어.
-- **Private**: no network, no telemetry. See [docs/SECURITY.md](docs/SECURITY.md).
+- **Auto-update** from GitHub Releases, verified with SHA-256 and always confirmed before installing (can be turned off).
+- **Private**: no telemetry; the update check is the only network access. See [docs/SECURITY.md](docs/SECURITY.md).
 
 ## Install
 
@@ -63,7 +64,7 @@ Installer (needs [Inno Setup 6](https://jrsoftware.org/isinfo.php)):
 
 ```
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
-iscc /DAppVersion=1.2.0 setup\Mandal.iss
+iscc /DAppVersion=1.3.0 setup\Mandal.iss
 ```
 
 ## Files

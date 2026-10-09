@@ -30,6 +30,10 @@ public partial class App : Application
     private CornerTabWindow? _cornerTab;
     private readonly System.Windows.Threading.DispatcherTimer _cornerTimer = new() { Interval = TimeSpan.FromMilliseconds(120) };
     private readonly System.Windows.Threading.DispatcherTimer _cleanupTimer = new() { Interval = TimeSpan.FromHours(6) };
+    private readonly System.Windows.Threading.DispatcherTimer _updateTimer = new() { Interval = TimeSpan.FromHours(24) };
+    private bool _updateBusy;
+    private string? _readyUpdateFile;
+    private Version? _readyUpdateVersion;
     private int _cornerTicks;
 
     private Mutex? _mutex;
@@ -91,6 +95,13 @@ public partial class App : Application
         RunCleanup();
         _cleanupTimer.Tick += (_, _) => RunCleanup();
         _cleanupTimer.Start();
+
+        // Güncelleme: açılıştan 20 sn sonra ve günde bir; ayar kapalıysa hiç ağa çıkılmaz
+        _updateTimer.Tick += (_, _) => _ = CheckForUpdatesAsync(manual: false);
+        _updateTimer.Start();
+        var first = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
+        first.Tick += (_, _) => { first.Stop(); _ = CheckForUpdatesAsync(manual: false); };
+        first.Start();
 
         if (_folderFallback)
             _tray.Balloon("Mandal", Loc.T("Msg_FolderFallback"), WF.ToolTipIcon.Warning);
@@ -175,6 +186,64 @@ public partial class App : Application
         ItemHotkeys.Save();
         ApplyHotkeys();
         return true;
+    }
+
+    // ---------------- Güncelleme ----------------
+
+    /// <param name="manual">Tepsi menüsünden istendi: sonuç ne olursa olsun bildir.</param>
+    public async Task CheckForUpdatesAsync(bool manual)
+    {
+        if (_updateBusy) return;
+        if (!manual && !Settings.AutoUpdate) return;
+        _updateBusy = true;
+        try
+        {
+            // Daha önce indirilip bekletilen dosya varsa yeniden sor
+            if (_readyUpdateFile is not null && File.Exists(_readyUpdateFile))
+            {
+                OfferInstall();
+                return;
+            }
+
+            var rel = await Updater.CheckAsync();
+            if (rel is null)
+            {
+                if (manual) _tray?.Balloon("Mandal", Loc.F("Msg_UpToDate", Updater.Current), WF.ToolTipIcon.Info);
+                return;
+            }
+
+            Log.Write($"Güncelleme bulundu: {rel.Tag}");
+            var file = await Updater.DownloadAsync(rel);
+            _readyUpdateFile = file;
+            _readyUpdateVersion = rel.Version;
+            OfferInstall();
+        }
+        catch (Exception ex)
+        {
+            Log.Write(ex, "Güncelleme");
+            if (manual) _tray?.Balloon("Mandal", Loc.F("Msg_UpdateFailed", ex.Message), WF.ToolTipIcon.Warning);
+        }
+        finally
+        {
+            _updateBusy = false;
+        }
+    }
+
+    private void OfferInstall()
+    {
+        if (_readyUpdateFile is null || _readyUpdateVersion is null) return;
+        if (_line is not null) _line.PopupDepth++;
+        bool yes;
+        try { yes = ConfirmWindow.Ask(Loc.F("Msg_UpdateReady", _readyUpdateVersion), dangerous: false); }
+        finally { if (_line is not null) _line.PopupDepth = Math.Max(0, _line.PopupDepth - 1); }
+        if (!yes) return;
+
+        try
+        {
+            Updater.Install(_readyUpdateFile);
+            Shutdown();
+        }
+        catch (Exception ex) { Fail(ex, Loc.T("Menu_CheckUpdates")); }
     }
 
     // ---------------- Saklama ----------------

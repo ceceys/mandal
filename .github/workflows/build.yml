@@ -42,6 +42,15 @@ jobs:
           if ($version -notmatch '^\d+\.\d+') { $version = "0.0.0" }
           & $iscc "/DAppVersion=$version" setup\Mandal.iss
 
+      - name: Checksums (the app verifies downloads against this file)
+        shell: pwsh
+        run: |
+          $lines = foreach ($f in @("publish/Mandal.exe") + (Get-ChildItem dist/*.exe | ForEach-Object FullName)) {
+            "{0}  {1}" -f (Get-FileHash $f -Algorithm SHA256).Hash.ToLower(), (Split-Path $f -Leaf)
+          }
+          $lines | Set-Content SHA256SUMS.txt -Encoding ascii
+          Get-Content SHA256SUMS.txt
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -49,6 +58,7 @@ jobs:
           path: |
             publish/Mandal.exe
             dist/*.exe
+            SHA256SUMS.txt
 
       - name: Release
         if: startsWith(github.ref, 'refs/tags/v')
@@ -57,4 +67,5 @@ jobs:
           files: |
             publish/Mandal.exe
             dist/*.exe
+            SHA256SUMS.txt
           generate_release_notes: true

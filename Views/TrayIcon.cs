@@ -86,6 +86,7 @@ public sealed class TrayIcon : IDisposable
         menu.Items.Add(new WF.ToolStripSeparator());
 
         menu.Items.Add(new WF.ToolStripMenuItem(Loc.T("Menu_Settings"), null, (_, _) => app.OpenSettings()));
+        menu.Items.Add(new WF.ToolStripMenuItem(Loc.T("Menu_CheckUpdates"), null, (_, _) => _ = app.CheckForUpdatesAsync(manual: true)));
         menu.Items.Add(new WF.ToolStripMenuItem(Loc.T("Menu_OpenFolder"), null, (_, _) => app.OpenFolder()));
         menu.Items.Add(new WF.ToolStripMenuItem(Loc.T("Menu_OpenSettings"), null, (_, _) => app.OpenSettingsFile()));
         menu.Items.Add(new WF.ToolStripSeparator());

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0 — 2026-10-09
+
+- Automatic updates from GitHub Releases (on by default, Settings → Behavior; "Check for updates" in the tray menu). The app checks 20 s after start and once a day, downloads the new installer or portable exe, verifies it against `SHA256SUMS.txt` from the release, and asks before installing; the installer runs silently and the app restarts. This is the app's only network access.
+
 ## 1.2.0 — 2026-10-09
 
 - Preview window: double-click a card (or the magnifier button / right-click → Preview) to open it large at the top of the screen. Resizable from the edges, movable by its title bar, mouse-wheel zoom, drag to pan, `0` fit / `1` actual size. Optionally stays above other apps (pin button, also in Settings). Size and position are remembered.

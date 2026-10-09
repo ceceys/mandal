@@ -20,6 +20,9 @@ public sealed class Settings
     /// <summary>Tıkla-kopyala veya sürükle sonrası ip kendiliğinden kalksın.</summary>
     public bool HideLineAfterCopy { get; set; } = true;
 
+    /// <summary>GitHub Releases'tan güncellemeleri otomatik denetle ve indir (varsayılan açık).</summary>
+    public bool AutoUpdate { get; set; } = true;
+
     /// <summary>Kart silerken "emin misin?" sorulsun (varsayılan kapalı).</summary>
     public bool ConfirmDelete { get; set; } = false;
 

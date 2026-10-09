@@ -24,7 +24,8 @@
 - **Uzayan ip**: öğe arttıkça kartlar küçülür (ekran başına 12 → 16 → 24 → 32 → 40 → 50 → 60); fazlası oklarla veya tekerlekle kaydırılır.
 - **Kalıcı**: alıntılar gün klasörlerinde PNG/TXT olarak durur, yeniden açılışta geri gelir.
 - **12 dil**: Türkçe, English, Deutsch, Français, Español, Italiano, Português, Русский, العربية, 中文, 日本語, 한국어.
-- **Gizli**: ağ yok, telemetri yok. Bkz. [docs/SECURITY.md](docs/SECURITY.md).
+- **Otomatik güncelleme**: GitHub Releases'tan, SHA-256 ile doğrulanır, kurmadan önce her zaman sorar (kapatılabilir).
+- **Gizli**: telemetri yok; tek ağ erişimi güncelleme denetimi. Bkz. [docs/SECURITY.md](docs/SECURITY.md).
 
 ## Kurulum
 
@@ -63,7 +64,7 @@ Kurulum paketi ([Inno Setup 6](https://jrsoftware.org/isinfo.php) gerekir):
 
 ```
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
-iscc /DAppVersion=1.2.0 setup\Mandal.iss
+iscc /DAppVersion=1.3.0 setup\Mandal.iss
 ```
 
 ## Dosyalar
