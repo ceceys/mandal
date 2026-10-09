@@ -80,6 +80,10 @@ iscc /DAppVersion=1.3.0 setup\Mandal.iss
 - Captures: `%APPDATA%\Mandal\Clips\yyyy-MM-dd\` (changeable in Settings)
 - Settings, item shortcuts, log: `%APPDATA%\Mandal\`
 
+## Feedback and contributing
+
+Bug reports, ideas and translation fixes are welcome. Open an [issue](https://github.com/ceceys/mandal/issues/new/choose) or see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
 [MIT](LICENSE)

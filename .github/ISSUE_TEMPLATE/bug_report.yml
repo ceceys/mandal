@@ -1,0 +1,62 @@
+name: Bug report / Hata bildirimi
+description: Something does not work as expected / Bir şey beklendiği gibi çalışmıyor
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report. You can write in English or Turkish.
+        Bildirdiğin için teşekkürler. İngilizce ya da Türkçe yazabilirsin.
+  - type: input
+    id: version
+    attributes:
+      label: Mandal version / Mandal sürümü
+      description: Settings → About / Ayarlar → Hakkında
+      placeholder: "1.3.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Installed with / Kurulum şekli
+      options:
+        - Installer (Mandal-Setup.exe) / Kurulum paketi
+        - Portable (Mandal.exe) / Taşınabilir
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version / Windows sürümü
+      description: Win+R → winver
+      placeholder: Windows 11 24H2
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened? / Ne oldu?
+      description: What did you expect and what happened instead? / Ne bekliyordun, ne oldu?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce / Nasıl tekrarlanır?
+      placeholder: |
+        1.
+        2.
+        3.
+  - type: textarea
+    id: log
+    attributes:
+      label: Log / Günlük
+      description: |
+        Paste the last lines of %APPDATA%\Mandal\mandal.log. It contains no screenshots or note contents.
+        %APPDATA%\Mandal\mandal.log dosyasının son satırlarını yapıştır. Ekran görüntüsü ya da not içeriği barındırmaz.
+      render: text
+  - type: markdown
+    attributes:
+      value: |
+        Please do not attach screenshots that contain personal data.
+        Lütfen kişisel veri içeren ekran görüntüsü ekleme.

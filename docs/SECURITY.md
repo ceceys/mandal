@@ -28,4 +28,4 @@ A `Local\` (per-session) mutex and event are used. The only effect another proce
 
 ## Reporting
 
-Open an issue on GitHub. Please do not include screenshots that contain personal data.
+Please report security problems privately through [Security → Report a vulnerability](https://github.com/ceceys/mandal/security/advisories/new) instead of a public issue. For other bugs, open an [issue](https://github.com/ceceys/mandal/issues/new/choose). Please do not include screenshots that contain personal data.

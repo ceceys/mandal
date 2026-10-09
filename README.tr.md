@@ -80,6 +80,10 @@ iscc /DAppVersion=1.3.0 setup\Mandal.iss
 - Alıntılar: `%APPDATA%\Mandal\Clips\yyyy-MM-dd\` (Ayarlar'dan değiştirilebilir)
 - Ayarlar, öğe kısayolları, günlük: `%APPDATA%\Mandal\`
 
+## Geri bildirim ve katkı
+
+Hata bildirimleri, öneriler ve çeviri düzeltmeleri memnuniyetle karşılanır. Bir [issue](https://github.com/ceceys/mandal/issues/new/choose) aç ya da [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bak.
+
 ## Lisans
 
 [MIT](LICENSE)

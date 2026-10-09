@@ -1,0 +1,19 @@
+name: Feature request / Özellik önerisi
+description: Suggest an idea for Mandal / Mandal için bir fikir öner
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to do? / Ne yapmak istiyorsun?
+      description: Describe the situation or the problem. / Durumu ya da sorunu anlat.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: How could Mandal help? / Mandal nasıl yardımcı olabilir?
+  - type: textarea
+    id: other
+    attributes:
+      label: Anything else? / Eklemek istediğin bir şey var mı?
