@@ -95,10 +95,25 @@ public partial class ClipItemView : UserControl
         }
     }
 
+    private LineWindow? Line => Window.GetWindow(this) as LineWindow;
+
+    private void Menu_Opened(object sender, RoutedEventArgs e)
+    {
+        if (Line is { } l) l.PopupDepth++;
+    }
+
+    private void Menu_Closed(object sender, RoutedEventArgs e)
+    {
+        if (Line is { } l) l.PopupDepth = Math.Max(0, l.PopupDepth - 1);
+    }
+
     private void AssignHotkey_Click(object sender, RoutedEventArgs e)
     {
         if (Item is null) return;
-        new HotkeyAssignWindow(Item).ShowDialog();
+        var line = Line;
+        if (line is not null) line.PopupDepth++;
+        try { new HotkeyAssignWindow(Item).ShowDialog(); }
+        finally { if (line is not null) line.PopupDepth = Math.Max(0, line.PopupDepth - 1); }
     }
 
     private void Preview_Click(object sender, RoutedEventArgs e)

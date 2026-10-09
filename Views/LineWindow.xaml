@@ -34,7 +34,8 @@
         </Style>
     </Window.Resources>
 
-    <Grid x:Name="Root">
+    <!-- Görünmez zemin: tüm ip bandı fareyi görür (giriş/çıkış sayımı için) -->
+    <Grid x:Name="Root" Background="#01FFFFFF">
         <Grid.RenderTransform>
             <TranslateTransform x:Name="Slide" Y="-206"/>
         </Grid.RenderTransform>

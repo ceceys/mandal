@@ -5,25 +5,30 @@
         Title="Mandal"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         ResizeMode="NoResize" Topmost="True" ShowInTaskbar="False" ShowActivated="False"
-        WindowStartupLocation="Manual" Left="0" Top="0" Width="34" Height="34"
-        Cursor="Hand" MouseLeftButtonDown="OnClick"
+        WindowStartupLocation="Manual" Left="0" Top="0" Width="84" Height="84"
+        Cursor="Hand" MouseLeftButtonDown="OnClick" MouseEnter="OnEnter" MouseLeave="OnLeave"
         ToolTip="{Binding [Menu_ToggleLine], Source={x:Static svc:Loc.Current}}" ToolTipService.InitialShowDelay="900">
-    <!-- Sol üst köşede kâğıt renkli küçük sekme, üstünde mandal -->
-    <Border x:Name="Tab" Background="{StaticResource PaperBrush}" BorderBrush="#D9CBB3" BorderThickness="0,0,1,1"
-            CornerRadius="0,0,14,0" Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Opacity="0.7">
-        <Border.Style>
-            <Style TargetType="Border">
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Opacity" Value="1"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </Border.Style>
-        <ContentControl Template="{StaticResource PinTemplate}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,2,0">
+    <Grid>
+        <!-- Görünmez ama fare yaklaşınca yakalayan alan -->
+        <Rectangle Fill="#01FFFFFF"/>
+
+        <!-- Köşeden çapraz asılı mandal; arka plan yok -->
+        <ContentControl x:Name="Pin" Template="{StaticResource PinTemplate}"
+                        HorizontalAlignment="Left" VerticalAlignment="Top" Margin="18,2,0,0"
+                        RenderTransformOrigin="0.5,0" Opacity="0.85">
             <ContentControl.LayoutTransform>
-                <ScaleTransform ScaleX="0.7" ScaleY="0.7"/>
+                <ScaleTransform ScaleX="1.15" ScaleY="1.15"/>
             </ContentControl.LayoutTransform>
+            <ContentControl.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform x:Name="PinScale" ScaleX="1" ScaleY="1"/>
+                    <RotateTransform x:Name="PinRotate" Angle="-38"/>
+                    <TranslateTransform x:Name="PinMove" X="0" Y="0"/>
+                </TransformGroup>
+            </ContentControl.RenderTransform>
+            <ContentControl.Effect>
+                <DropShadowEffect x:Name="PinShadow" BlurRadius="6" ShadowDepth="2" Opacity="0.45"/>
+            </ContentControl.Effect>
         </ContentControl>
-    </Border>
+    </Grid>
 </Window>

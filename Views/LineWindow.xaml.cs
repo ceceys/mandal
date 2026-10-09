@@ -27,6 +27,10 @@ public partial class LineWindow : Window
 
     private readonly ClipStore _store;
     private readonly DispatcherTimer _autoHide = new();
+    private readonly DispatcherTimer _leaveTimer = new() { Interval = TimeSpan.FromMilliseconds(420) };
+
+    /// <summary>Açık sağ tık menüsü / iletişim kutusu sayısı; sıfırdan büyükken fare çıkışı ipi kaldırmaz.</summary>
+    public int PopupDepth { get; set; }
     private bool _shown;
     private bool _temporary;
 
@@ -49,6 +53,12 @@ public partial class LineWindow : Window
             if (IsDragging || IsMouseOver) return; // bir sonraki tikte yeniden bak
             _autoHide.Stop();
             HideAnimated();
+        };
+
+        _leaveTimer.Tick += (_, _) =>
+        {
+            _leaveTimer.Stop();
+            if (_shown && !IsMouseOver && !IsDragging && PopupDepth == 0) HideAnimated();
         };
 
         store.Items.CollectionChanged += (_, _) => { UpdateEmptyCard(); Relayout(); };
@@ -115,6 +125,7 @@ public partial class LineWindow : Window
     public void HideAnimated(TimeSpan? delay = null)
     {
         _autoHide.Stop();
+        _leaveTimer.Stop();
         _temporary = false;
         if (!_shown) return;
         _shown = false;
@@ -209,12 +220,16 @@ public partial class LineWindow : Window
 
     private void Window_MouseEnter(object sender, MouseEventArgs e)
     {
+        _leaveTimer.Stop();
         if (_temporary) _autoHide.Stop();
     }
 
     private void Window_MouseLeave(object sender, MouseEventArgs e)
     {
-        if (_temporary && _shown && !IsDragging) _autoHide.Start();
+        if (!_shown || IsDragging) return;
+        // Varsayılan: fare bandın dışına çıkınca ip yukarı kaçar
+        if (App.Current.Settings.HideOnMouseLeave && PopupDepth == 0) _leaveTimer.Start();
+        else if (_temporary) _autoHide.Start();
     }
 
     private void Scroller_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

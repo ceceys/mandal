@@ -394,10 +394,46 @@ public partial class App : Application
         catch (Exception ex) { Fail(ex, Loc.T("Item_Preview")); }
     }
 
+    /// <summary>Evet/Hayır sorusu; açıkken ip fare çıkışıyla kalkmaz.</summary>
+    private bool Confirm(string text)
+    {
+        if (_line is not null) _line.PopupDepth++;
+        try
+        {
+            return ConfirmWindow.Ask(text, dangerous: true);
+        }
+        finally
+        {
+            if (_line is not null) _line.PopupDepth = Math.Max(0, _line.PopupDepth - 1);
+        }
+    }
+
+    /// <summary>İpteki tüm kartları ve dosyalarını siler; her zaman onay ister.</summary>
+    public void DeleteAll()
+    {
+        try
+        {
+            if (Store.Items.Count == 0) return;
+            if (!Confirm(Loc.T("Msg_DeleteAllConfirm"))) return;
+
+            _preview?.Close();
+            foreach (var item in Store.Items.ToList())
+            {
+                try { Store.Delete(item); }
+                catch (Exception ex) { Log.Write(ex, "Tümünü sil"); }
+            }
+            foreach (var rel in ItemHotkeys.All.Keys.ToList()) ItemHotkeys.Remove(rel);
+            ItemHotkeys.Save();
+            ApplyHotkeys();
+        }
+        catch (Exception ex) { Fail(ex, Loc.T("Card_DeleteAll")); }
+    }
+
     public void DeleteItem(ClipItem item)
     {
         try
         {
+            if (Settings.ConfirmDelete && !Confirm(Loc.T("Msg_DeleteConfirm"))) return;
             if (_preview is { Item: { } previewed } && ReferenceEquals(previewed, item)) _preview.Close();
             var rel = Store.RelativePath(item);
             Store.Delete(item);

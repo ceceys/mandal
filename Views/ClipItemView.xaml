@@ -45,7 +45,7 @@
     </UserControl.Resources>
 
     <UserControl.ContextMenu>
-        <ContextMenu>
+        <ContextMenu Opened="Menu_Opened" Closed="Menu_Closed">
             <MenuItem Header="{Binding [Item_Copy], Source={x:Static svc:Loc.Current}}" Click="Copy_Click"/>
             <MenuItem Header="{Binding [Item_Preview], Source={x:Static svc:Loc.Current}}" Click="Preview_Click"/>
             <MenuItem Header="{Binding [Item_OcrTip], Source={x:Static svc:Loc.Current}}" Click="Ocr_Click"

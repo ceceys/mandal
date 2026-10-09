@@ -88,6 +88,8 @@
             </TextBlock>
         </StackPanel>
         <CheckBox IsChecked="{Binding HideLineAfterCopy}" Content="{Binding [Menu_HideAfterCopy], Source={x:Static svc:Loc.Current}}"/>
+        <CheckBox IsChecked="{Binding HideOnMouseLeave}" Content="{Binding [Settings_HideOnLeave], Source={x:Static svc:Loc.Current}}"/>
+        <CheckBox IsChecked="{Binding ConfirmDelete}" Content="{Binding [Settings_ConfirmDelete], Source={x:Static svc:Loc.Current}}"/>
         <CheckBox IsChecked="{Binding HotCorner}" Content="{Binding [Settings_HotCorner], Source={x:Static svc:Loc.Current}}"/>
         <CheckBox IsChecked="{Binding CornerTab}" Content="{Binding [Settings_CornerTab], Source={x:Static svc:Loc.Current}}"/>
         <CheckBox IsChecked="{Binding PreviewTopmost}" Content="{Binding [Settings_PreviewTopmost], Source={x:Static svc:Loc.Current}}"/>

@@ -20,6 +20,12 @@ public sealed class Settings
     /// <summary>Tıkla-kopyala veya sürükle sonrası ip kendiliğinden kalksın.</summary>
     public bool HideLineAfterCopy { get; set; } = true;
 
+    /// <summary>Kart silerken "emin misin?" sorulsun (varsayılan kapalı).</summary>
+    public bool ConfirmDelete { get; set; } = false;
+
+    /// <summary>Fare ipin alanından çıkınca ip hemen yukarı kalksın.</summary>
+    public bool HideOnMouseLeave { get; set; } = true;
+
     /// <summary>Fare sol üst köşeye değince ip açılsın.</summary>
     public bool HotCorner { get; set; } = true;
 

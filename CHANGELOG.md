@@ -3,6 +3,10 @@
 ## 1.2.0 — 2026-10-09
 
 - Preview window: double-click a card (or the magnifier button / right-click → Preview) to open it large at the top of the screen. Resizable from the edges, movable by its title bar, mouse-wheel zoom, drag to pan, `0` fit / `1` actual size. Optionally stays above other apps (pin button, also in Settings). Size and position are remembered.
+- Corner tab is now just a diagonal clothespin on a transparent background; it pops forward and swings when the mouse approaches.
+- The line puts itself away as soon as the mouse leaves it (default on, Settings → Behavior).
+- "Delete all" button on the right-hand card with an in-theme confirmation card; optional confirmation for single deletes (Settings).
+- Flat transparent clothespin as the app icon.
 
 ## 1.1.0 — 2026-10-09
 
