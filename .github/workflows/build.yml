@@ -58,7 +58,7 @@ jobs:
           Get-Content SHA256SUMS.txt
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Mandal
           path: |
