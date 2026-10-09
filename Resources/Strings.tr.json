@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "Panoyu izle (panoya düşen görüntüler asılır)",
   "Menu_ShowOnCapture": "Yeni alıntıda ipi kısa süre göster",
   "Menu_HideAfterCopy": "Kopyalayınca ipi kaldır",
+  "Menu_CornerTab": "Köşede mandal göster",
   "Menu_Autostart": "Windows ile başlat",
   "Menu_Language": "Dil",
   "Menu_LanguageAuto": "Sistem dili",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "Metin tanıma",
   "Dialog_SaveTitle": "Alıntıyı kaydet",
   "Dialog_PngFilter": "PNG görüntü",
-  "Dialog_TxtFilter": "Metin dosyası"
+  "Dialog_TxtFilter": "Metin dosyası",
+  "Corner_Hide": "Mandalı gizle (tepsi menüsünden geri açılır)"
 }

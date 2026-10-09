@@ -807,6 +807,15 @@ public partial class App : Application
         Settings.Save();
     }
 
+    /// <summary>Köşedeki mandalı açar/kapatır (tepsi menüsü, mandala sağ tık, Ayarlar).</summary>
+    public void SetCornerTab(bool on)
+    {
+        Settings.CornerTab = on;
+        Settings.Save();
+        UpdateCornerTab();
+        SettingsChanged?.Invoke();
+    }
+
     public void SetShowOnCapture(bool on)
     {
         Settings.ShowOnCapture = on;

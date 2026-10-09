@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "Следить за буфером обмена (вешать скопированные изображения)",
   "Menu_ShowOnCapture": "Кратко показывать верёвку после снимка",
   "Menu_HideAfterCopy": "Скрывать верёвку после копирования",
+  "Menu_CornerTab": "Показывать прищепку в углу",
   "Menu_Autostart": "Запускать вместе с Windows",
   "Menu_Language": "Язык",
   "Menu_LanguageAuto": "Язык системы",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "Распознавание текста",
   "Dialog_SaveTitle": "Сохранить снимок",
   "Dialog_PngFilter": "Изображение PNG",
-  "Dialog_TxtFilter": "Текстовый файл"
+  "Dialog_TxtFilter": "Текстовый файл",
+  "Corner_Hide": "Скрыть эту прищепку (включить снова в меню трея)"
 }

@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "Zwischenablage beobachten (kopierte Bilder anheften)",
   "Menu_ShowOnCapture": "Leine nach einer Aufnahme kurz zeigen",
   "Menu_HideAfterCopy": "Leine nach dem Kopieren ausblenden",
+  "Menu_CornerTab": "Wäscheklammer in der Ecke zeigen",
   "Menu_Autostart": "Mit Windows starten",
   "Menu_Language": "Sprache",
   "Menu_LanguageAuto": "Systemsprache",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "Texterkennung",
   "Dialog_SaveTitle": "Aufnahme speichern",
   "Dialog_PngFilter": "PNG-Bild",
-  "Dialog_TxtFilter": "Textdatei"
+  "Dialog_TxtFilter": "Textdatei",
+  "Corner_Hide": "Diese Klammer ausblenden (im Tray-Menü wieder einschalten)"
 }

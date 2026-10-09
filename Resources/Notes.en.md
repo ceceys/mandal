@@ -1,6 +1,7 @@
 1.3.1 — 2026-10-09
 - Changing shortcuts in Settings works again: global hotkeys are suspended while a shortcut box has focus, so the pressed combination reaches the box (also when assigning a shortcut to a card).
 - Invalid shortcut values in the settings file are ignored; the corner clothespin is recreated if its window is closed unexpectedly.
+- The corner clothespin can now be toggled from the tray menu with one click; right-click the clothespin → Hide also works.
 
 1.3.0 — 2026-10-09
 - Automatic updates from GitHub Releases (on by default, can be turned off). Downloads are verified with SHA-256 and you are always asked before installing.

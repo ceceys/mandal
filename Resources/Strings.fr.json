@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "Surveiller le presse-papiers (épingler les images copiées)",
   "Menu_ShowOnCapture": "Afficher brièvement la corde après une capture",
   "Menu_HideAfterCopy": "Masquer la corde après la copie",
+  "Menu_CornerTab": "Afficher la pince dans le coin",
   "Menu_Autostart": "Lancer avec Windows",
   "Menu_Language": "Langue",
   "Menu_LanguageAuto": "Langue du système",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "Reconnaissance de texte",
   "Dialog_SaveTitle": "Enregistrer la capture",
   "Dialog_PngFilter": "Image PNG",
-  "Dialog_TxtFilter": "Fichier texte"
+  "Dialog_TxtFilter": "Fichier texte",
+  "Corner_Hide": "Masquer cette pince (réactivable depuis le menu de la barre)"
 }

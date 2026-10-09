@@ -8,6 +8,12 @@
         WindowStartupLocation="Manual" Left="0" Top="0" Width="84" Height="84"
         Cursor="Hand" MouseLeftButtonDown="OnClick" MouseEnter="OnEnter" MouseLeave="OnLeave"
         ToolTip="{Binding [Menu_ToggleLine], Source={x:Static svc:Loc.Current}}" ToolTipService.InitialShowDelay="900">
+    <Window.ContextMenu>
+        <!-- Sağ tık: mandalı gizle; tepsi menüsü veya Ayarlar'dan geri açılır -->
+        <ContextMenu>
+            <MenuItem Header="{Binding [Corner_Hide], Source={x:Static svc:Loc.Current}}" Click="OnHideClick"/>
+        </ContextMenu>
+    </Window.ContextMenu>
     <Grid>
         <!-- Görünmez ama fare yaklaşınca yakalayan alan -->
         <Rectangle Fill="#01FFFFFF"/>

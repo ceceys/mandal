@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "클립보드 감시 (복사한 이미지를 걸기)",
   "Menu_ShowOnCapture": "캡처 후 빨랫줄을 잠시 표시",
   "Menu_HideAfterCopy": "복사 후 빨랫줄 숨기기",
+  "Menu_CornerTab": "모서리에 빨래집게 표시",
   "Menu_Autostart": "Windows 시작 시 실행",
   "Menu_Language": "언어",
   "Menu_LanguageAuto": "시스템 언어",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "텍스트 인식",
   "Dialog_SaveTitle": "캡처 저장",
   "Dialog_PngFilter": "PNG 이미지",
-  "Dialog_TxtFilter": "텍스트 파일"
+  "Dialog_TxtFilter": "텍스트 파일",
+  "Corner_Hide": "이 빨래집게 숨기기(트레이 메뉴에서 다시 켬)"
 }

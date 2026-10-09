@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "Watch clipboard (pin images copied to it)",
   "Menu_ShowOnCapture": "Briefly show the line after a capture",
   "Menu_HideAfterCopy": "Hide the line after copying",
+  "Menu_CornerTab": "Show clothespin in the corner",
   "Menu_Autostart": "Start with Windows",
   "Menu_Language": "Language",
   "Menu_LanguageAuto": "System language",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "Text recognition",
   "Dialog_SaveTitle": "Save capture",
   "Dialog_PngFilter": "PNG image",
-  "Dialog_TxtFilter": "Text file"
+  "Dialog_TxtFilter": "Text file",
+  "Corner_Hide": "Hide this clothespin (turn it back on from the tray menu)"
 }

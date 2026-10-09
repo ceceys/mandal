@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "Monitorar a área de transferência (pendurar imagens copiadas)",
   "Menu_ShowOnCapture": "Mostrar o varal brevemente após uma captura",
   "Menu_HideAfterCopy": "Ocultar o varal ao copiar",
+  "Menu_CornerTab": "Mostrar o pregador no canto",
   "Menu_Autostart": "Iniciar com o Windows",
   "Menu_Language": "Idioma",
   "Menu_LanguageAuto": "Idioma do sistema",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "Reconhecimento de texto",
   "Dialog_SaveTitle": "Salvar captura",
   "Dialog_PngFilter": "Imagem PNG",
-  "Dialog_TxtFilter": "Arquivo de texto"
+  "Dialog_TxtFilter": "Arquivo de texto",
+  "Corner_Hide": "Ocultar este pregador (reative pelo menu da bandeja)"
 }

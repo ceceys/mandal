@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "クリップボードを監視（コピーした画像を吊るす）",
   "Menu_ShowOnCapture": "キャプチャ後にロープを少しの間表示",
   "Menu_HideAfterCopy": "コピー後にロープを隠す",
+  "Menu_CornerTab": "隅に洗濯ばさみを表示",
   "Menu_Autostart": "Windows 起動時に実行",
   "Menu_Language": "言語",
   "Menu_LanguageAuto": "システムの言語",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "テキスト認識",
   "Dialog_SaveTitle": "キャプチャを保存",
   "Dialog_PngFilter": "PNG 画像",
-  "Dialog_TxtFilter": "テキストファイル"
+  "Dialog_TxtFilter": "テキストファイル",
+  "Corner_Hide": "この洗濯ばさみを隠す（トレイメニューで再表示）"
 }

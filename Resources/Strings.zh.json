@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "监视剪贴板（自动挂上复制的图片）",
   "Menu_ShowOnCapture": "截图后短暂显示晾衣绳",
   "Menu_HideAfterCopy": "复制后隐藏晾衣绳",
+  "Menu_CornerTab": "在角落显示夹子",
   "Menu_Autostart": "开机启动",
   "Menu_Language": "语言",
   "Menu_LanguageAuto": "跟随系统",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "文字识别",
   "Dialog_SaveTitle": "保存截图",
   "Dialog_PngFilter": "PNG 图片",
-  "Dialog_TxtFilter": "文本文件"
+  "Dialog_TxtFilter": "文本文件",
+  "Corner_Hide": "隐藏此夹子（可在托盘菜单中重新打开）"
 }

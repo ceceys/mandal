@@ -1,6 +1,7 @@
 1.3.1 — 09.10.2026
 - Tastenkürzel lassen sich in den Einstellungen wieder ändern: Während ein Kürzel-Feld den Fokus hat, sind die globalen Hotkeys ausgesetzt, die gedrückte Kombination erreicht das Feld (auch beim Zuweisen an eine Karte).
 - Ungültige Kürzel in der Einstellungsdatei werden ignoriert; die Eck-Wäscheklammer wird neu erstellt, falls ihr Fenster unerwartet geschlossen wird.
+- Die Eck-Wäscheklammer lässt sich jetzt mit einem Klick im Tray-Menü ein-/ausschalten; Rechtsklick auf die Klammer → Ausblenden geht auch.
 
 1.3.0 — 09.10.2026
 - Automatische Updates über GitHub Releases (standardmäßig an, abschaltbar). Downloads werden per SHA-256 geprüft; vor der Installation wird immer gefragt.

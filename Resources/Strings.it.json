@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "Controlla gli appunti (appendi le immagini copiate)",
   "Menu_ShowOnCapture": "Mostra brevemente il filo dopo una cattura",
   "Menu_HideAfterCopy": "Nascondi il filo dopo la copia",
+  "Menu_CornerTab": "Mostra la molletta nell'angolo",
   "Menu_Autostart": "Avvia con Windows",
   "Menu_Language": "Lingua",
   "Menu_LanguageAuto": "Lingua di sistema",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "Riconoscimento del testo",
   "Dialog_SaveTitle": "Salva cattura",
   "Dialog_PngFilter": "Immagine PNG",
-  "Dialog_TxtFilter": "File di testo"
+  "Dialog_TxtFilter": "File di testo",
+  "Corner_Hide": "Nascondi questa molletta (riattivabile dal menu nell'area di notifica)"
 }

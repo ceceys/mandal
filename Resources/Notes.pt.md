@@ -1,6 +1,7 @@
 1.3.1 — 09/10/2026
 - Alterar atalhos nas Configurações volta a funcionar: os atalhos globais ficam suspensos enquanto uma caixa de atalho tem o foco, então a combinação pressionada chega à caixa (também ao atribuir um atalho a um cartão).
 - Valores de atalho inválidos no arquivo de configurações são ignorados; o pregador do canto é recriado se a janela dele fechar inesperadamente.
+- O pregador do canto agora pode ser ligado/desligado com um clique no menu da bandeja; clique direito no pregador → Ocultar também funciona.
 
 1.3.0 — 09/10/2026
 - Atualizações automáticas pelo GitHub Releases (ativadas por padrão, podem ser desligadas). Os downloads são verificados com SHA-256 e sempre há confirmação antes de instalar.

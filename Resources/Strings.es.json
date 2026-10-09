@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "Vigilar el portapapeles (colgar las imágenes copiadas)",
   "Menu_ShowOnCapture": "Mostrar el tendedero brevemente tras una captura",
   "Menu_HideAfterCopy": "Ocultar el tendedero al copiar",
+  "Menu_CornerTab": "Mostrar la pinza en la esquina",
   "Menu_Autostart": "Iniciar con Windows",
   "Menu_Language": "Idioma",
   "Menu_LanguageAuto": "Idioma del sistema",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "Reconocimiento de texto",
   "Dialog_SaveTitle": "Guardar captura",
   "Dialog_PngFilter": "Imagen PNG",
-  "Dialog_TxtFilter": "Archivo de texto"
+  "Dialog_TxtFilter": "Archivo de texto",
+  "Corner_Hide": "Ocultar esta pinza (se reactiva desde el menú de la bandeja)"
 }

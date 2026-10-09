@@ -56,6 +56,8 @@ public partial class CornerTabWindow : Window
         App.Current.ToggleLine();
     }
 
+    private void OnHideClick(object sender, RoutedEventArgs e) => App.Current.SetCornerTab(false);
+
     private void OnEnter(object sender, MouseEventArgs e)
     {
         var pop = new BackEase { EasingMode = EasingMode.EaseOut, Amplitude = 0.6 };

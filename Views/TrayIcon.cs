@@ -63,11 +63,14 @@ public sealed class TrayIcon : IDisposable
             (_, _) => app.SetShowOnCapture(!app.Settings.ShowOnCapture));
         var hideAfterCopy = new WF.ToolStripMenuItem(Loc.T("Menu_HideAfterCopy"), null,
             (_, _) => app.SetHideLineAfterCopy(!app.Settings.HideLineAfterCopy));
+        var cornerTab = new WF.ToolStripMenuItem(Loc.T("Menu_CornerTab"), null,
+            (_, _) => app.SetCornerTab(!app.Settings.CornerTab));
         var autostart = new WF.ToolStripMenuItem(Loc.T("Menu_Autostart"), null,
             (_, _) => app.SetAutostart(!Autostart.IsEnabled()));
         menu.Items.Add(watch);
         menu.Items.Add(showOnCapture);
         menu.Items.Add(hideAfterCopy);
+        menu.Items.Add(cornerTab);
         menu.Items.Add(autostart);
 
         // Dil alt menüsü
@@ -97,6 +100,7 @@ public sealed class TrayIcon : IDisposable
             watch.Checked = app.Settings.WatchClipboard;
             showOnCapture.Checked = app.Settings.ShowOnCapture;
             hideAfterCopy.Checked = app.Settings.HideLineAfterCopy;
+            cornerTab.Checked = app.Settings.CornerTab;
             autostart.Checked = Autostart.IsEnabled();
         };
 

@@ -7,6 +7,7 @@
   "Menu_WatchClipboard": "مراقبة الحافظة (تعليق الصور المنسوخة)",
   "Menu_ShowOnCapture": "إظهار الحبل لفترة وجيزة بعد الالتقاط",
   "Menu_HideAfterCopy": "إخفاء الحبل بعد النسخ",
+  "Menu_CornerTab": "إظهار المشبك في الزاوية",
   "Menu_Autostart": "التشغيل مع Windows",
   "Menu_Language": "اللغة",
   "Menu_LanguageAuto": "لغة النظام",
@@ -114,5 +115,6 @@
   "Ctx_Ocr": "التعرف على النص",
   "Dialog_SaveTitle": "حفظ اللقطة",
   "Dialog_PngFilter": "صورة PNG",
-  "Dialog_TxtFilter": "ملف نصي"
+  "Dialog_TxtFilter": "ملف نصي",
+  "Corner_Hide": "إخفاء هذا المشبك (يُعاد تفعيله من قائمة الدرج)"
 }

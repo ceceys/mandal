@@ -1,6 +1,7 @@
 1.3.1 — 09/10/2026
 - Cambiare le scorciatoie nelle Impostazioni funziona di nuovo: le scorciatoie globali vengono sospese mentre un campo scorciatoia ha il focus, così la combinazione premuta arriva al campo (anche assegnando una scorciatoia a una scheda).
 - I valori di scorciatoia non validi nel file delle impostazioni vengono ignorati; la molletta nell'angolo viene ricreata se la sua finestra si chiude inaspettatamente.
+- La molletta nell'angolo ora si attiva/disattiva con un clic dal menu nell'area di notifica; anche tasto destro sulla molletta → Nascondi.
 
 1.3.0 — 09/10/2026
 - Aggiornamenti automatici da GitHub Releases (attivi per impostazione predefinita, disattivabili). I download sono verificati con SHA-256 e viene sempre chiesta conferma prima di installare.

@@ -1,6 +1,7 @@
 1.3.1 — 09/10/2026
 - Cambiar atajos en Ajustes vuelve a funcionar: los atajos globales se suspenden mientras un cuadro de atajo tiene el foco, así la combinación pulsada llega al cuadro (también al asignar un atajo a una tarjeta).
 - Los valores de atajo no válidos del archivo de ajustes se ignoran; la pinza de la esquina se vuelve a crear si su ventana se cierra inesperadamente.
+- La pinza de la esquina ahora se activa o desactiva con un clic desde el menú de la bandeja; clic derecho en la pinza → Ocultar también funciona.
 
 1.3.0 — 09/10/2026
 - Actualizaciones automáticas desde GitHub Releases (activadas por defecto, se pueden desactivar). Las descargas se verifican con SHA-256 y siempre se pregunta antes de instalar.

@@ -1,6 +1,7 @@
 1.3.1 — 09.10.2026
 - Ayarlar'da kısayol değiştirme düzeltildi: kutu odaktayken sistem geneli kısayollar askıya alınır, basılan kombinasyon artık kutuya yazılır (karta kısayol atamada da).
 - Ayar dosyasındaki geçersiz kısayol değeri yok sayılır; köşe mandalı penceresi beklenmedik kapanırsa yeniden kurulur.
+- Köşe mandalı artık tepsi menüsünden tek tıkla açılıp kapanır; mandala sağ tıklayıp Gizle de denebilir.
 
 1.3.0 — 09.10.2026
 - GitHub Releases'tan otomatik güncelleme (varsayılan açık, ayarlardan kapanır). İndirilen dosya SHA-256 ile doğrulanır; kurulumdan önce her zaman sorulur.
