@@ -5,3 +5,7 @@ publish-setup/
 dist/
 *.user
 .vs/
+
+# Lisanslı stok müzik ve büyük ara kareler depoya girmez
+docs/promo/video/music-*.wav
+docs/promo/video/frames/page-*.png
