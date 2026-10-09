@@ -36,7 +36,7 @@ public partial class ClipItemView : UserControl
         if (e.ClickCount == 2)
         {
             _pressed = false;
-            App.Current.OpenItem(Item);
+            App.Current.OpenPreview(Item);
             e.Handled = true;
             return;
         }
@@ -99,6 +99,11 @@ public partial class ClipItemView : UserControl
     {
         if (Item is null) return;
         new HotkeyAssignWindow(Item).ShowDialog();
+    }
+
+    private void Preview_Click(object sender, RoutedEventArgs e)
+    {
+        if (Item is not null) App.Current.OpenPreview(Item);
     }
 
     private void Open_Click(object sender, RoutedEventArgs e)

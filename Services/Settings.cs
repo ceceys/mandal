@@ -26,6 +26,14 @@ public sealed class Settings
     /// <summary>Sol üst köşede tıklanabilir küçük mandal dursun.</summary>
     public bool CornerTab { get; set; } = true;
 
+    /// <summary>Önizleme penceresi diğer uygulamaların üstünde kalsın.</summary>
+    public bool PreviewTopmost { get; set; } = true;
+    public double PreviewWidth { get; set; } = 780;
+    public double PreviewHeight { get; set; } = 540;
+    /// <summary>-1 = ipin altında ortala.</summary>
+    public double PreviewLeft { get; set; } = -1;
+    public double PreviewTop { get; set; } = -1;
+
     public int ThumbnailHeight { get; set; } = 120;
 
     public string HotkeyRegion { get; set; } = "Ctrl+Shift+S";
@@ -81,6 +89,10 @@ public sealed class Settings
         if (string.IsNullOrWhiteSpace(ClipFolder)) ClipFolder = DefaultClipFolder;
         ThumbnailHeight = Math.Clamp(ThumbnailHeight, 40, 400);
         ShowOnCaptureSeconds = double.IsFinite(ShowOnCaptureSeconds) ? Math.Clamp(ShowOnCaptureSeconds, 0.5, 30) : 2.5;
+        PreviewWidth = double.IsFinite(PreviewWidth) ? Math.Clamp(PreviewWidth, 340, 8000) : 780;
+        PreviewHeight = double.IsFinite(PreviewHeight) ? Math.Clamp(PreviewHeight, 240, 8000) : 540;
+        if (!double.IsFinite(PreviewLeft) || PreviewLeft < -1 || PreviewLeft > 16000) PreviewLeft = -1;
+        if (!double.IsFinite(PreviewTop) || PreviewTop < -1 || PreviewTop > 16000) PreviewTop = -1;
         HotkeyRegion = CleanHotkey(HotkeyRegion);
         HotkeyRegionAlt = CleanHotkey(HotkeyRegionAlt);
         HotkeyFullScreen = CleanHotkey(HotkeyFullScreen);

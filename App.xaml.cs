@@ -23,6 +23,7 @@ public partial class App : Application
     private HotkeyManager? _hotkeys;
     private ClipboardWatcher? _clipboard;
     private SettingsWindow? _settingsWindow;
+    private PreviewWindow? _preview;
     private CornerTabWindow? _cornerTab;
     private readonly System.Windows.Threading.DispatcherTimer _cornerTimer = new() { Interval = TimeSpan.FromMilliseconds(120) };
     private int _cornerTicks;
@@ -378,10 +379,26 @@ public partial class App : Application
         }
     }
 
+    /// <summary>Büyük önizleme penceresi (tek pencere, öğe değişince yeniden kullanılır).</summary>
+    public void OpenPreview(ClipItem item)
+    {
+        try
+        {
+            if (_preview is null || !_preview.IsLoaded)
+            {
+                _preview = new PreviewWindow();
+                _preview.Closed += (_, _) => _preview = null;
+            }
+            _preview.ShowItem(item);
+        }
+        catch (Exception ex) { Fail(ex, Loc.T("Item_Preview")); }
+    }
+
     public void DeleteItem(ClipItem item)
     {
         try
         {
+            if (_preview is { Item: { } previewed } && ReferenceEquals(previewed, item)) _preview.Close();
             var rel = Store.RelativePath(item);
             Store.Delete(item);
             if (ItemHotkeys.Remove(rel))
@@ -546,6 +563,7 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         _cornerTimer.Stop();
+        _preview?.Close();
         _settingsWindow?.Close();
         _cornerTab?.Close();
         _tray?.Dispose();

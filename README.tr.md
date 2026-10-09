@@ -17,6 +17,7 @@
 - **Alıntı al**: bölge (`Ctrl+Shift+S` veya `PrtScn`), tam ekran (`Ctrl+Shift+F`), aktif pencere (`Ctrl+Shift+W`).
 - **Pano izleme**: başka bir araçla (ör. `Win+Shift+S`) kopyalanan görüntüler de asılır.
 - **Tek tık kopyalar** (görüntü + dosya); **sürükle-bırak** Explorer, Word, tarayıcı ve sohbet uygulamalarında çalışır.
+- **Önizleme**: karta çift tıkla, ekranın üstünde büyük açılır. Kenarlardan boyutlandır, tekerlekle yakınlaştır, raptiye düğmesiyle diğer uygulamaların üstünde tut.
 - **Görseli metne çevir**: `Aa` düğmesi (Windows'un yerleşik OCR'ı, çevrimdışı). Metin kendi kartı olur.
 - **Öğeye kısayol**: bir karta ör. `Ctrl+Alt+1` ata; basınca o kart kopyalanır, bilgisayar yeniden açılsa da.
 - **Uzayan ip**: öğe arttıkça kartlar küçülür (ekran başına 12 → 16 → 24 → 32 → 40 → 50 → 60); fazlası oklarla veya tekerlekle kaydırılır.
@@ -40,6 +41,7 @@ Windows 10 sürüm 2004 veya üstü. Dosya kod imzalı olmadığı için SmartSc
 | İpi göster / gizle | `Ctrl+Shift+Space`, tepsi simgesi, sol üst köşedeki küçük sekme ya da fareyi sol üst köşeye götürmek |
 | Kartı kopyala | Tıkla |
 | Kartı başka uygulamaya taşı | Sürükle |
+| Büyük önizleme | Karta çift tıkla ya da üzerine gelip büyütece tıkla |
 | Görsel → metin | Kartın üzerine gel, `Aa`'ya tıkla |
 | Sil | Kartın üzerine gel, ✕'e tıkla |
 | Aç, farklı kaydet, klasörde göster, kısayol ata | Karta sağ tık |
@@ -60,7 +62,7 @@ Kurulum paketi ([Inno Setup 6](https://jrsoftware.org/isinfo.php) gerekir):
 
 ```
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
-iscc /DAppVersion=1.1.0 setup\Mandal.iss
+iscc /DAppVersion=1.2.0 setup\Mandal.iss
 ```
 
 ## Dosyalar

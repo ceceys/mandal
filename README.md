@@ -17,6 +17,7 @@
 - **Capture** a region (`Ctrl+Shift+S` or `PrtScn`), the full screen (`Ctrl+Shift+F`) or the active window (`Ctrl+Shift+W`).
 - **Clipboard watching**: any image copied by another tool (e.g. `Win+Shift+S`) is pinned too.
 - **One click copies** the card to the clipboard (image + file), **drag and drop** works into Explorer, Word, browsers, chat apps.
+- **Preview**: double-click a card to open it large at the top of the screen. Resize from the edges, zoom with the wheel, keep it above other apps with the pin button.
 - **Convert an image to text** with the `Aa` button (Windows built-in OCR, offline). The text becomes its own card.
 - **Per-item shortcuts**: assign e.g. `Ctrl+Alt+1` to a card; pressing it copies that card, even after a restart.
 - **Stretching line**: cards shrink as you pin more (12 → 16 → 24 → 32 → 40 → 50 → 60 per screen); beyond that, slide with the arrows or the mouse wheel.
@@ -40,6 +41,7 @@ Windows 10 version 2004 or newer. The executable is not code-signed, so SmartScr
 | Show / hide the line | `Ctrl+Shift+Space`, the tray icon, the small tab at the top-left corner, or move the mouse into the top-left corner |
 | Copy a card | Click it |
 | Move a card into another app | Drag it |
+| Preview large | Double-click the card, or hover and click the magnifier |
 | Image → text | Hover the card, click `Aa` |
 | Delete | Hover the card, click ✕ |
 | Open, save as, show in folder, assign shortcut | Right-click the card |
@@ -60,7 +62,7 @@ Installer (needs [Inno Setup 6](https://jrsoftware.org/isinfo.php)):
 
 ```
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
-iscc /DAppVersion=1.1.0 setup\Mandal.iss
+iscc /DAppVersion=1.2.0 setup\Mandal.iss
 ```
 
 ## Files
