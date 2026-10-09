@@ -8,7 +8,7 @@
 
 <p align="center"><a href="README.tr.md">Türkçe</a></p>
 
-![Mandal line with pinned captures](docs/screenshot.png)
+![Mandal](docs/promo/hero-wide.png)
 
 **Mandal** (Turkish for *clothespin*) is a small Windows tool. Every capture is pinned to a clothesline at the top of the screen. The line stays out of the way until you call it; then you click a card to copy it, drag it into another app, or take it down with the ✕.
 
@@ -26,6 +26,8 @@
 - **12 languages**: Türkçe, English, Deutsch, Français, Español, Italiano, Português, Русский, العربية, 中文, 日本語, 한국어.
 - **Auto-update** from GitHub Releases, verified with SHA-256 and always confirmed before installing (can be turned off).
 - **Private**: no telemetry; the update check is the only network access. See [docs/SECURITY.md](docs/SECURITY.md).
+
+![Mandal in detail](docs/promo/features-grid.png)
 
 ## Install
 

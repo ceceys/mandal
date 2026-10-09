@@ -1,0 +1,10 @@
+Mandal tanıtım videosu — Adobe Express projeleri (09.10.2026)
+Sahneler storyboard-tr.html / storyboard-en.html dosyalarından aktarıldı (7 sahne, 1920x1080).
+
+[TR] Adobe Express düzenleyici: https://new.express.adobe.com/id/urn:aaid:sc:AP:da14482d-1d6e-4f19-8112-6fe5d77016fa?referrer=claude&intent=export_html_to_express&sdid=CMR41ZGB
+[TR] Belge kimliği: urn:aaid:sc:AP:da14482d-1d6e-4f19-8112-6fe5d77016fa
+
+[EN] Adobe Express düzenleyici: https://new.express.adobe.com/id/urn:aaid:sc:AP:52f03936-af6f-4607-9982-7914c6173490?referrer=claude&intent=export_html_to_express&sdid=CMR41ZGB
+[EN] Belge kimliği: urn:aaid:sc:AP:52f03936-af6f-4607-9982-7914c6173490
+
+Bitirmek için: Express'te aç → Animate (her sahneye Fade/Slide, 3-4 sn) → Audio → müzik seç (%40) → Download → MP4 1080p.

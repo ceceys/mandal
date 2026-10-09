@@ -8,7 +8,7 @@
 
 <p align="center"><a href="README.md">English</a></p>
 
-![Asılı alıntılarla Mandal ipi](docs/screenshot.png)
+![Mandal](docs/promo/hero-wide-tr.png)
 
 **Mandal**, küçük bir Windows aracı. Her alıntı ekranın üstündeki çamaşır ipine mandalla asılır. İp sen çağırana kadar görünmez; çağırınca bir karta tıklayıp kopyalarsın, başka uygulamaya sürüklersin ya da ✕ ile indirirsin.
 
@@ -26,6 +26,8 @@
 - **12 dil**: Türkçe, English, Deutsch, Français, Español, Italiano, Português, Русский, العربية, 中文, 日本語, 한국어.
 - **Otomatik güncelleme**: GitHub Releases'tan, SHA-256 ile doğrulanır, kurmadan önce her zaman sorar (kapatılabilir).
 - **Gizli**: telemetri yok; tek ağ erişimi güncelleme denetimi. Bkz. [docs/SECURITY.md](docs/SECURITY.md).
+
+![Mandal ayrıntıları](docs/promo/features-grid.png)
 
 ## Kurulum
 
