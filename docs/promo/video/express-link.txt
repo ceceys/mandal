@@ -1,12 +1,14 @@
-Mandal tanıtım videosu — Adobe Express projeleri (09.10.2026)
-Sahneler storyboard-tr.html / storyboard-en.html dosyalarından aktarıldı (7 sahne, 1920x1080).
+Mandal tanıtım videosu (09.10.2026)
 
-[TR] Adobe Express düzenleyici: https://new.express.adobe.com/id/urn:aaid:sc:AP:da14482d-1d6e-4f19-8112-6fe5d77016fa?referrer=claude&intent=export_html_to_express&sdid=CMR41ZGB
-[TR] Belge kimliği: urn:aaid:sc:AP:da14482d-1d6e-4f19-8112-6fe5d77016fa
+HAZIR MP4 (müzikli, 26 sn, 1080p): Mandal-tanitim-TR.mp4 ve Mandal-promo-EN.mp4 (bu klasörde ve üst Mandal klasöründe).
+Müzik: Adobe Stock 506618148 "Elegant Calm Corporate Music" (ücretsiz katman, Cuma'nın Adobe hesabıyla lisanslandı; wav depoya girmez).
 
-[EN] Adobe Express düzenleyici: https://new.express.adobe.com/id/urn:aaid:sc:AP:52f03936-af6f-4607-9982-7914c6173490?referrer=claude&intent=export_html_to_express&sdid=CMR41ZGB
-[EN] Belge kimliği: urn:aaid:sc:AP:52f03936-af6f-4607-9982-7914c6173490
+Adobe Express projeleri (v2, GitHub + LinkedIn bağlantılı sahneler; geçici, ~12 saat, 09.10 11:32'den itibaren — kullanmak istersen aç ve kendi hesabına kaydet):
 
-ÖNEMLİ: Projeler Adobe'de geçici (12 saat, ~09.10.2026 11:05'ten itibaren). Kaydetmek için: TR https://to.adobe.com/4GiQh8kq · EN https://to.adobe.com/QygaJh9i → 'Open in Adobe'. Süre geçerse storyboard HTML'lerinden yeniden aktarılır.
+[TR v2] Adobe Express: https://new.express.adobe.com/id/urn:aaid:sc:AP:b5d1ff20-e8b4-422f-956a-bf4b27652ea6?referrer=claude&intent=export_html_to_express&sdid=CMR41ZGB
+[TR v2] Belge kimliği: urn:aaid:sc:AP:b5d1ff20-e8b4-422f-956a-bf4b27652ea6
 
-Bitirmek için: Express'te aç → Animate (her sahneye Fade/Slide, 3-4 sn) → Audio → müzik seç (%40) → Download → MP4 1080p.
+[EN v2] Adobe Express: https://new.express.adobe.com/id/urn:aaid:sc:AP:86aeefc4-0e9b-421a-8ea6-623945e28dd2?referrer=claude&intent=export_html_to_express&sdid=CMR41ZGB
+[EN v2] Belge kimliği: urn:aaid:sc:AP:86aeefc4-0e9b-421a-8ea6-623945e28dd2
+
+İlk sürüm projeler (LinkedIn satırı yok): TR urn:aaid:sc:AP:da14482d-1d6e-4f19-8112-6fe5d77016fa · EN urn:aaid:sc:AP:52f03936-af6f-4607-9982-7914c6173490
