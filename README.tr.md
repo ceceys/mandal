@@ -72,7 +72,7 @@ Kurulum paketi ([Inno Setup 6](https://jrsoftware.org/isinfo.php) gerekir):
 
 ```
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
-iscc /DAppVersion=1.3.0 setup\Mandal.iss
+iscc /DAppVersion=1.3.1 setup\Mandal.iss
 ```
 
 ## Dosyalar

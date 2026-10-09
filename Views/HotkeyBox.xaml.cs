@@ -46,6 +46,10 @@ public partial class HotkeyBox : UserControl
         bool focused = IsKeyboardFocusWithin;
         Frame.BorderBrush = focused ? (Brush)FindResource("AccentBrush") : (Brush)FindResource("LineBrush");
         Frame.BorderThickness = new Thickness(focused ? 2 : 1);
+
+        // Kutu odaktayken sistem geneli kısayollar askıda: yoksa kayıtlı bir kombinasyona basınca
+        // Windows tuşu bize vermez, kutuya hiçbir şey yazılmazdı (ör. Ctrl+Shift+F alıntı alırdı).
+        if (focused) App.Current.SuspendHotkeys(); else App.Current.ResumeHotkeys();
     }
 
     private void OnPreviewKeyDown(object sender, KeyEventArgs e)

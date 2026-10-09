@@ -128,7 +128,7 @@ public sealed class Settings
     private static string CleanHotkey(string? s)
     {
         s = (s ?? "").Trim();
-        return s.Length > 64 ? "" : s;
+        return s.Length > 64 || !HotkeyManager.TryParse(s, out _, out _) ? "" : s; // geçersiz değer ("+" gibi) sessizce boş
     }
 
     /// <summary>

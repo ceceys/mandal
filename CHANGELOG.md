@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1 — 2026-10-09
+
+- Fixed: changing shortcuts in Settings. Global hotkeys are suspended while a shortcut box has keyboard focus, so pressing e.g. Ctrl+Shift+F fills the box instead of triggering a capture (same for per-card shortcut assignment).
+- Invalid shortcut strings in `settings.json` are ignored instead of being reported at every start.
+- The corner clothespin is recreated if its window is closed unexpectedly; showing or hiding the line no longer throws in that case.
+
 ## 1.3.0 — 2026-10-09
 
 - Drag and drop: the clothespin snaps off, a small copy of the card follows the cursor, the line pulls up while dragging and comes back if the drop is cancelled.

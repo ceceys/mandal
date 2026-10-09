@@ -84,7 +84,7 @@ public partial class App : Application
         _clipboard.Enabled = Settings.WatchClipboard;
 
         _line = new LineWindow(Store);
-        _line.ShownChanged += shown => { if (_cornerTab is not null) _cornerTab.Visibility = shown ? Visibility.Hidden : Visibility.Visible; };
+        _line.ShownChanged += shown => { if (_cornerTab is { IsLoaded: true }) _cornerTab.Visibility = shown ? Visibility.Hidden : Visibility.Visible; };
         _tray = new TrayIcon(this);
 
         RegisterHotkeys();
@@ -144,7 +144,27 @@ public partial class App : Application
     private void ApplyHotkeys()
     {
         _hotkeys?.UnregisterAll();
-        RegisterHotkeys();
+        if (!_hotkeysSuspended) RegisterHotkeys();
+    }
+
+    private bool _hotkeysSuspended;
+
+    /// <summary>
+    /// Bir kısayol kutusu odaktayken sistem geneli kısayollar askıya alınır: kayıtlı bir kombinasyona basılınca
+    /// Windows tuşu uygulamaya ulaştırmaz, kutu boş kalırdı. Odak çıkınca <see cref="ResumeHotkeys"/> geri kurar.
+    /// </summary>
+    public void SuspendHotkeys()
+    {
+        if (_hotkeysSuspended) return;
+        _hotkeysSuspended = true;
+        _hotkeys?.UnregisterAll();
+    }
+
+    public void ResumeHotkeys()
+    {
+        if (!_hotkeysSuspended) return;
+        _hotkeysSuspended = false;
+        ApplyHotkeys();
     }
 
     /// <summary>Kayıtlı kısayolları ipteki öğelere yazar; dosyası silinmişleri temizler.</summary>
@@ -320,15 +340,27 @@ public partial class App : Application
     {
         if (Settings.CornerTab)
         {
-            _cornerTab ??= new CornerTabWindow();
+            if (_cornerTab is { IsLoaded: false }) _cornerTab = null; // dışarıdan kapanmışsa yeniden kurulur
+            if (_cornerTab is null)
+            {
+                var tab = new CornerTabWindow();
+                tab.Closed += (_, _) =>
+                {
+                    if (!ReferenceEquals(_cornerTab, tab)) return;
+                    Log.Write("Köşe mandalı penceresi beklenmedik biçimde kapandı; ip gösterilince yeniden kurulacak");
+                    _cornerTab = null;
+                };
+                _cornerTab = tab;
+            }
             _cornerTab.ApplyCorner(Settings.CornerPosition);
             if (!_cornerTab.IsVisible) _cornerTab.Show();
             _cornerTab.Visibility = _line is { IsShown: true } ? Visibility.Hidden : Visibility.Visible;
         }
         else if (_cornerTab is not null)
         {
-            _cornerTab.Close();
+            var tab = _cornerTab;
             _cornerTab = null;
+            tab.Close();
         }
     }
 

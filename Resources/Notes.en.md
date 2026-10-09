@@ -1,3 +1,7 @@
+1.3.1 — 2026-10-09
+- Changing shortcuts in Settings works again: global hotkeys are suspended while a shortcut box has focus, so the pressed combination reaches the box (also when assigning a shortcut to a card).
+- Invalid shortcut values in the settings file are ignored; the corner clothespin is recreated if its window is closed unexpectedly.
+
 1.3.0 — 2026-10-09
 - Automatic updates from GitHub Releases (on by default, can be turned off). Downloads are verified with SHA-256 and you are always asked before installing.
 - Drag and drop: the clothespin snaps off, a small copy of the card follows the cursor, the line pulls up while dragging and comes back if you cancel.

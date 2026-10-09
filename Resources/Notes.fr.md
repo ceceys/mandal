@@ -1,3 +1,7 @@
+1.3.1 — 09/10/2026
+- La modification des raccourcis dans les Paramètres fonctionne à nouveau : les raccourcis globaux sont suspendus tant qu'un champ de raccourci a le focus, la combinaison saisie arrive bien dans le champ (aussi pour l'attribution à une carte).
+- Les valeurs de raccourci invalides du fichier de paramètres sont ignorées ; la pince d'angle est recréée si sa fenêtre se ferme de façon inattendue.
+
 1.3.0 — 09/10/2026
 - Mises à jour automatiques via GitHub Releases (activées par défaut, désactivables). Les téléchargements sont vérifiés en SHA-256 ; on te demande toujours avant d'installer.
 - Glisser-déposer : la pince se détache, une petite copie de la carte suit le curseur, la corde remonte pendant le glissement et revient si tu annules.
