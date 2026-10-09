@@ -34,6 +34,7 @@ public partial class App : Application
     private bool _updateBusy;
     private string? _readyUpdateFile;
     private Version? _readyUpdateVersion;
+    private string _readyUpdateNotes = "";
     private int _cornerTicks;
 
     private Mutex? _mutex;
@@ -216,6 +217,7 @@ public partial class App : Application
             var file = await Updater.DownloadAsync(rel);
             _readyUpdateFile = file;
             _readyUpdateVersion = rel.Version;
+            _readyUpdateNotes = rel.Notes;
             OfferInstall();
         }
         catch (Exception ex)
@@ -234,7 +236,17 @@ public partial class App : Application
         if (_readyUpdateFile is null || _readyUpdateVersion is null) return;
         if (_line is not null) _line.PopupDepth++;
         bool yes;
-        try { yes = ConfirmWindow.Ask(Loc.F("Msg_UpdateReady", _readyUpdateVersion), dangerous: false); }
+        try
+        {
+            var msg = Loc.F("Msg_UpdateReady", _readyUpdateVersion);
+            if (!string.IsNullOrWhiteSpace(_readyUpdateNotes))
+            {
+                var notes = _readyUpdateNotes.Replace("\r", "");
+                if (notes.Length > 420) notes = notes[..420] + "…";
+                msg += "\n\n" + notes;
+            }
+            yes = ConfirmWindow.Ask(msg, dangerous: false);
+        }
         finally { if (_line is not null) _line.PopupDepth = Math.Max(0, _line.PopupDepth - 1); }
         if (!yes) return;
 
@@ -475,8 +487,14 @@ public partial class App : Application
         Clipboard.SetText(text);
     }
 
+    private DragGhostWindow? _ghost;
+
+    /// <summary>
+    /// Sürükle-bırak: ip yukarı çekilir, imlecin yanında küçük bir kart gider; bırakma iptal olursa ip geri iner.
+    /// </summary>
     public void DragItem(DependencyObject source, ClipItem item)
     {
+        GiveFeedbackEventHandler? feedback = null;
         try
         {
             var data = new DataObject();
@@ -484,15 +502,28 @@ public partial class App : Application
             if (item.IsImage) data.SetImage(item.LoadFull());
             else data.SetText(item.Text ?? "");
 
-            if (_line is not null) _line.IsDragging = true;
+            bool wasShown = _line is { IsShown: true };
+            if (_line is not null) { _line.IsDragging = true; _line.HideAnimated(); }
+
+            _ghost ??= new DragGhostWindow();
+            _ghost.ShowFor(item);
+            feedback = (_, e) => _ghost?.Follow();
+            DragDrop.AddGiveFeedbackHandler(source, feedback);
+
             var result = DragDrop.DoDragDrop(source, data, DragDropEffects.Copy);
+
+            DragDrop.RemoveGiveFeedbackHandler(source, feedback);
+            feedback = null;
+            _ghost.Hide();
             if (_line is not null) _line.IsDragging = false;
 
-            if (result != DragDropEffects.None && Settings.HideLineAfterCopy)
-                _line?.HideAnimated(TimeSpan.FromMilliseconds(150));
+            // Hiçbir yere bırakılmadıysa ip geri insin; bırakıldıysa kalksın
+            if (result == DragDropEffects.None && wasShown) _line?.ShowAnimated();
         }
         catch (Exception ex)
         {
+            if (feedback is not null) DragDrop.RemoveGiveFeedbackHandler(source, feedback);
+            _ghost?.Hide();
             if (_line is not null) _line.IsDragging = false;
             Fail(ex, Loc.T("Ctx_Drag"));
         }
@@ -767,6 +798,7 @@ public partial class App : Application
     protected override void OnExit(ExitEventArgs e)
     {
         _cornerTimer.Stop();
+        _ghost?.Close();
         _preview?.Close();
         _settingsWindow?.Close();
         _cornerTab?.Close();

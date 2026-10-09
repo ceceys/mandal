@@ -15,6 +15,7 @@ public partial class SettingsWindow : Window
     public SettingsWindow()
     {
         InitializeComponent();
+        MaxHeight = SystemParameters.WorkArea.Height - 16; // ekrana sığmazsa içerik kayar, düğmeler altta kalır
         _copy = App.Current.Settings.Clone();
         DataContext = _copy;
 
@@ -28,7 +29,8 @@ public partial class SettingsWindow : Window
         UpdateStorageUi();
         FillCorners();
 
-        VersionRun.Text = "Mandal " + About.Version;
+        VersionText.Text = "Mandal " + About.Version;
+        NotesBox.Text = About.ReleaseNotes;
         if (string.IsNullOrEmpty(About.LinkedInUrl))
         {
             LinkedInSep.Text = "";
@@ -166,6 +168,8 @@ public partial class SettingsWindow : Window
     private void Cancel_Click(object sender, RoutedEventArgs e) => Close();
 
     private void GitHub_Click(object sender, RoutedEventArgs e) => About.Open(About.GitHubUrl);
+
+    private void CheckUpdates_Click(object sender, RoutedEventArgs e) => _ = App.Current.CheckForUpdatesAsync(manual: true);
 
     private void LinkedIn_Click(object sender, RoutedEventArgs e) => About.Open(About.LinkedInUrl);
 }

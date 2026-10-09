@@ -1,0 +1,33 @@
+<Window x:Class="Mandal.Views.DragGhostWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Mandal" WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="NoResize" Topmost="True" ShowInTaskbar="False" ShowActivated="False"
+        WindowStartupLocation="Manual" SizeToContent="WidthAndHeight" IsHitTestVisible="False">
+    <!-- İmlecin yanında giden küçük kart: sürüklenen şeyi gösterir -->
+    <Grid Margin="10" RenderTransformOrigin="0.5,0">
+        <Grid.RenderTransform>
+            <RotateTransform Angle="-6"/>
+        </Grid.RenderTransform>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="1" Background="White" Padding="3" CornerRadius="2" Margin="0,-4,0,0" Opacity="0.92"
+                Effect="{StaticResource CardShadow}">
+            <Grid>
+                <Image x:Name="Img" MaxWidth="150" MaxHeight="96" Stretch="Uniform" StretchDirection="DownOnly"
+                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                <Border x:Name="Paper" Background="{StaticResource PaperBrush}" Width="130" Height="80" Padding="6,4" Visibility="Collapsed">
+                    <TextBlock x:Name="Txt" FontSize="9" Foreground="{StaticResource InkBrush}" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"/>
+                </Border>
+            </Grid>
+        </Border>
+        <ContentControl Grid.Row="0" Template="{StaticResource PinTemplate}" HorizontalAlignment="Center" VerticalAlignment="Top"
+                        Panel.ZIndex="2" Margin="0,0,0,-4">
+            <ContentControl.LayoutTransform>
+                <ScaleTransform ScaleX="0.75" ScaleY="0.75"/>
+            </ContentControl.LayoutTransform>
+        </ContentControl>
+    </Grid>
+</Window>

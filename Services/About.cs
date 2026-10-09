@@ -20,6 +20,30 @@ public static class About
         }
     }
 
+    /// <summary>Gömülü CHANGELOG.md; başlık satırı atılır, markdown işaretleri sadeleştirilir.</summary>
+    public static string ReleaseNotes
+    {
+        get
+        {
+            try
+            {
+                using var s = typeof(About).Assembly.GetManifestResourceStream("Mandal.CHANGELOG.md");
+                if (s is null) return "";
+                using var r = new StreamReader(s);
+                var lines = r.ReadToEnd().Split('\n')
+                    .Select(l => l.TrimEnd('\r'))
+                    .Where(l => !l.StartsWith("# ", StringComparison.Ordinal))
+                    .Select(l => l.StartsWith("## ", StringComparison.Ordinal) ? l[3..] : l.Replace("`", ""));
+                return string.Join("\n", lines).Trim();
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex, "Sürüm notları");
+                return "";
+            }
+        }
+    }
+
     /// <summary>Yalnızca sabit https adresleri açılır.</summary>
     public static void Open(string url)
     {

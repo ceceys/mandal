@@ -2,6 +2,8 @@
 
 ## 1.3.0 — 2026-10-09
 
+- Drag and drop: the clothespin snaps off, a small copy of the card follows the cursor, the line pulls up while dragging and comes back if the drop is cancelled.
+- "Delete all" sits on its own row below a divider; About box in Settings with version, GitHub/LinkedIn, update check and release notes. Settings content scrolls on small screens.
 - Automatic updates from GitHub Releases (on by default, Settings → Behavior; "Check for updates" in the tray menu). The app checks 20 s after start and once a day, downloads the new installer or portable exe, verifies it against `SHA256SUMS.txt` from the release, and asks before installing; the installer runs silently and the app restarts. This is the app's only network access.
 
 ## 1.2.0 — 2026-10-09

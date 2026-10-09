@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using Mandal.Models;
 using Mandal.Services;
@@ -140,7 +141,26 @@ public partial class ClipItemView : UserControl
             return;
 
         _pressed = false;
-        App.Current.DragItem(this, Item);
+        StartDrag();
+    }
+
+    /// <summary>Mandal kopar, kart sürüklenir; bitince mandal geri takılır.</summary>
+    private void StartDrag()
+    {
+        if (Item is null) return;
+        SnapPin(true);
+        try { App.Current.DragItem(this, Item); }
+        finally { SnapPin(false); }
+    }
+
+    private void SnapPin(bool off)
+    {
+        var dur = new Duration(TimeSpan.FromMilliseconds(off ? 140 : 320));
+        var ease = off ? new CubicEase { EasingMode = EasingMode.EaseOut } : (IEasingFunction)new BackEase { EasingMode = EasingMode.EaseOut, Amplitude = 0.7 };
+        PinSnapRotate.BeginAnimation(RotateTransform.AngleProperty, new DoubleAnimation(off ? -28 : 0, dur) { EasingFunction = ease });
+        PinSnapMove.BeginAnimation(TranslateTransform.YProperty, new DoubleAnimation(off ? -12 : 0, dur) { EasingFunction = ease });
+        PinSnapMove.BeginAnimation(TranslateTransform.XProperty, new DoubleAnimation(off ? 6 : 0, dur) { EasingFunction = ease });
+        PinHandle.BeginAnimation(OpacityProperty, new DoubleAnimation(off ? 0.35 : 1, dur));
     }
 
     private void Photo_MouseUp(object sender, MouseButtonEventArgs e)
@@ -197,7 +217,7 @@ public partial class ClipItemView : UserControl
             Math.Abs(d.Y) < SystemParameters.MinimumVerticalDragDistance)
             return;
         _pinPressed = false;
-        App.Current.DragItem(this, Item);
+        StartDrag();
     }
 
     private void Pin_MouseUp(object sender, MouseButtonEventArgs e)

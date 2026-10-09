@@ -20,7 +20,7 @@ public sealed class Updater
     private const string LatestApi = $"https://api.github.com/repos/{Owner}/{Repo}/releases/latest";
     private const long MaxDownloadBytes = 200L * 1024 * 1024;
 
-    public sealed record Release(Version Version, string Tag, string? InstallerUrl, string? PortableUrl, string? SumsUrl);
+    public sealed record Release(Version Version, string Tag, string? InstallerUrl, string? PortableUrl, string? SumsUrl, string Notes);
 
     public static Version Current
     {
@@ -68,7 +68,8 @@ public sealed class Updater
                 else if (name.Equals("SHA256SUMS.txt", StringComparison.OrdinalIgnoreCase)) sums = url;
             }
         }
-        return new Release(ver, tag, installer, portable, sums);
+        var notes = root.TryGetProperty("body", out var body) ? body.GetString() ?? "" : "";
+        return new Release(ver, tag, installer, portable, sums, notes.Trim());
     }
 
     /// <summary>Uygun dosyayı geçici klasöre indirir ve SHA-256 özetini doğrular. Özet dosyası yoksa reddeder.</summary>

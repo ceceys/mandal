@@ -16,6 +16,14 @@ internal static class NativeMethods
     public const int GWL_EXSTYLE = -20;
     public const long WS_EX_TOOLWINDOW = 0x00000080;
     public const long WS_EX_NOACTIVATE = 0x08000000;
+    public const long WS_EX_TRANSPARENT = 0x00000020;
+
+    /// <summary>Fare olayları pencereden geçer, altındaki pencereye gider (sürükleme hayaleti için).</summary>
+    public static void MakeClickThrough(IntPtr hwnd)
+    {
+        long style = GetWindowLongPtr(hwnd, GWL_EXSTYLE).ToInt64();
+        SetWindowLongPtr(hwnd, GWL_EXSTYLE, new IntPtr(style | WS_EX_TRANSPARENT));
+    }
 
     public const int DWMWA_EXTENDED_FRAME_BOUNDS = 9;
 

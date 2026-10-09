@@ -109,8 +109,14 @@
 
         <!-- Mandal: not kartlarında sürükleme tutamağı -->
         <Border x:Name="PinHandle" Grid.Row="0" Background="#01FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Top"
-                Panel.ZIndex="2" Margin="0,0,0,-6" Padding="4,0"
+                Panel.ZIndex="2" Margin="0,0,0,-6" Padding="4,0" RenderTransformOrigin="0.5,0"
                 PreviewMouseLeftButtonDown="Pin_MouseDown" PreviewMouseMove="Pin_MouseMove" PreviewMouseLeftButtonUp="Pin_MouseUp">
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform x:Name="PinSnapRotate" Angle="0"/>
+                    <TranslateTransform x:Name="PinSnapMove" X="0" Y="0"/>
+                </TransformGroup>
+            </Border.RenderTransform>
             <ContentControl Template="{StaticResource PinTemplate}">
                 <ContentControl.LayoutTransform>
                     <ScaleTransform ScaleX="{Binding PinScale, Source={x:Static svc:LineLayout.Current}}"

@@ -16,7 +16,7 @@
         <!-- Kart: alıntılarla aynı beyaz çerçeve, içi kâğıt -->
         <Border Grid.Row="1" Background="White" Padding="4" CornerRadius="2" Margin="0,-6,0,0"
                 Effect="{StaticResource CardShadow}">
-            <Border Background="{StaticResource PaperBrush}" Width="128" Height="148">
+            <Border Background="{StaticResource PaperBrush}" Width="128" Height="164">
                 <StackPanel VerticalAlignment="Center" Margin="4,0">
                     <StackPanel.Resources>
                         <Style TargetType="Button" BasedOn="{StaticResource CardButton}">
@@ -69,6 +69,8 @@
                         </StackPanel>
                     </Button>
 
+                    <!-- Tümünü sil: Kaldır'dan ayrı, bir satır aşağıda, ince çizgiyle -->
+                    <Rectangle Height="1" Fill="{StaticResource LineBrush}" Margin="8,6,8,4"/>
                     <Button Style="{StaticResource CardButton}" Click="DeleteAll_Click" Foreground="{StaticResource DangerBrush}">
                         <StackPanel Orientation="Horizontal">
                             <Path Width="16" Height="16" Stretch="Uniform" Stroke="{StaticResource DangerBrush}" StrokeThickness="2"
