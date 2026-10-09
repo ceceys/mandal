@@ -4,46 +4,45 @@
         xmlns:svc="clr-namespace:Mandal.Services"
         xmlns:views="clr-namespace:Mandal.Views"
         Title="{Binding [Settings_Title], Source={x:Static svc:Loc.Current}}"
-        Width="560" SizeToContent="Height" ResizeMode="NoResize" Topmost="True"
+        Width="880" SizeToContent="Height" ResizeMode="NoResize" Topmost="True"
         WindowStartupLocation="CenterScreen" Background="{StaticResource PanelBrush}"
-        FontSize="13" Foreground="{StaticResource InkBrush}" Icon="pack://application:,,,/Assets/mandal.ico">
+        FontSize="12.5" Foreground="{StaticResource InkBrush}" Icon="pack://application:,,,/Assets/mandal.ico">
 
     <Window.Resources>
         <Style x:Key="SectionTitle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontSize" Value="13.5"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
-            <Setter Property="Margin" Value="0,18,0,8"/>
+            <Setter Property="Margin" Value="0,10,0,6"/>
         </Style>
         <Style x:Key="RowLabel" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,0,14,0"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
         </Style>
         <Style TargetType="CheckBox">
-            <Setter Property="Margin" Value="0,5"/>
+            <Setter Property="Margin" Value="0,3"/>
             <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
-            <!-- Uzun açıklamalar alt satıra kaysın -->
             <Setter Property="ContentTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" TextWrapping="Wrap" MaxWidth="470"/>
+                        <TextBlock Text="{Binding}" TextWrapping="Wrap" MaxWidth="400"/>
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
         <Style TargetType="TextBox">
-            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Padding" Value="8,4"/>
             <Setter Property="BorderBrush" Value="{StaticResource LineBrush}"/>
             <Setter Property="Background" Value="White"/>
         </Style>
         <Style TargetType="ComboBox">
-            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Padding" Value="8,4"/>
         </Style>
     </Window.Resources>
 
     <DockPanel>
-        <!-- Düğmeler: her zaman altta görünür -->
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="28,10,28,18">
+        <!-- Düğmeler: her zaman altta -->
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="24,8,24,14">
             <Button Style="{StaticResource DialogButton}" Margin="0,0,10,0" IsCancel="True" Click="Cancel_Click"
                     Content="{Binding [Settings_Cancel], Source={x:Static svc:Loc.Current}}"/>
             <Button Style="{StaticResource DialogButton}" Margin="0,0,10,0" Click="Apply_Click"
@@ -52,126 +51,135 @@
                     Content="{Binding [Settings_Save], Source={x:Static svc:Loc.Current}}"/>
         </StackPanel>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="28,8,28,8">
-    <StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24,4,24,4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="28"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-        <!-- Dil -->
-        <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Language], Source={x:Static svc:Loc.Current}}"/>
-        <ComboBox x:Name="LanguageCombo" Width="260" HorizontalAlignment="Left"
-                  DisplayMemberPath="Name" SelectedValuePath="Code" SelectionChanged="LanguageCombo_SelectionChanged"/>
+                <!-- SOL: Dil, Kısayollar, Klasör -->
+                <StackPanel Grid.Column="0" Grid.Row="0">
+                    <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Language], Source={x:Static svc:Loc.Current}}"/>
+                    <ComboBox x:Name="LanguageCombo" Width="220" HorizontalAlignment="Left"
+                              DisplayMemberPath="Name" SelectedValuePath="Code" SelectionChanged="LanguageCombo_SelectionChanged"/>
 
-        <!-- Kısayollar -->
-        <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Hotkeys], Source={x:Static svc:Loc.Current}}"/>
-        <TextBlock Foreground="{StaticResource MutedBrush}" FontSize="12" Margin="0,0,0,8" TextWrapping="Wrap"
-                   Text="{Binding [Settings_HotkeyHint], Source={x:Static svc:Loc.Current}}"/>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="36"/>
-                <RowDefinition Height="36"/>
-                <RowDefinition Height="36"/>
-                <RowDefinition Height="36"/>
-                <RowDefinition Height="36"/>
-            </Grid.RowDefinitions>
+                    <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Hotkeys], Source={x:Static svc:Loc.Current}}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="32"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Style="{StaticResource RowLabel}" Text="{Binding [Settings_HotkeyRegion], Source={x:Static svc:Loc.Current}}"/>
+                        <views:HotkeyBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Height="27" MinWidth="160" Hotkey="{Binding HotkeyRegion}"/>
+                        <TextBlock Grid.Row="1" Style="{StaticResource RowLabel}" Text="{Binding [Settings_HotkeyRegionAlt], Source={x:Static svc:Loc.Current}}"/>
+                        <views:HotkeyBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Height="27" MinWidth="160" Hotkey="{Binding HotkeyRegionAlt}"/>
+                        <TextBlock Grid.Row="2" Style="{StaticResource RowLabel}" Text="{Binding [Settings_HotkeyFullScreen], Source={x:Static svc:Loc.Current}}"/>
+                        <views:HotkeyBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Height="27" MinWidth="160" Hotkey="{Binding HotkeyFullScreen}"/>
+                        <TextBlock Grid.Row="3" Style="{StaticResource RowLabel}" Text="{Binding [Settings_HotkeyWindow], Source={x:Static svc:Loc.Current}}"/>
+                        <views:HotkeyBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Height="27" MinWidth="160" Hotkey="{Binding HotkeyWindow}"/>
+                        <TextBlock Grid.Row="4" Style="{StaticResource RowLabel}" Text="{Binding [Settings_HotkeyToggle], Source={x:Static svc:Loc.Current}}"/>
+                        <views:HotkeyBox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Height="27" MinWidth="160" Hotkey="{Binding HotkeyToggleLine}"/>
+                    </Grid>
+                    <TextBlock Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="0,2,0,0" TextWrapping="Wrap"
+                               Text="{Binding [Settings_HotkeyHint], Source={x:Static svc:Loc.Current}}"/>
+                    <TextBlock x:Name="HotkeyError" Foreground="{StaticResource DangerBrush}" FontSize="11.5" Margin="0,3,0,0" Visibility="Collapsed"
+                               Text="{Binding [Settings_HotkeyDuplicate], Source={x:Static svc:Loc.Current}}"/>
 
-            <TextBlock Grid.Row="0" Style="{StaticResource RowLabel}" Text="{Binding [Settings_HotkeyRegion], Source={x:Static svc:Loc.Current}}"/>
-            <views:HotkeyBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Hotkey="{Binding HotkeyRegion}"/>
+                    <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Folder], Source={x:Static svc:Loc.Current}}"/>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Style="{StaticResource DialogButton}" MinWidth="0" Padding="12,4" Margin="8,0,0,0" Click="Browse_Click"
+                                Content="{Binding [Settings_Browse], Source={x:Static svc:Loc.Current}}"/>
+                        <TextBox x:Name="FolderBox" Text="{Binding ClipFolder, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"/>
+                    </DockPanel>
+                    <TextBlock x:Name="FolderError" Foreground="{StaticResource DangerBrush}" FontSize="11.5" Margin="0,3,0,0" Visibility="Collapsed"
+                               Text="{Binding [Settings_FolderInvalid], Source={x:Static svc:Loc.Current}}"/>
+                </StackPanel>
 
-            <TextBlock Grid.Row="1" Style="{StaticResource RowLabel}" Text="{Binding [Settings_HotkeyRegionAlt], Source={x:Static svc:Loc.Current}}"/>
-            <views:HotkeyBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Hotkey="{Binding HotkeyRegionAlt}"/>
-
-            <TextBlock Grid.Row="2" Style="{StaticResource RowLabel}" Text="{Binding [Settings_HotkeyFullScreen], Source={x:Static svc:Loc.Current}}"/>
-            <views:HotkeyBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Hotkey="{Binding HotkeyFullScreen}"/>
-
-            <TextBlock Grid.Row="3" Style="{StaticResource RowLabel}" Text="{Binding [Settings_HotkeyWindow], Source={x:Static svc:Loc.Current}}"/>
-            <views:HotkeyBox Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Hotkey="{Binding HotkeyWindow}"/>
-
-            <TextBlock Grid.Row="4" Style="{StaticResource RowLabel}" Text="{Binding [Settings_HotkeyToggle], Source={x:Static svc:Loc.Current}}"/>
-            <views:HotkeyBox Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Hotkey="{Binding HotkeyToggleLine}"/>
-        </Grid>
-        <TextBlock x:Name="HotkeyError" Foreground="{StaticResource DangerBrush}" FontSize="12" Margin="0,4,0,0" Visibility="Collapsed"
-                   Text="{Binding [Settings_HotkeyDuplicate], Source={x:Static svc:Loc.Current}}"/>
-
-        <!-- Davranış -->
-        <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Behavior], Source={x:Static svc:Loc.Current}}"/>
-        <CheckBox IsChecked="{Binding WatchClipboard}" Content="{Binding [Menu_WatchClipboard], Source={x:Static svc:Loc.Current}}"/>
-        <StackPanel Orientation="Horizontal">
-            <CheckBox x:Name="ShowOnCaptureCheck" IsChecked="{Binding ShowOnCapture}" Content="{Binding [Menu_ShowOnCapture], Source={x:Static svc:Loc.Current}}"/>
-            <Slider x:Name="SecondsSlider" Width="110" Minimum="1" Maximum="10" TickFrequency="0.5" IsSnapToTickEnabled="True"
-                    VerticalAlignment="Center" Margin="16,0,8,0" IsEnabled="{Binding IsChecked, ElementName=ShowOnCaptureCheck}"/>
-            <TextBlock VerticalAlignment="Center" Foreground="{StaticResource MutedBrush}">
-                <Run Text="{Binding Value, ElementName=SecondsSlider, StringFormat={}{0:0.#}, Mode=OneWay}"/>
-                <Run Text="{Binding [Settings_ShowSeconds], Source={x:Static svc:Loc.Current}, Mode=OneWay}"/>
-            </TextBlock>
-        </StackPanel>
-        <CheckBox IsChecked="{Binding HideLineAfterCopy}" Content="{Binding [Menu_HideAfterCopy], Source={x:Static svc:Loc.Current}}"/>
-        <CheckBox IsChecked="{Binding HideOnMouseLeave}" Content="{Binding [Settings_HideOnLeave], Source={x:Static svc:Loc.Current}}"/>
-        <CheckBox IsChecked="{Binding ConfirmDelete}" Content="{Binding [Settings_ConfirmDelete], Source={x:Static svc:Loc.Current}}"/>
-        <CheckBox IsChecked="{Binding SelectOnCard}" Content="{Binding [Settings_SelectOnCard], Source={x:Static svc:Loc.Current}}"/>
-        <StackPanel Orientation="Horizontal" Margin="0,6,0,2">
-            <TextBlock VerticalAlignment="Center" Margin="0,0,12,0" Text="{Binding [Settings_Corner], Source={x:Static svc:Loc.Current}}"/>
-            <ComboBox x:Name="CornerCombo" Width="190" DisplayMemberPath="Name" SelectedValuePath="Code" SelectionChanged="CornerCombo_SelectionChanged"/>
-        </StackPanel>
-        <CheckBox IsChecked="{Binding HotCorner}" Content="{Binding [Settings_HotCorner], Source={x:Static svc:Loc.Current}}"/>
-        <CheckBox IsChecked="{Binding CornerTab}" Content="{Binding [Settings_CornerTab], Source={x:Static svc:Loc.Current}}"/>
-        <CheckBox IsChecked="{Binding PreviewTopmost}" Content="{Binding [Settings_PreviewTopmost], Source={x:Static svc:Loc.Current}}"/>
-        <CheckBox x:Name="AutostartCheck" Content="{Binding [Menu_Autostart], Source={x:Static svc:Loc.Current}}"/>
-
-        <!-- Saklama: varsayılan kalıcı -->
-        <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Storage], Source={x:Static svc:Loc.Current}}"/>
-        <CheckBox x:Name="KeepCheck" IsChecked="{Binding KeepForever}" Content="{Binding [Settings_KeepForever], Source={x:Static svc:Loc.Current}}"
-                  Checked="KeepCheck_Changed" Unchecked="KeepCheck_Changed"/>
-        <StackPanel x:Name="AutoPanel" Orientation="Horizontal" Margin="24,2,0,0">
-            <Slider x:Name="DaysSlider" Width="160" Minimum="1" Maximum="365" TickFrequency="1" IsSnapToTickEnabled="True"
-                    VerticalAlignment="Center" ValueChanged="DaysSlider_ValueChanged"/>
-            <TextBlock x:Name="AutoLabel" VerticalAlignment="Center" Margin="12,0,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" MaxWidth="300"/>
-        </StackPanel>
-
-        <!-- Klasör -->
-        <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Folder], Source={x:Static svc:Loc.Current}}"/>
-        <DockPanel>
-            <Button DockPanel.Dock="Right" Style="{StaticResource DialogButton}" MinWidth="0" Margin="8,0,0,0" Click="Browse_Click"
-                    Content="{Binding [Settings_Browse], Source={x:Static svc:Loc.Current}}"/>
-            <TextBox x:Name="FolderBox" Text="{Binding ClipFolder, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"/>
-        </DockPanel>
-        <TextBlock x:Name="FolderError" Foreground="{StaticResource DangerBrush}" FontSize="12" Margin="0,4,0,0" Visibility="Collapsed"
-                   Text="{Binding [Settings_FolderInvalid], Source={x:Static svc:Loc.Current}}"/>
-
-        <!-- Hakkında: sürüm, bağlantılar, güncelleme, sürüm notları -->
-        <Border Margin="0,22,0,0" Background="{StaticResource PaperBrush}" BorderBrush="#D9CBB3" BorderThickness="1" CornerRadius="10" Padding="16,12">
-            <StackPanel>
-                <Grid>
+                <!-- SAĞ: Davranış, Saklama -->
+                <StackPanel Grid.Column="2" Grid.Row="0">
+                    <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Behavior], Source={x:Static svc:Loc.Current}}"/>
+                    <CheckBox IsChecked="{Binding WatchClipboard}" Content="{Binding [Menu_WatchClipboard], Source={x:Static svc:Loc.Current}}"/>
                     <StackPanel Orientation="Horizontal">
-                        <ContentControl Template="{StaticResource PinTemplate}" Margin="0,0,12,0" VerticalAlignment="Center">
-                            <ContentControl.LayoutTransform>
-                                <ScaleTransform ScaleX="0.7" ScaleY="0.7"/>
-                            </ContentControl.LayoutTransform>
-                        </ContentControl>
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock x:Name="VersionText" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource InkBrush}"/>
-                            <TextBlock FontSize="11.5" Foreground="{StaticResource MutedBrush}" Margin="0,2,0,0">
-                                <Hyperlink Click="GitHub_Click" Foreground="{StaticResource AccentBrush}" TextDecorations="None">GitHub</Hyperlink>
-                                <Run x:Name="LinkedInSep" Text=" · "/>
-                                <Hyperlink x:Name="LinkedInLink" Click="LinkedIn_Click" Foreground="{StaticResource AccentBrush}" TextDecorations="None">LinkedIn</Hyperlink>
-                            </TextBlock>
-                        </StackPanel>
+                        <CheckBox x:Name="ShowOnCaptureCheck" IsChecked="{Binding ShowOnCapture}" Content="{Binding [Menu_ShowOnCapture], Source={x:Static svc:Loc.Current}}"/>
+                        <Slider x:Name="SecondsSlider" Width="90" Minimum="1" Maximum="10" TickFrequency="0.5" IsSnapToTickEnabled="True"
+                                VerticalAlignment="Center" Margin="12,0,6,0" IsEnabled="{Binding IsChecked, ElementName=ShowOnCaptureCheck}"/>
+                        <TextBlock VerticalAlignment="Center" Foreground="{StaticResource MutedBrush}" FontSize="11.5">
+                            <Run Text="{Binding Value, ElementName=SecondsSlider, StringFormat={}{0:0.#}, Mode=OneWay}"/>
+                            <Run Text="{Binding [Settings_ShowSeconds], Source={x:Static svc:Loc.Current}, Mode=OneWay}"/>
+                        </TextBlock>
                     </StackPanel>
-                    <Button Style="{StaticResource DialogButton}" HorizontalAlignment="Right" VerticalAlignment="Center" MinWidth="0" Padding="14,6"
-                            Click="CheckUpdates_Click" Content="{Binding [Menu_CheckUpdates], Source={x:Static svc:Loc.Current}}"/>
-                </Grid>
-                <CheckBox IsChecked="{Binding AutoUpdate}" Margin="0,10,0,0" Content="{Binding [Settings_AutoUpdate], Source={x:Static svc:Loc.Current}}"/>
-                <TextBlock FontSize="11.5" Foreground="{StaticResource MutedBrush}" Margin="0,8,0,4" Text="{Binding [Settings_ReleaseNotes], Source={x:Static svc:Loc.Current}}"/>
-                <Border Background="White" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="6">
-                    <TextBox x:Name="NotesBox" IsReadOnly="True" Height="118" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
-                             BorderThickness="0" Background="Transparent" FontSize="11.5" Padding="8,6" Foreground="{StaticResource InkBrush}"/>
-                </Border>
-            </StackPanel>
-        </Border>
+                    <CheckBox IsChecked="{Binding HideLineAfterCopy}" Content="{Binding [Menu_HideAfterCopy], Source={x:Static svc:Loc.Current}}"/>
+                    <CheckBox IsChecked="{Binding HideOnMouseLeave}" Content="{Binding [Settings_HideOnLeave], Source={x:Static svc:Loc.Current}}"/>
+                    <CheckBox IsChecked="{Binding ConfirmDelete}" Content="{Binding [Settings_ConfirmDelete], Source={x:Static svc:Loc.Current}}"/>
+                    <CheckBox IsChecked="{Binding SelectOnCard}" Content="{Binding [Settings_SelectOnCard], Source={x:Static svc:Loc.Current}}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,4,0,2">
+                        <TextBlock VerticalAlignment="Center" Margin="0,0,10,0" Text="{Binding [Settings_Corner], Source={x:Static svc:Loc.Current}}"/>
+                        <ComboBox x:Name="CornerCombo" Width="150" DisplayMemberPath="Name" SelectedValuePath="Code" SelectionChanged="CornerCombo_SelectionChanged"/>
+                    </StackPanel>
+                    <CheckBox IsChecked="{Binding HotCorner}" Content="{Binding [Settings_HotCorner], Source={x:Static svc:Loc.Current}}"/>
+                    <CheckBox IsChecked="{Binding CornerTab}" Content="{Binding [Settings_CornerTab], Source={x:Static svc:Loc.Current}}"/>
+                    <CheckBox IsChecked="{Binding PreviewTopmost}" Content="{Binding [Settings_PreviewTopmost], Source={x:Static svc:Loc.Current}}"/>
+                    <CheckBox x:Name="AutostartCheck" Content="{Binding [Menu_Autostart], Source={x:Static svc:Loc.Current}}"/>
 
-    </StackPanel>
-    </ScrollViewer>
+                    <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Storage], Source={x:Static svc:Loc.Current}}"/>
+                    <CheckBox x:Name="KeepCheck" IsChecked="{Binding KeepForever}" Content="{Binding [Settings_KeepForever], Source={x:Static svc:Loc.Current}}"
+                              Checked="KeepCheck_Changed" Unchecked="KeepCheck_Changed"/>
+                    <StackPanel x:Name="AutoPanel" Orientation="Horizontal" Margin="22,0,0,0">
+                        <Slider x:Name="DaysSlider" Width="130" Minimum="1" Maximum="365" TickFrequency="1" IsSnapToTickEnabled="True"
+                                VerticalAlignment="Center" ValueChanged="DaysSlider_ValueChanged"/>
+                        <TextBlock x:Name="AutoLabel" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="{StaticResource MutedBrush}" FontSize="11" TextWrapping="Wrap" MaxWidth="250"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- ALT: Hakkında şeridi -->
+                <Border Grid.Row="1" Grid.ColumnSpan="3" Margin="0,14,0,4" Background="{StaticResource PaperBrush}" BorderBrush="#D9CBB3" BorderThickness="1" CornerRadius="10" Padding="14,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Top">
+                            <ContentControl Template="{StaticResource PinTemplate}" Margin="0,2,12,0" VerticalAlignment="Top">
+                                <ContentControl.LayoutTransform>
+                                    <ScaleTransform ScaleX="0.7" ScaleY="0.7"/>
+                                </ContentControl.LayoutTransform>
+                            </ContentControl>
+                            <StackPanel Width="190">
+                                <TextBlock x:Name="VersionText" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource InkBrush}"/>
+                                <TextBlock FontSize="11.5" Foreground="{StaticResource MutedBrush}" Margin="0,2,0,0">
+                                    <Hyperlink Click="GitHub_Click" Foreground="{StaticResource AccentBrush}" TextDecorations="None">GitHub</Hyperlink>
+                                    <Run x:Name="LinkedInSep" Text=" · "/>
+                                    <Hyperlink x:Name="LinkedInLink" Click="LinkedIn_Click" Foreground="{StaticResource AccentBrush}" TextDecorations="None">LinkedIn</Hyperlink>
+                                </TextBlock>
+                                <CheckBox IsChecked="{Binding AutoUpdate}" Margin="0,8,0,0" FontSize="11.5" Content="{Binding [Settings_AutoUpdate], Source={x:Static svc:Loc.Current}}"/>
+                                <Button Style="{StaticResource DialogButton}" HorizontalAlignment="Left" MinWidth="0" Padding="12,4" Margin="0,6,0,0" FontSize="12"
+                                        Click="CheckUpdates_Click" Content="{Binding [Menu_CheckUpdates], Source={x:Static svc:Loc.Current}}"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="18,0,0,0">
+                            <TextBlock FontSize="11.5" Foreground="{StaticResource MutedBrush}" Margin="0,0,0,4" Text="{Binding [Settings_ReleaseNotes], Source={x:Static svc:Loc.Current}}"/>
+                            <Border Background="White" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="6">
+                                <TextBox x:Name="NotesBox" IsReadOnly="True" Height="96" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                         BorderThickness="0" Background="Transparent" FontSize="11" Padding="8,5" Foreground="{StaticResource InkBrush}"/>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
     </DockPanel>
 </Window>

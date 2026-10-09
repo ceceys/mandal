@@ -36,7 +36,8 @@
     <Resource Include="Assets\mandal.ico" />
     <!-- WithCulture=false: "Strings.en.json" uydu derlemeye değil, ana derlemeye gömülsün -->
     <EmbeddedResource Include="Resources\Strings.*.json" WithCulture="false" LogicalName="Mandal.Resources.%(Filename)%(Extension)" />
-    <!-- Sürüm notları ayarlar penceresinde okunur -->
+    <!-- Sürüm notları ayarlar penceresinde uygulamanın dilinde okunur; İngilizce CHANGELOG yedek -->
+    <EmbeddedResource Include="Resources\Notes.*.md" WithCulture="false" LogicalName="Mandal.Resources.%(Filename)%(Extension)" />
     <EmbeddedResource Include="CHANGELOG.md" LogicalName="Mandal.CHANGELOG.md" />
   </ItemGroup>
 

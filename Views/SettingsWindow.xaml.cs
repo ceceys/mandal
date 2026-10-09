@@ -38,7 +38,13 @@ public partial class SettingsWindow : Window
         }
         Loc.Current.LanguageChanged += UpdateStorageUi;
         Loc.Current.LanguageChanged += FillCorners;
-        Closed += (_, _) => { Loc.Current.LanguageChanged -= UpdateStorageUi; Loc.Current.LanguageChanged -= FillCorners; };
+        Loc.Current.LanguageChanged += RefreshNotes;
+        Closed += (_, _) =>
+        {
+            Loc.Current.LanguageChanged -= UpdateStorageUi;
+            Loc.Current.LanguageChanged -= FillCorners;
+            Loc.Current.LanguageChanged -= RefreshNotes;
+        };
         Loaded += (_, _) => Activate();
     }
 
@@ -166,6 +172,8 @@ public partial class SettingsWindow : Window
     }
 
     private void Cancel_Click(object sender, RoutedEventArgs e) => Close();
+
+    private void RefreshNotes() => NotesBox.Text = About.ReleaseNotes;
 
     private void GitHub_Click(object sender, RoutedEventArgs e) => About.Open(About.GitHubUrl);
 

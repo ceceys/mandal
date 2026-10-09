@@ -20,27 +20,31 @@ public static class About
         }
     }
 
-    /// <summary>Gömülü CHANGELOG.md; başlık satırı atılır, markdown işaretleri sadeleştirilir.</summary>
+    /// <summary>Sürüm notları, uygulamanın dilinde (Resources\Notes.{dil}.md); yoksa İngilizce, o da yoksa CHANGELOG.md.</summary>
     public static string ReleaseNotes
     {
         get
         {
-            try
+            var asm = typeof(About).Assembly;
+            foreach (var name in new[] { $"Mandal.Resources.Notes.{Loc.Current.Code}.md", "Mandal.Resources.Notes.en.md", "Mandal.CHANGELOG.md" })
             {
-                using var s = typeof(About).Assembly.GetManifestResourceStream("Mandal.CHANGELOG.md");
-                if (s is null) return "";
-                using var r = new StreamReader(s);
-                var lines = r.ReadToEnd().Split('\n')
-                    .Select(l => l.TrimEnd('\r'))
-                    .Where(l => !l.StartsWith("# ", StringComparison.Ordinal))
-                    .Select(l => l.StartsWith("## ", StringComparison.Ordinal) ? l[3..] : l.Replace("`", ""));
-                return string.Join("\n", lines).Trim();
+                try
+                {
+                    using var s = asm.GetManifestResourceStream(name);
+                    if (s is null) continue;
+                    using var r = new StreamReader(s);
+                    var lines = r.ReadToEnd().Split('\n')
+                        .Select(l => l.TrimEnd('\r'))
+                        .Where(l => !l.StartsWith("# ", StringComparison.Ordinal))
+                        .Select(l => l.StartsWith("## ", StringComparison.Ordinal) ? l[3..] : l.Replace("`", ""));
+                    return string.Join("\n", lines).Trim();
+                }
+                catch (Exception ex)
+                {
+                    Log.Write(ex, "Sürüm notları");
+                }
             }
-            catch (Exception ex)
-            {
-                Log.Write(ex, "Sürüm notları");
-                return "";
-            }
+            return "";
         }
     }
 
