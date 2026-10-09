@@ -10,7 +10,9 @@ namespace Mandal.Views;
 public partial class ClipItemView : UserControl
 {
     private Point _down;
-    private bool _pressed;
+    private bool _pressed;      // fotoğraf/kart üzerinde basıldı: tık = kopyala, sürükle = taşı
+    private bool _textPressed;  // seçilebilir not metni üzerinde basıldı
+    private bool _pinPressed;
 
     public ClipItemView()
     {
@@ -18,21 +20,47 @@ public partial class ClipItemView : UserControl
         Loaded += (_, _) =>
         {
             RefreshTooltip();
+            ApplySettings();
             Loc.Current.LanguageChanged += RefreshTooltip;
+            App.Current.SettingsChanged += ApplySettings;
         };
-        Unloaded += (_, _) => Loc.Current.LanguageChanged -= RefreshTooltip;
+        Unloaded += (_, _) =>
+        {
+            Loc.Current.LanguageChanged -= RefreshTooltip;
+            App.Current.SettingsChanged -= ApplySettings;
+        };
     }
 
     private ClipItem? Item => DataContext as ClipItem;
+
+    private bool TextSelectable => Item is { IsText: true } && App.Current.Settings.SelectOnCard;
+
+    private void ApplySettings()
+    {
+        // Seçim kapalıysa metin kutusu fareyi görmez; kart tek parça gibi davranır
+        TextCard.IsHitTestVisible = TextSelectable;
+        TextCard.Cursor = TextSelectable ? Cursors.IBeam : Cursors.Hand;
+    }
 
     private void RefreshTooltip()
     {
         if (Item is { } it) ToolTip = it.Summary + "\n\n" + Loc.T("Item_Hint");
     }
 
+    // ---------------- Kart gövdesi ----------------
+
     private void Photo_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (Item is null) return;
+
+        if (TextSelectable && IsOverText(e))
+        {
+            // Metin kutusu seçimi yönetir (çift tık kelimeyi seçer); bırakınca kopyalanır
+            _textPressed = true;
+            _pressed = false;
+            return;
+        }
+
         if (e.ClickCount == 2)
         {
             _pressed = false;
@@ -59,14 +87,72 @@ public partial class ClipItemView : UserControl
 
     private void Photo_MouseUp(object sender, MouseButtonEventArgs e)
     {
-        if (!_pressed || Item is null) return;
+        if (Item is null) return;
+
+        if (_textPressed)
+        {
+            _textPressed = false;
+            // Seçim varsa yalnız seçim; yoksa tüm not
+            Dispatcher.BeginInvoke(() =>
+            {
+                if (TextCard.SelectionLength > 0)
+                {
+                    App.Current.SetClipboardText(TextCard.SelectedText);
+                    ShowCopied(Loc.T("Preview_SelectionCopied"));
+                }
+                else
+                {
+                    App.Current.CopyItem(Item);
+                    ShowCopied(Loc.T("Item_Copied"));
+                }
+            }, System.Windows.Threading.DispatcherPriority.Input);
+            return;
+        }
+
+        if (!_pressed) return;
         _pressed = false;
         App.Current.CopyItem(Item);
-        ShowCopied();
+        ShowCopied(Loc.T("Item_Copied"));
     }
 
-    private void ShowCopied()
+    private bool IsOverText(MouseEventArgs e)
     {
+        var p = e.GetPosition(TextCard);
+        return p.X >= 0 && p.Y >= 0 && p.X <= TextCard.ActualWidth && p.Y <= TextCard.ActualHeight;
+    }
+
+    // ---------------- Mandal tutamağı: not kartını sürükle-bırak ----------------
+
+    private void Pin_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (Item is null) return;
+        _down = e.GetPosition(this);
+        _pinPressed = true;
+        e.Handled = true;
+    }
+
+    private void Pin_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (!_pinPressed || Item is null || e.LeftButton != MouseButtonState.Pressed) return;
+        var d = e.GetPosition(this) - _down;
+        if (Math.Abs(d.X) < SystemParameters.MinimumHorizontalDragDistance &&
+            Math.Abs(d.Y) < SystemParameters.MinimumVerticalDragDistance)
+            return;
+        _pinPressed = false;
+        App.Current.DragItem(this, Item);
+    }
+
+    private void Pin_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        if (!_pinPressed || Item is null) return;
+        _pinPressed = false;
+        App.Current.CopyItem(Item);
+        ShowCopied(Loc.T("Item_Copied"));
+    }
+
+    private void ShowCopied(string text)
+    {
+        CopiedText.Text = text;
         var anim = new DoubleAnimationUsingKeyFrames();
         anim.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(90))));
         anim.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(650))));
@@ -74,11 +160,13 @@ public partial class ClipItemView : UserControl
         CopiedBadge.BeginAnimation(OpacityProperty, anim);
     }
 
+    // ---------------- Menü ve düğmeler ----------------
+
     private void Copy_Click(object sender, RoutedEventArgs e)
     {
         if (Item is null) return;
         App.Current.CopyItem(Item);
-        ShowCopied();
+        ShowCopied(Loc.T("Item_Copied"));
     }
 
     private async void Ocr_Click(object sender, RoutedEventArgs e)
@@ -87,7 +175,7 @@ public partial class ClipItemView : UserControl
         Cursor = Cursors.Wait;
         try
         {
-            if (await App.Current.OcrItemAsync(Item)) ShowCopied();
+            if (await App.Current.OcrItemAsync(Item)) ShowCopied(Loc.T("Item_Copied"));
         }
         finally
         {
@@ -114,6 +202,11 @@ public partial class ClipItemView : UserControl
         if (line is not null) line.PopupDepth++;
         try { new HotkeyAssignWindow(Item).ShowDialog(); }
         finally { if (line is not null) line.PopupDepth = Math.Max(0, line.PopupDepth - 1); }
+    }
+
+    private void Edit_Click(object sender, RoutedEventArgs e)
+    {
+        if (Item is { IsText: true }) App.Current.OpenNoteEditor(Item);
     }
 
     private void Preview_Click(object sender, RoutedEventArgs e)

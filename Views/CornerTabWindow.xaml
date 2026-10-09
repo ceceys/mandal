@@ -12,7 +12,7 @@
         <!-- Görünmez ama fare yaklaşınca yakalayan alan -->
         <Rectangle Fill="#01FFFFFF"/>
 
-        <!-- Köşeden çapraz asılı mandal; arka plan yok -->
+        <!-- Köşeden çapraz asılı mandal; hangi köşe olduğu kodda ayarlanır -->
         <ContentControl x:Name="Pin" Template="{StaticResource PinTemplate}"
                         HorizontalAlignment="Left" VerticalAlignment="Top" Margin="18,2,0,0"
                         RenderTransformOrigin="0.5,0" Opacity="0.85">

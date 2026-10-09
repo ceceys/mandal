@@ -48,6 +48,8 @@
         <ContextMenu Opened="Menu_Opened" Closed="Menu_Closed">
             <MenuItem Header="{Binding [Item_Copy], Source={x:Static svc:Loc.Current}}" Click="Copy_Click"/>
             <MenuItem Header="{Binding [Item_Preview], Source={x:Static svc:Loc.Current}}" Click="Preview_Click"/>
+            <MenuItem Header="{Binding [Item_Edit], Source={x:Static svc:Loc.Current}}" Click="Edit_Click"
+                      Visibility="{Binding IsText, Converter={StaticResource BoolToVis}}"/>
             <MenuItem Header="{Binding [Item_OcrTip], Source={x:Static svc:Loc.Current}}" Click="Ocr_Click"
                       Visibility="{Binding IsImage, Converter={StaticResource BoolToVis}}"/>
             <MenuItem Header="{Binding [Item_AssignHotkey], Source={x:Static svc:Loc.Current}}" Click="AssignHotkey_Click"/>
@@ -86,10 +88,13 @@
                         Width="{Binding TextCardWidth, Source={x:Static svc:LineLayout.Current}}"
                         Height="{Binding ThumbHeight, Source={x:Static svc:LineLayout.Current}}"
                         Visibility="{Binding IsText, Converter={StaticResource BoolToVis}}">
-                    <TextBlock Text="{Binding Preview}" Foreground="{StaticResource InkBrush}"
-                               FontSize="{Binding TextFontSize, Source={x:Static svc:LineLayout.Current}}"
-                               TextWrapping="Wrap" TextTrimming="CharacterEllipsis" LineStackingStrategy="BlockLineHeight"
-                               LineHeight="{Binding TextFontSize, Source={x:Static svc:LineLayout.Current}, Converter={x:Static svc:LineHeightConverter.Instance}}"/>
+                    <!-- Not metni: doğrudan seçilebilir; seçip bırakınca seçim kopyalanır -->
+                    <TextBox x:Name="TextCard" Text="{Binding Preview, Mode=OneWay}" IsReadOnly="True" IsReadOnlyCaretVisible="False"
+                             Background="Transparent" BorderThickness="0" Padding="0" Cursor="IBeam"
+                             Foreground="{StaticResource InkBrush}" SelectionBrush="{StaticResource AccentBrush}" SelectionOpacity="0.35"
+                             FontSize="{Binding TextFontSize, Source={x:Static svc:LineLayout.Current}}"
+                             TextWrapping="Wrap" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden"
+                             ContextMenu="{x:Null}" Focusable="True"/>
                 </Border>
 
                 <!-- Atanmış kısayol rozeti -->
@@ -101,14 +106,17 @@
             </Grid>
         </Border>
 
-        <!-- Mandal -->
-        <ContentControl Grid.Row="0" Template="{StaticResource PinTemplate}" HorizontalAlignment="Center"
-                        VerticalAlignment="Top" Panel.ZIndex="2" Margin="0,0,0,-6">
-            <ContentControl.LayoutTransform>
-                <ScaleTransform ScaleX="{Binding PinScale, Source={x:Static svc:LineLayout.Current}}"
-                                ScaleY="{Binding PinScale, Source={x:Static svc:LineLayout.Current}}"/>
-            </ContentControl.LayoutTransform>
-        </ContentControl>
+        <!-- Mandal: not kartlarında sürükleme tutamağı -->
+        <Border x:Name="PinHandle" Grid.Row="0" Background="#01FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Top"
+                Panel.ZIndex="2" Margin="0,0,0,-6" Padding="4,0"
+                PreviewMouseLeftButtonDown="Pin_MouseDown" PreviewMouseMove="Pin_MouseMove" PreviewMouseLeftButtonUp="Pin_MouseUp">
+            <ContentControl Template="{StaticResource PinTemplate}">
+                <ContentControl.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding PinScale, Source={x:Static svc:LineLayout.Current}}"
+                                    ScaleY="{Binding PinScale, Source={x:Static svc:LineLayout.Current}}"/>
+                </ContentControl.LayoutTransform>
+            </ContentControl>
+        </Border>
 
         <!-- Sil (sağ üst) -->
         <Button Grid.Row="1" Style="{StaticResource HoverCircleButton}"
@@ -140,7 +148,7 @@
         <!-- Kopyalandı -->
         <Border x:Name="CopiedBadge" Grid.Row="1" Background="#D91F8F4A" CornerRadius="12" Padding="12,4" Opacity="0"
                 HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" Panel.ZIndex="4">
-            <TextBlock Foreground="White" FontWeight="SemiBold" FontSize="13"
+            <TextBlock x:Name="CopiedText" Foreground="White" FontWeight="SemiBold" FontSize="13"
                        Text="{Binding [Item_Copied], Source={x:Static svc:Loc.Current}}"/>
         </Border>
     </Grid>

@@ -15,6 +15,8 @@ public partial class ControlCardView : UserControl
 
     private void Settings_Click(object sender, RoutedEventArgs e) => App.Current.OpenSettings();
 
+    private void AddNote_Click(object sender, RoutedEventArgs e) => App.Current.OpenNoteEditor(null);
+
     private void Hide_Click(object sender, RoutedEventArgs e) => App.Current.HideLine();
 
     private void DeleteAll_Click(object sender, RoutedEventArgs e) => App.Current.DeleteAll();

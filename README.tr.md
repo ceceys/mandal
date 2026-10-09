@@ -19,6 +19,7 @@
 - **Tek tık kopyalar** (görüntü + dosya); **sürükle-bırak** Explorer, Word, tarayıcı ve sohbet uygulamalarında çalışır.
 - **Önizleme**: karta çift tıkla, ekranın üstünde büyük açılır. Kenarlardan boyutlandır, tekerlekle yakınlaştır, raptiye düğmesiyle diğer uygulamaların üstünde tut.
 - **Görseli metne çevir**: `Aa` düğmesi (Windows'un yerleşik OCR'ı, çevrimdışı). Metin kendi kartı olur.
+- **Notlar**: sağ karttan not yaz; alıntı gibi ipe asılır. Büyük aç, bir kısmını seçip bırak sadece o kopyalanır; ya da tümünü kopyala.
 - **Öğeye kısayol**: bir karta ör. `Ctrl+Alt+1` ata; basınca o kart kopyalanır, bilgisayar yeniden açılsa da.
 - **Uzayan ip**: öğe arttıkça kartlar küçülür (ekran başına 12 → 16 → 24 → 32 → 40 → 50 → 60); fazlası oklarla veya tekerlekle kaydırılır.
 - **Kalıcı**: alıntılar gün klasörlerinde PNG/TXT olarak durur, yeniden açılışta geri gelir.

@@ -16,7 +16,7 @@
         <!-- Kart: alıntılarla aynı beyaz çerçeve, içi kâğıt -->
         <Border Grid.Row="1" Background="White" Padding="4" CornerRadius="2" Margin="0,-6,0,0"
                 Effect="{StaticResource CardShadow}">
-            <Border Background="{StaticResource PaperBrush}" Width="124" Height="120">
+            <Border Background="{StaticResource PaperBrush}" Width="128" Height="148">
                 <StackPanel VerticalAlignment="Center" Margin="4,0">
                     <StackPanel.Resources>
                         <Style TargetType="Button" BasedOn="{StaticResource CardButton}">
@@ -31,6 +31,16 @@
                                   Data="M4,7 L7,7 L9,4 L15,4 L17,7 L20,7 L20,19 L4,19 Z M12,16 A3.5,3.5 0 1 0 12,9 A3.5,3.5 0 1 0 12,16 Z"/>
                             <TextBlock Margin="8,0,0,0" VerticalAlignment="Center"
                                        Text="{Binding [Card_Capture], Source={x:Static svc:Loc.Current}}"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource CardButton}" Click="AddNote_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Path Width="16" Height="16" Stretch="Uniform" Stroke="{StaticResource InkBrush}" StrokeThickness="1.8"
+                                  StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                  Data="M5,4 L15,4 L19,8 L19,20 L5,20 Z M15,4 L15,8 L19,8 M8,12 L16,12 M8,16 L13,16"/>
+                            <TextBlock Margin="8,0,0,0" VerticalAlignment="Center"
+                                       Text="{Binding [Card_AddNote], Source={x:Static svc:Loc.Current}}"/>
                         </StackPanel>
                     </Button>
 

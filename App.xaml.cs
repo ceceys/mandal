@@ -17,6 +17,9 @@ public partial class App : Application
     public ClipStore Store { get; private set; } = null!;
     public ItemHotkeys ItemHotkeys { get; } = new();
 
+    /// <summary>Ayarlar penceresinden yeni ayarlar uygulandığında.</summary>
+    public event Action? SettingsChanged;
+
     private LineWindow? _line;
     private TrayIcon? _tray;
     private MessageWindow? _msg;
@@ -26,6 +29,7 @@ public partial class App : Application
     private PreviewWindow? _preview;
     private CornerTabWindow? _cornerTab;
     private readonly System.Windows.Threading.DispatcherTimer _cornerTimer = new() { Interval = TimeSpan.FromMilliseconds(120) };
+    private readonly System.Windows.Threading.DispatcherTimer _cleanupTimer = new() { Interval = TimeSpan.FromHours(6) };
     private int _cornerTicks;
 
     private Mutex? _mutex;
@@ -83,6 +87,10 @@ public partial class App : Application
         UpdateCornerTab();
         _cornerTimer.Tick += CornerTimer_Tick;
         _cornerTimer.Start();
+
+        RunCleanup();
+        _cleanupTimer.Tick += (_, _) => RunCleanup();
+        _cleanupTimer.Start();
 
         if (_folderFallback)
             _tray.Balloon("Mandal", Loc.T("Msg_FolderFallback"), WF.ToolTipIcon.Warning);
@@ -169,6 +177,29 @@ public partial class App : Application
         return true;
     }
 
+    // ---------------- Saklama ----------------
+
+    /// <summary>
+    /// Varsayılan: hiçbir şey kendiliğinden silinmez (KeepForever). Kullanıcı kapatırsa
+    /// AutoDeleteDays'den eski kartlar silinir; kısayol atanmış kartlar her zaman kalır.
+    /// </summary>
+    private void RunCleanup()
+    {
+        if (Settings.KeepForever) return;
+        try
+        {
+            var limit = DateTime.Now.AddDays(-Settings.AutoDeleteDays);
+            var old = Store.Items.Where(i => i.Time < limit && !i.HasHotkey).ToList();
+            foreach (var item in old)
+            {
+                try { Store.Delete(item); }
+                catch (Exception ex) { Log.Write(ex, "Otomatik temizlik"); }
+            }
+            if (old.Count > 0) Log.Write($"Otomatik temizlik: {old.Count} kart silindi ({Settings.AutoDeleteDays} günden eski)");
+        }
+        catch (Exception ex) { Log.Write(ex, "Otomatik temizlik"); }
+    }
+
     // ---------------- Sol üst köşe ----------------
 
     /// <summary>Fare sol üst köşeye ~360 ms değerse ipi aç.</summary>
@@ -179,7 +210,7 @@ public partial class App : Application
             _cornerTicks = 0;
             return;
         }
-        if (NativeMethods.GetCursorPos(out var p) && p.X <= 1 && p.Y <= 1)
+        if (NativeMethods.GetCursorPos(out var p) && IsInHotCorner(p))
         {
             if (++_cornerTicks >= 3)
             {
@@ -193,11 +224,23 @@ public partial class App : Application
         }
     }
 
+    /// <summary>Fare, ayarlardaki köşenin 2 piksellik ucunda mı? (fizik piksel, birincil ekran)</summary>
+    private bool IsInHotCorner(NativeMethods.POINT p)
+    {
+        var b = WF.Screen.PrimaryScreen?.Bounds ?? new Drawing.Rectangle(0, 0, 1920, 1080);
+        bool right = Settings.CornerPosition is "TopRight" or "BottomRight";
+        bool bottom = Settings.CornerPosition is "BottomLeft" or "BottomRight";
+        bool xOk = right ? p.X >= b.Right - 2 : p.X <= b.Left + 1;
+        bool yOk = bottom ? p.Y >= b.Bottom - 2 : p.Y <= b.Top + 1;
+        return xOk && yOk;
+    }
+
     private void UpdateCornerTab()
     {
         if (Settings.CornerTab)
         {
             _cornerTab ??= new CornerTabWindow();
+            _cornerTab.ApplyCorner(Settings.CornerPosition);
             if (!_cornerTab.IsVisible) _cornerTab.Show();
             _cornerTab.Visibility = _line is { IsShown: true } ? Visibility.Hidden : Visibility.Visible;
         }
@@ -356,6 +399,13 @@ public partial class App : Application
         catch (Exception ex) { Fail(ex, Loc.T("Item_Copy")); }
     }
 
+    /// <summary>Düz metni panoya koyar; pano izleyici bizim kopyamızı yok sayar.</summary>
+    public void SetClipboardText(string text)
+    {
+        _clipboard?.SuppressFor(TimeSpan.FromSeconds(2));
+        Clipboard.SetText(text);
+    }
+
     public void DragItem(DependencyObject source, ClipItem item)
     {
         try
@@ -376,6 +426,42 @@ public partial class App : Application
         {
             if (_line is not null) _line.IsDragging = false;
             Fail(ex, Loc.T("Ctx_Drag"));
+        }
+    }
+
+    /// <summary>Not kartı: yeni not (item null) veya mevcut metin kartını düzenleme.</summary>
+    public void OpenNoteEditor(ClipItem? item)
+    {
+        if (item is { IsText: false }) return;
+        if (_line is not null) _line.PopupDepth++;
+        try
+        {
+            var draftPath = Path.Combine(Settings.Dir, "note-draft.txt");
+            string? draft = item is null && File.Exists(draftPath) ? File.ReadAllText(draftPath) : null;
+
+            var w = new NoteWindow(item, draft);
+            w.ShowDialog();
+
+            if (w.SavedText is not { } text)
+            {
+                // İptal: yeni not yazılmışsa taslak olarak sakla; hiçbir şey kaybolmaz
+                if (item is null)
+                {
+                    if (!string.IsNullOrWhiteSpace(w.DraftText)) File.WriteAllText(draftPath, w.DraftText);
+                    else if (File.Exists(draftPath)) File.Delete(draftPath);
+                }
+                return;
+            }
+
+            ClipItem saved = item is null ? Store.AddText(text) : Store.UpdateText(item, text);
+            if (item is null && File.Exists(draftPath)) File.Delete(draftPath);
+            if (item is not null && _preview is { Item: { } p } && ReferenceEquals(p, item)) _preview.ShowItem(saved);
+            if (item is null) Hang(saved);
+        }
+        catch (Exception ex) { Fail(ex, Loc.T("Note_Title")); }
+        finally
+        {
+            if (_line is not null) _line.PopupDepth = Math.Max(0, _line.PopupDepth - 1);
         }
     }
 
@@ -536,8 +622,10 @@ public partial class App : Application
 
         ApplyHotkeys();
         UpdateCornerTab();
+        RunCleanup();
         _line?.RefreshTexts();
         _tray?.Rebuild();
+        SettingsChanged?.Invoke();
     }
 
     public void OpenFolder()

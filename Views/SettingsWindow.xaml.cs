@@ -24,6 +24,12 @@ public partial class SettingsWindow : Window
 
         SecondsSlider.Value = Math.Clamp(_copy.ShowOnCaptureSeconds, 1, 10);
         AutostartCheck.IsChecked = Autostart.IsEnabled();
+        DaysSlider.Value = Math.Clamp(_copy.AutoDeleteDays, 1, 365);
+        UpdateStorageUi();
+        FillCorners();
+        Loc.Current.LanguageChanged += UpdateStorageUi;
+        Loc.Current.LanguageChanged += FillCorners;
+        Closed += (_, _) => { Loc.Current.LanguageChanged -= UpdateStorageUi; Loc.Current.LanguageChanged -= FillCorners; };
         Loaded += (_, _) => Activate();
     }
 
@@ -52,6 +58,39 @@ public partial class SettingsWindow : Window
         App.Current.SetLanguage(code); // anında uygulanır; dil ayarı iptalle geri alınmaz
     }
 
+    private bool _loadingCorners;
+
+    private void FillCorners()
+    {
+        _loadingCorners = true;
+        try
+        {
+            CornerCombo.ItemsSource = Settings.Corners.Select(c => new LangOption(c, Loc.T("Corner_" + c))).ToList();
+            CornerCombo.SelectedValue = _copy.CornerPosition;
+        }
+        finally { _loadingCorners = false; }
+    }
+
+    private void CornerCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_loadingCorners || CornerCombo.SelectedValue is not string code) return;
+        _copy.CornerPosition = code;
+    }
+
+    private void UpdateStorageUi()
+    {
+        AutoPanel.IsEnabled = KeepCheck.IsChecked != true;
+        AutoPanel.Opacity = AutoPanel.IsEnabled ? 1 : 0.5;
+        AutoLabel.Text = Loc.F("Settings_AutoDelete", (int)DaysSlider.Value);
+    }
+
+    private void KeepCheck_Changed(object sender, RoutedEventArgs e) => UpdateStorageUi();
+
+    private void DaysSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (AutoLabel is not null) UpdateStorageUi();
+    }
+
     private void Browse_Click(object sender, RoutedEventArgs e)
     {
         using var dlg = new WF.FolderBrowserDialog
@@ -69,6 +108,15 @@ public partial class SettingsWindow : Window
 
     private void Save_Click(object sender, RoutedEventArgs e)
     {
+        if (ApplyChanges()) Close();
+    }
+
+    /// <summary>Uygula: pencere açık kalır, değişiklikler hemen etkili olur; birden fazla ayarı deneyerek görebilirsin.</summary>
+    private void Apply_Click(object sender, RoutedEventArgs e) => ApplyChanges();
+
+    /// <returns>Doğrulama geçtiyse true.</returns>
+    private bool ApplyChanges()
+    {
         HotkeyError.Visibility = Visibility.Collapsed;
         FolderError.Visibility = Visibility.Collapsed;
 
@@ -80,7 +128,7 @@ public partial class SettingsWindow : Window
             if (HotkeyManager.TryParse(g, out var mods, out var vk) && !seen.Add((mods, vk)))
             {
                 HotkeyError.Visibility = Visibility.Visible;
-                return;
+                return false;
             }
         }
 
@@ -94,16 +142,18 @@ public partial class SettingsWindow : Window
         catch
         {
             FolderError.Visibility = Visibility.Visible;
-            return;
+            return false;
         }
 
         _copy.ShowOnCaptureSeconds = SecondsSlider.Value;
+        _copy.AutoDeleteDays = (int)DaysSlider.Value;
 
         bool wantAutostart = AutostartCheck.IsChecked == true;
         if (wantAutostart != Autostart.IsEnabled()) App.Current.SetAutostart(wantAutostart);
 
         App.Current.ApplySettings(_copy);
-        Close();
+        Activate(); // ip veya köşe mandalı yenilenirken odak bizde kalsın
+        return true;
     }
 
     private void Cancel_Click(object sender, RoutedEventArgs e) => Close();

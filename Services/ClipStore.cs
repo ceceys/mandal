@@ -102,6 +102,21 @@ public sealed class ClipStore
         return AddExistingOrDelete(path);
     }
 
+    /// <summary>Metin kartının içeriğini değiştirir; dosya aynı kalır, öğe yerinde yenilenir.</summary>
+    public ClipItem UpdateText(ClipItem item, string text)
+    {
+        if (!item.IsText) throw new InvalidOperationException("Görsel kart düzenlenemez");
+        if (string.IsNullOrWhiteSpace(text)) throw new ArgumentException("Boş metin", nameof(text));
+        if (Encoding.UTF8.GetByteCount(text) > ClipItem.MaxTextBytes) throw new InvalidDataException("Metin çok uzun");
+
+        File.WriteAllText(item.Path, text, new UTF8Encoding(false));
+        var fresh = ClipItem.Load(item.Path, _thumbHeight);
+        fresh.Hotkey = item.Hotkey;
+        int i = Items.IndexOf(item);
+        if (i >= 0) Items[i] = fresh; else Items.Insert(0, fresh);
+        return fresh;
+    }
+
     private ClipItem AddExistingOrDelete(string path)
     {
         try

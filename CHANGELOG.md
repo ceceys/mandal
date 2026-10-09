@@ -7,6 +7,12 @@
 - The line puts itself away as soon as the mouse leaves it (default on, Settings → Behavior).
 - "Delete all" button on the right-hand card with an in-theme confirmation card; optional confirmation for single deletes (Settings).
 - Flat transparent clothespin as the app icon.
+- Notes: "Add note" on the right-hand card opens a note card; the note hangs on the line as a text card. Right-click → Edit (or the pencil in the preview) to change it. A cancelled note is kept as a draft and comes back next time.
+- Select text directly on a note card on the line and release to copy just that part (double-click selects a word); drag the clothespin to move the card. Default on, Settings → Behavior. The same works in the preview, plus "Copy all".
+- Context menu restyled as a paper card.
+- Storage: "Keep captures and notes forever" is on by default; nothing is ever deleted automatically. Optional auto-delete after N days can be enabled in Settings (cards with a shortcut are always kept).
+- The corner clothespin and hot corner can be placed in any screen corner (Settings).
+- Settings has an "Apply" button so several changes can be checked without closing the window.
 
 ## 1.1.0 — 2026-10-09
 

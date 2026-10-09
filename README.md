@@ -19,6 +19,7 @@
 - **One click copies** the card to the clipboard (image + file), **drag and drop** works into Explorer, Word, browsers, chat apps.
 - **Preview**: double-click a card to open it large at the top of the screen. Resize from the edges, zoom with the wheel, keep it above other apps with the pin button.
 - **Convert an image to text** with the `Aa` button (Windows built-in OCR, offline). The text becomes its own card.
+- **Notes**: write a note from the right-hand card; it hangs on the line like a capture. Open it large, select a part and release to copy only that, or copy all.
 - **Per-item shortcuts**: assign e.g. `Ctrl+Alt+1` to a card; pressing it copies that card, even after a restart.
 - **Stretching line**: cards shrink as you pin more (12 → 16 → 24 → 32 → 40 → 50 → 60 per screen); beyond that, slide with the arrows or the mouse wheel.
 - **Persistent**: captures are stored as PNG/TXT in day folders and come back after a restart.

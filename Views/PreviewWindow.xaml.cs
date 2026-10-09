@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using Mandal.Models;
 using Mandal.Services;
@@ -54,7 +55,13 @@ public partial class PreviewWindow : Window
         Item = item;
         TitleText.Text = item.Summary.Replace("\n", "   ·   ");
 
-        if (item.IsImage)
+        bool img = item.IsImage;
+        FitButton.Visibility = img ? Visibility.Visible : Visibility.Collapsed;
+        ActualButton.Visibility = img ? Visibility.Visible : Visibility.Collapsed;
+        CopySelButton.Visibility = img ? Visibility.Collapsed : Visibility.Visible;
+        EditButton.Visibility = img ? Visibility.Collapsed : Visibility.Visible;
+
+        if (img)
         {
             Img.Source = item.LoadFull();
             Scroll.Visibility = Visibility.Visible;
@@ -68,7 +75,7 @@ public partial class PreviewWindow : Window
             TextView.Text = item.Text ?? "";
             Scroll.Visibility = Visibility.Collapsed;
             TextView.Visibility = Visibility.Visible;
-            StatusText.Text = Loc.F("Item_TextChars", item.Text?.Length ?? 0);
+            StatusText.Text = Loc.F("Item_TextChars", item.Text?.Length ?? 0) + "   ·   " + Loc.T("Note_SelectHint");
         }
 
         if (!IsVisible) Show();
@@ -176,6 +183,51 @@ public partial class PreviewWindow : Window
     }
 
     private void Close_Click(object sender, RoutedEventArgs e) => Close();
+
+    // ---------------- Metin kartı: zahmetsiz kopyalama ----------------
+
+    /// <summary>Fareyle seçip bırakınca seçim panoya gider; Ctrl+C beklemeye gerek yok.</summary>
+    private void TextView_MouseUp(object sender, MouseButtonEventArgs e) => CopySelectionIfAny();
+
+    private void TextView_KeyUp(object sender, KeyEventArgs e)
+    {
+        if (e.Key is Key.LeftShift or Key.RightShift) CopySelectionIfAny();
+    }
+
+    private void CopySelection_Click(object sender, RoutedEventArgs e)
+    {
+        if (!CopySelectionIfAny()) TextView.SelectAll();
+    }
+
+    private bool CopySelectionIfAny()
+    {
+        if (TextView.SelectionLength == 0) return false;
+        try
+        {
+            App.Current.SetClipboardText(TextView.SelectedText);
+            ShowSelBadge();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Log.Write(ex, "Seçim kopyalama");
+            return false;
+        }
+    }
+
+    private void ShowSelBadge()
+    {
+        var anim = new DoubleAnimationUsingKeyFrames();
+        anim.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(80))));
+        anim.KeyFrames.Add(new LinearDoubleKeyFrame(1, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(700))));
+        anim.KeyFrames.Add(new LinearDoubleKeyFrame(0, KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(1000))));
+        SelBadge.BeginAnimation(OpacityProperty, anim);
+    }
+
+    private void Edit_Click(object sender, RoutedEventArgs e)
+    {
+        if (Item is { IsText: true } it) App.Current.OpenNoteEditor(it);
+    }
 
     private void Window_KeyDown(object sender, KeyEventArgs e)
     {

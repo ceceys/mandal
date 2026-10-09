@@ -23,14 +23,28 @@ public sealed class Settings
     /// <summary>Kart silerken "emin misin?" sorulsun (varsayılan kapalı).</summary>
     public bool ConfirmDelete { get; set; } = false;
 
+    /// <summary>Not kartında metin doğrudan seçilebilsin; seçip bırakınca seçim kopyalanır (varsayılan açık).</summary>
+    public bool SelectOnCard { get; set; } = true;
+
+    /// <summary>Alıntılar ve notlar kalıcı: kendiliğinden hiçbir şey silinmez (varsayılan açık).</summary>
+    public bool KeepForever { get; set; } = true;
+
+    /// <summary>KeepForever kapalıysa bu kadar günden eski kartlar silinir (kısayol atanmışlar hariç).</summary>
+    public int AutoDeleteDays { get; set; } = 30;
+
     /// <summary>Fare ipin alanından çıkınca ip hemen yukarı kalksın.</summary>
     public bool HideOnMouseLeave { get; set; } = true;
 
     /// <summary>Fare sol üst köşeye değince ip açılsın.</summary>
     public bool HotCorner { get; set; } = true;
 
-    /// <summary>Sol üst köşede tıklanabilir küçük mandal dursun.</summary>
+    /// <summary>Köşede tıklanabilir küçük mandal dursun.</summary>
     public bool CornerTab { get; set; } = true;
+
+    /// <summary>Mandal ve sıcak köşe: TopLeft, TopRight, BottomLeft, BottomRight.</summary>
+    public string CornerPosition { get; set; } = "TopLeft";
+
+    public static readonly string[] Corners = { "TopLeft", "TopRight", "BottomLeft", "BottomRight" };
 
     /// <summary>Önizleme penceresi diğer uygulamaların üstünde kalsın.</summary>
     public bool PreviewTopmost { get; set; } = true;
@@ -95,6 +109,8 @@ public sealed class Settings
         if (string.IsNullOrWhiteSpace(ClipFolder)) ClipFolder = DefaultClipFolder;
         ThumbnailHeight = Math.Clamp(ThumbnailHeight, 40, 400);
         ShowOnCaptureSeconds = double.IsFinite(ShowOnCaptureSeconds) ? Math.Clamp(ShowOnCaptureSeconds, 0.5, 30) : 2.5;
+        AutoDeleteDays = Math.Clamp(AutoDeleteDays, 1, 3650);
+        if (!Corners.Contains(CornerPosition)) CornerPosition = "TopLeft";
         PreviewWidth = double.IsFinite(PreviewWidth) ? Math.Clamp(PreviewWidth, 340, 8000) : 780;
         PreviewHeight = double.IsFinite(PreviewHeight) ? Math.Clamp(PreviewHeight, 240, 8000) : 540;
         if (!double.IsFinite(PreviewLeft) || PreviewLeft < -1 || PreviewLeft > 16000) PreviewLeft = -1;

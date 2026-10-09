@@ -22,6 +22,14 @@
         <Style TargetType="CheckBox">
             <Setter Property="Margin" Value="0,5"/>
             <Setter Property="Foreground" Value="{StaticResource InkBrush}"/>
+            <!-- Uzun açıklamalar alt satıra kaysın -->
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" TextWrapping="Wrap" MaxWidth="470"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="Padding" Value="8,5"/>
@@ -90,10 +98,25 @@
         <CheckBox IsChecked="{Binding HideLineAfterCopy}" Content="{Binding [Menu_HideAfterCopy], Source={x:Static svc:Loc.Current}}"/>
         <CheckBox IsChecked="{Binding HideOnMouseLeave}" Content="{Binding [Settings_HideOnLeave], Source={x:Static svc:Loc.Current}}"/>
         <CheckBox IsChecked="{Binding ConfirmDelete}" Content="{Binding [Settings_ConfirmDelete], Source={x:Static svc:Loc.Current}}"/>
+        <CheckBox IsChecked="{Binding SelectOnCard}" Content="{Binding [Settings_SelectOnCard], Source={x:Static svc:Loc.Current}}"/>
+        <StackPanel Orientation="Horizontal" Margin="0,6,0,2">
+            <TextBlock VerticalAlignment="Center" Margin="0,0,12,0" Text="{Binding [Settings_Corner], Source={x:Static svc:Loc.Current}}"/>
+            <ComboBox x:Name="CornerCombo" Width="190" DisplayMemberPath="Name" SelectedValuePath="Code" SelectionChanged="CornerCombo_SelectionChanged"/>
+        </StackPanel>
         <CheckBox IsChecked="{Binding HotCorner}" Content="{Binding [Settings_HotCorner], Source={x:Static svc:Loc.Current}}"/>
         <CheckBox IsChecked="{Binding CornerTab}" Content="{Binding [Settings_CornerTab], Source={x:Static svc:Loc.Current}}"/>
         <CheckBox IsChecked="{Binding PreviewTopmost}" Content="{Binding [Settings_PreviewTopmost], Source={x:Static svc:Loc.Current}}"/>
         <CheckBox x:Name="AutostartCheck" Content="{Binding [Menu_Autostart], Source={x:Static svc:Loc.Current}}"/>
+
+        <!-- Saklama: varsayılan kalıcı -->
+        <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Storage], Source={x:Static svc:Loc.Current}}"/>
+        <CheckBox x:Name="KeepCheck" IsChecked="{Binding KeepForever}" Content="{Binding [Settings_KeepForever], Source={x:Static svc:Loc.Current}}"
+                  Checked="KeepCheck_Changed" Unchecked="KeepCheck_Changed"/>
+        <StackPanel x:Name="AutoPanel" Orientation="Horizontal" Margin="24,2,0,0">
+            <Slider x:Name="DaysSlider" Width="160" Minimum="1" Maximum="365" TickFrequency="1" IsSnapToTickEnabled="True"
+                    VerticalAlignment="Center" ValueChanged="DaysSlider_ValueChanged"/>
+            <TextBlock x:Name="AutoLabel" VerticalAlignment="Center" Margin="12,0,0,0" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" MaxWidth="300"/>
+        </StackPanel>
 
         <!-- Klasör -->
         <TextBlock Style="{StaticResource SectionTitle}" Text="{Binding [Settings_Folder], Source={x:Static svc:Loc.Current}}"/>
@@ -109,6 +132,8 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,24,0,0">
             <Button Style="{StaticResource DialogButton}" Margin="0,0,10,0" IsCancel="True" Click="Cancel_Click"
                     Content="{Binding [Settings_Cancel], Source={x:Static svc:Loc.Current}}"/>
+            <Button Style="{StaticResource DialogButton}" Margin="0,0,10,0" Click="Apply_Click"
+                    Content="{Binding [Settings_Apply], Source={x:Static svc:Loc.Current}}"/>
             <Button Style="{StaticResource DialogButton}" IsDefault="True" Click="Save_Click"
                     Content="{Binding [Settings_Save], Source={x:Static svc:Loc.Current}}"/>
         </StackPanel>
