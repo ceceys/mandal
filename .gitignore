@@ -6,6 +6,8 @@ dist/
 *.user
 .vs/
 
-# Lisanslı stok müzik ve büyük ara kareler depoya girmez
-docs/promo/video/music-*.wav
-docs/promo/video/frames/page-*.png
+# Tanıtım malzemesi depo dışında tutulur: 01 Müşteri ve Projeler\Mandal\Tanitim
+docs/promo/*
+!docs/promo/hero-wide.png
+!docs/promo/hero-wide-tr.png
+!docs/promo/features-grid.png
