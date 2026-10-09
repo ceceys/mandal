@@ -71,6 +71,15 @@ public partial class LineWindow : Window
             NativeMethods.MakeNoActivateToolWindow(new WindowInteropHelper(this).Handle);
     }
 
+    /// <summary>Yerinde not düzenleme için pencereyi geçici olarak odak alabilir yapar (ve odaklar) ya da geri çevirir.</summary>
+    public void AllowActivate(bool on)
+    {
+        var hwnd = new WindowInteropHelper(this).Handle;
+        if (hwnd == IntPtr.Zero) return;
+        NativeMethods.SetNoActivate(hwnd, !on);
+        if (on) Activate();
+    }
+
     /// <summary>Dil veya kısayol değişince metinleri yeniler.</summary>
     public void RefreshTexts()
     {

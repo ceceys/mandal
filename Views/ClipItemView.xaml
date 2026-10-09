@@ -93,8 +93,9 @@
                              Background="Transparent" BorderThickness="0" Padding="0" Cursor="IBeam"
                              Foreground="{StaticResource InkBrush}" SelectionBrush="{StaticResource AccentBrush}" SelectionOpacity="0.35"
                              FontSize="{Binding TextFontSize, Source={x:Static svc:LineLayout.Current}}"
-                             TextWrapping="Wrap" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden"
-                             ContextMenu="{x:Null}" Focusable="True"/>
+                             TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden"
+                             ContextMenu="{x:Null}" Focusable="True"
+                             PreviewKeyDown="TextCard_PreviewKeyDown" LostKeyboardFocus="TextCard_LostFocus"/>
                 </Border>
 
                 <!-- Atanmış kısayol rozeti -->
@@ -133,6 +134,16 @@
                 ToolTip="{Binding [Item_OcrTip], Source={x:Static svc:Loc.Current}}"
                 Visibility="{Binding IsImage, Converter={StaticResource BoolToVis}}">
             <TextBlock Text="Aa" Foreground="White" FontSize="9.5" FontWeight="Bold" Margin="0,-1,0,0"/>
+        </Button>
+
+        <!-- Yerinde düzenle (sol üst, yalnız not) -->
+        <Button Grid.Row="1" Style="{StaticResource HoverCircleButton}" Background="{StaticResource AccentBrush}"
+                HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-9,-14,0,0" Panel.ZIndex="3"
+                Click="EditInline_Click"
+                ToolTip="{Binding [Item_Edit], Source={x:Static svc:Loc.Current}}"
+                Visibility="{Binding IsText, Converter={StaticResource BoolToVis}}">
+            <Path Data="M4,20 L8,19 L19,8 L16,5 L5,16 Z M14,7 L17,10" Stroke="White" StrokeThickness="1.8"
+                  StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Width="11" Height="11" Stretch="Uniform"/>
         </Button>
 
         <!-- Önizleme (sol alt): büyük pencerede aç -->

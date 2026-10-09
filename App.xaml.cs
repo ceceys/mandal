@@ -465,6 +465,17 @@ public partial class App : Application
         }
     }
 
+    /// <summary>Kart üzerinde yerinde düzenlenen notu kaydeder.</summary>
+    public void UpdateNote(ClipItem item, string text)
+    {
+        try
+        {
+            var saved = Store.UpdateText(item, text);
+            if (_preview is { Item: { } p } && ReferenceEquals(p, item)) _preview.ShowItem(saved);
+        }
+        catch (Exception ex) { Fail(ex, Loc.T("Item_Edit")); }
+    }
+
     /// <summary>Büyük önizleme penceresi (tek pencere, öğe değişince yeniden kullanılır).</summary>
     public void OpenPreview(ClipItem item)
     {

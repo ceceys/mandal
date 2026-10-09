@@ -35,11 +35,68 @@ public partial class ClipItemView : UserControl
 
     private bool TextSelectable => Item is { IsText: true } && App.Current.Settings.SelectOnCard;
 
+    private bool _editing;
+
     private void ApplySettings()
     {
+        if (_editing) return;
         // Seçim kapalıysa metin kutusu fareyi görmez; kart tek parça gibi davranır
         TextCard.IsHitTestVisible = TextSelectable;
         TextCard.Cursor = TextSelectable ? Cursors.IBeam : Cursors.Hand;
+    }
+
+    // ---------------- Yerinde not düzenleme ----------------
+
+    private void EditInline_Click(object sender, RoutedEventArgs e)
+    {
+        if (Item is { IsText: true }) BeginInlineEdit();
+    }
+
+    private void BeginInlineEdit()
+    {
+        if (_editing || Item is null) return;
+        _editing = true;
+        TextCard.Text = Item.Text ?? "";
+        TextCard.IsReadOnly = false;
+        TextCard.IsReadOnlyCaretVisible = true;
+        TextCard.IsHitTestVisible = true;
+        TextCard.Cursor = Cursors.IBeam;
+        TextCard.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+        TextCard.Background = System.Windows.Media.Brushes.White;
+        if (Line is { } l) { l.PopupDepth++; l.AllowActivate(true); }
+        TextCard.Focus();
+        TextCard.CaretIndex = TextCard.Text.Length;
+    }
+
+    private void EndInlineEdit(bool save)
+    {
+        if (!_editing || Item is null) return;
+        _editing = false;
+        var text = TextCard.Text;
+        TextCard.IsReadOnly = true;
+        TextCard.IsReadOnlyCaretVisible = false;
+        TextCard.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+        TextCard.Background = System.Windows.Media.Brushes.Transparent;
+        TextCard.Select(0, 0);
+        ApplySettings();
+        if (Line is { } l) { l.PopupDepth = Math.Max(0, l.PopupDepth - 1); l.AllowActivate(false); }
+
+        if (save && !string.IsNullOrWhiteSpace(text) && text.TrimEnd() != (Item.Text ?? "").TrimEnd())
+            App.Current.UpdateNote(Item, text.TrimEnd()); // öğe yenilenir, kart yeniden bağlanır
+        else
+            TextCard.Text = Item.Preview;
+    }
+
+    private void TextCard_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (!_editing) return;
+        if (e.Key == Key.Escape) { EndInlineEdit(save: false); e.Handled = true; }
+        else if (e.Key == Key.Return && Keyboard.Modifiers == ModifierKeys.Control) { EndInlineEdit(save: true); e.Handled = true; }
+    }
+
+    private void TextCard_LostFocus(object sender, KeyboardFocusChangedEventArgs e)
+    {
+        if (_editing) EndInlineEdit(save: true);
     }
 
     private void RefreshTooltip()
@@ -52,6 +109,7 @@ public partial class ClipItemView : UserControl
     private void Photo_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (Item is null) return;
+        if (_editing) return; // düzenleme sırasında metin kutusu her şeyi yönetir
 
         if (TextSelectable && IsOverText(e))
         {
@@ -87,7 +145,7 @@ public partial class ClipItemView : UserControl
 
     private void Photo_MouseUp(object sender, MouseButtonEventArgs e)
     {
-        if (Item is null) return;
+        if (Item is null || _editing) return;
 
         if (_textPressed)
         {

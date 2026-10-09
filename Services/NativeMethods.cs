@@ -78,6 +78,14 @@ internal static class NativeMethods
     [DllImport("gdi32.dll")]
     public static extern bool DeleteObject(IntPtr hObject);
 
+    /// <summary>WS_EX_NOACTIVATE'i açıp kapatır: yerinde not düzenlerken klavye odağı gerekir.</summary>
+    public static void SetNoActivate(IntPtr hwnd, bool noActivate)
+    {
+        long style = GetWindowLongPtr(hwnd, GWL_EXSTYLE).ToInt64();
+        style = noActivate ? style | WS_EX_NOACTIVATE : style & ~WS_EX_NOACTIVATE;
+        SetWindowLongPtr(hwnd, GWL_EXSTYLE, new IntPtr(style));
+    }
+
     /// <summary>Pencereyi tıklandığında odak almayan araç penceresi yapar; kullanıcının çalıştığı uygulama odakta kalır.</summary>
     public static void MakeNoActivateToolWindow(IntPtr hwnd)
     {

@@ -13,6 +13,7 @@
 - Storage: "Keep captures and notes forever" is on by default; nothing is ever deleted automatically. Optional auto-delete after N days can be enabled in Settings (cards with a shortcut are always kept).
 - The corner clothespin and hot corner can be placed in any screen corner (Settings).
 - Settings has an "Apply" button so several changes can be checked without closing the window.
+- Quick in-place editing of notes: hover a note card and click the pencil, type, Ctrl+Enter (or click elsewhere) saves, Esc cancels.
 
 ## 1.1.0 — 2026-10-09
 
