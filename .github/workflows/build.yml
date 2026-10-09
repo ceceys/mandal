@@ -42,6 +42,12 @@ jobs:
           if ($version -notmatch '^\d+\.\d+') { $version = "0.0.0" }
           & $iscc "/DAppVersion=$version" setup\Mandal.iss
 
+      - name: Stable installer name (README download button)
+        shell: pwsh
+        run: |
+          $setup = Get-ChildItem dist/Mandal-Setup-*.exe | Select-Object -First 1
+          Copy-Item $setup.FullName dist/Mandal-Setup.exe
+
       - name: Checksums (the app verifies downloads against this file)
         shell: pwsh
         run: |

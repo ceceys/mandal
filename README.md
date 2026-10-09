@@ -8,6 +8,12 @@
 
 <p align="center"><a href="README.tr.md">Türkçe</a></p>
 
+<p align="center">
+  <a href="https://github.com/ceceys/mandal/releases/latest/download/Mandal-Setup.exe"><img src="https://img.shields.io/github/v/release/ceceys/mandal?label=Download%20for%20Windows&style=for-the-badge&color=2ea44f" alt="Download Mandal for Windows" height="40"></a>
+</p>
+
+<p align="center">One click installer, no admin rights needed · <a href="https://github.com/ceceys/mandal/releases/latest/download/Mandal.exe">Portable exe</a> · <a href="https://github.com/ceceys/mandal/releases/latest">All files</a></p>
+
 ![Mandal](docs/promo/hero-wide.png)
 
 **Mandal** (Turkish for *clothespin*) is a small Windows tool. Every capture is pinned to a clothesline at the top of the screen. The line stays out of the way until you call it; then you click a card to copy it, drag it into another app, or take it down with the ✕.
@@ -31,12 +37,12 @@
 
 ## Install
 
-Download from [Releases](../../releases):
+1. **[Download Mandal-Setup.exe](https://github.com/ceceys/mandal/releases/latest/download/Mandal-Setup.exe)** and run it. It installs for your user only, needs no admin rights and includes the .NET runtime.
+2. If Windows shows *Windows protected your PC*, click **More info → Run anyway**. The file is not code-signed, so this warning is expected.
 
-- `Mandal-Setup-x.y.z.exe` — installer (per-user, no admin rights needed, includes the .NET runtime).
-- `Mandal.exe` — portable single file; needs the [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0).
+Portable alternative: [Mandal.exe](https://github.com/ceceys/mandal/releases/latest/download/Mandal.exe), a single file that needs the [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0). All versions and release notes are on the [Releases](https://github.com/ceceys/mandal/releases) page.
 
-Windows 10 version 2004 or newer. The executable is not code-signed, so SmartScreen may warn on first run; choose *More info → Run anyway*.
+Windows 10 version 2004 or newer. Mandal updates itself from GitHub Releases.
 
 ## Using the line
 

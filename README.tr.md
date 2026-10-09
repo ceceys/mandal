@@ -8,6 +8,12 @@
 
 <p align="center"><a href="README.md">English</a></p>
 
+<p align="center">
+  <a href="https://github.com/ceceys/mandal/releases/latest/download/Mandal-Setup.exe"><img src="https://img.shields.io/github/v/release/ceceys/mandal?label=Windows%20i%C3%A7in%20indir&style=for-the-badge&color=2ea44f" alt="Mandal'ı Windows için indir" height="40"></a>
+</p>
+
+<p align="center">Tek tıkla kurulum, yönetici hakkı gerekmez · <a href="https://github.com/ceceys/mandal/releases/latest/download/Mandal.exe">Taşınabilir exe</a> · <a href="https://github.com/ceceys/mandal/releases/latest">Tüm dosyalar</a></p>
+
 ![Mandal](docs/promo/hero-wide-tr.png)
 
 **Mandal**, küçük bir Windows aracı. Her alıntı ekranın üstündeki çamaşır ipine mandalla asılır. İp sen çağırana kadar görünmez; çağırınca bir karta tıklayıp kopyalarsın, başka uygulamaya sürüklersin ya da ✕ ile indirirsin.
@@ -31,12 +37,12 @@
 
 ## Kurulum
 
-[Releases](../../releases) sayfasından indir:
+1. **[Mandal-Setup.exe dosyasını indir](https://github.com/ceceys/mandal/releases/latest/download/Mandal-Setup.exe)** ve çalıştır. Yalnızca senin kullanıcın için kurulur, yönetici hakkı gerekmez, .NET çalışma ortamını içerir.
+2. Windows *Windows bilgisayarınızı korudu* uyarısı verirse **Ek bilgi → Yine de çalıştır** seç. Dosya kod imzalı olmadığı için bu uyarı normal.
 
-- `Mandal-Setup-x.y.z.exe` — kurulum paketi (kullanıcı bazlı, yönetici hakkı gerekmez, .NET çalışma zamanı içinde).
-- `Mandal.exe` — taşınabilir tek dosya; [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) gerekir.
+Taşınabilir seçenek: [Mandal.exe](https://github.com/ceceys/mandal/releases/latest/download/Mandal.exe), tek dosya, [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) gerekir. Tüm sürümler ve sürüm notları [Releases](https://github.com/ceceys/mandal/releases) sayfasında.
 
-Windows 10 sürüm 2004 veya üstü. Dosya kod imzalı olmadığı için SmartScreen ilk çalıştırmada uyarabilir; *Daha fazla bilgi → Yine de çalıştır* seç.
+Windows 10 sürüm 2004 veya üstü. Mandal kendini GitHub Releases üzerinden günceller.
 
 ## İpi kullanmak
 
