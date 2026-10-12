@@ -93,8 +93,9 @@ public partial class HotkeyBox : UserControl
         var name = KeyName(key);
         if (name is null) return;
 
-        bool isFunction = key is >= Key.F1 and <= Key.F24 || key == Key.Snapshot;
-        if (mods == ModifierKeys.None && !isFunction) return; // harf/rakam tek başına sistem geneli kısayol olmaz
+        // Harf/rakam tek başına sistem geneli kısayol olmaz; F tuşları, PrintScreen ve sayısal + olur
+        bool standalone = key is >= Key.F1 and <= Key.F24 || key is Key.Snapshot or Key.Add;
+        if (mods == ModifierKeys.None && !standalone) return;
 
         var parts = new List<string>(4);
         if (mods.HasFlag(ModifierKeys.Control)) parts.Add("Ctrl");
@@ -124,6 +125,7 @@ public partial class HotkeyBox : UserControl
             Key.PageUp => "PageUp",
             Key.PageDown => "PageDown",
             Key.Oem3 => "`",
+            Key.Add => "+", // sayısal tuş takımı; "Ctrl++" olarak yazılır, TryParse sondaki + işaretini tuş sayar
             Key.Up or Key.Down or Key.Left or Key.Right => key.ToString(),
             _ => null,
         };

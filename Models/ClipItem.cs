@@ -41,6 +41,20 @@ public sealed class ClipItem : INotifyPropertyChanged
     }
 
     public bool HasHotkey => !string.IsNullOrEmpty(_hotkey);
+
+    private bool _isPinned;
+
+    /// <summary>Sabitlenmiş: ipin başında, kullanıcının verdiği sırada durur; kendiliğinden silinmez.</summary>
+    public bool IsPinned
+    {
+        get => _isPinned;
+        set
+        {
+            if (_isPinned == value) return;
+            _isPinned = value;
+            OnPropertyChanged();
+        }
+    }
     public bool IsImage => Kind == ClipKind.Image;
     public bool IsText => Kind == ClipKind.Text;
     public string FileName => System.IO.Path.GetFileName(Path);

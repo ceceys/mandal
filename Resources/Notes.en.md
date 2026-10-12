@@ -1,3 +1,8 @@
+1.4.0 — 2026-10-12
+- Pin cards: click the pushpin at the bottom right or right-click → Pin. Pinned cards stay at the start of the line with a blue clothespin; drag them sideways to reorder, pull one down to drag it into another app. "Delete all" and auto-delete leave pinned cards alone.
+- Mandal starts with Windows (on by default; turn it off in the tray menu or Settings). If the exe is moved, the startup entry follows it.
+- A shortcut can be a single key: numpad + (e.g. to capture a region), F1–F24 or PrintScreen.
+
 1.3.1 — 2026-10-09
 - Changing shortcuts in Settings works again: global hotkeys are suspended while a shortcut box has focus, so the pressed combination reaches the box (also when assigning a shortcut to a card).
 - Invalid shortcut values in the settings file are ignored; the corner clothespin is recreated if its window is closed unexpectedly.

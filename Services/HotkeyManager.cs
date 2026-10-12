@@ -60,13 +60,24 @@ public sealed class HotkeyManager : IDisposable
         _actions.Clear();
     }
 
+    /// <summary>
+    /// "Ctrl+Shift+S", "PrintScreen", "+" gibi ifadeleri çözer. "+" tek başına ya da sonda ("Ctrl++")
+    /// sayısal tuş takımındaki + tuşudur; ayraçla karışmasın diye ayrıca bakılır.
+    /// </summary>
     public static bool TryParse(string gesture, out uint modifiers, out uint virtualKey)
     {
         modifiers = 0;
         virtualKey = 0;
         Key? key = null;
 
-        foreach (var raw in gesture.Split('+', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        var s = string.Concat(gesture.Where(c => !char.IsWhiteSpace(c)));
+        if (s == "+" || s.EndsWith("++", StringComparison.Ordinal))
+        {
+            key = Key.Add;
+            s = s[..^1];
+        }
+
+        foreach (var raw in s.Split('+', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
             switch (raw.ToLowerInvariant())
             {
@@ -92,6 +103,7 @@ public sealed class HotkeyManager : IDisposable
                 "pgup" or "pageup" => Key.PageUp,
                 "pgdn" or "pagedown" => Key.PageDown,
                 "`" or "tilde" or "oem3" => Key.Oem3,
+                "plus" or "numplus" => Key.Add,
                 _ when raw.Length == 1 && char.IsDigit(raw[0]) => (Key)Enum.Parse(typeof(Key), "D" + raw),
                 _ => Enum.TryParse<Key>(raw, true, out var k) ? k : null,
             };

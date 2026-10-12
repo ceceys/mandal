@@ -164,6 +164,7 @@ public partial class SettingsWindow : Window
         _copy.AutoDeleteDays = (int)DaysSlider.Value;
 
         bool wantAutostart = AutostartCheck.IsChecked == true;
+        _copy.StartWithWindows = wantAutostart;
         if (wantAutostart != Autostart.IsEnabled()) App.Current.SetAutostart(wantAutostart);
 
         App.Current.ApplySettings(_copy);

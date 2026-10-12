@@ -3,7 +3,7 @@
 ; Önce: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
 
 #ifndef AppVersion
-  #define AppVersion "1.3.1"
+  #define AppVersion "1.4.0"
 #endif
 #define AppName "Mandal"
 #define AppPublisher "Cuma Ali Dirik"
@@ -88,3 +88,5 @@ Filename: "{app}\{#AppExe}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags
 
 [UninstallRun]
 Filename: "taskkill.exe"; Parameters: "/f /im {#AppExe}"; Flags: runhidden; RunOnceId: "KillMandal"
+; Uygulama kendi ayarından da başlangıca yazar (kurulumda seçilmemiş olsa bile); kaldırınca kayıt kalmasın
+Filename: "reg.exe"; Parameters: "delete ""HKCU\Software\Microsoft\Windows\CurrentVersion\Run"" /v {#AppName} /f"; Flags: runhidden; RunOnceId: "DelMandalRun"

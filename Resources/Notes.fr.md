@@ -1,3 +1,8 @@
+1.4.0 — 12/10/2026
+- Épingler des cartes : cliquez sur la punaise en bas à droite ou clic droit → Épingler. Les cartes épinglées restent au début de la corde avec une pince bleue ; glissez-les sur le côté pour les réordonner, tirez-en une vers le bas pour la déposer dans une autre appli. « Tout supprimer » et la suppression automatique ne touchent pas aux cartes épinglées.
+- Mandal démarre avec Windows (activé par défaut ; désactivable dans le menu de la zone de notification ou dans les paramètres). Si l'exe est déplacé, l'entrée de démarrage le suit.
+- Un raccourci peut être une seule touche : + du pavé numérique (p. ex. pour capturer une zone), F1–F24 ou Impr. écran.
+
 1.3.1 — 09/10/2026
 - La modification des raccourcis dans les Paramètres fonctionne à nouveau : les raccourcis globaux sont suspendus tant qu'un champ de raccourci a le focus, la combinaison saisie arrive bien dans le champ (aussi pour l'attribution à une carte).
 - Les valeurs de raccourci invalides du fichier de paramètres sont ignorées ; la pince d'angle est recréée si sa fenêtre se ferme de façon inattendue.

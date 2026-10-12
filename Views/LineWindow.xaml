@@ -62,7 +62,7 @@
                           HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled"
                           Margin="30,0,34,22" PanningMode="HorizontalOnly" Focusable="False"
                           PreviewMouseWheel="Scroller_PreviewMouseWheel" ScrollChanged="Scroller_ScrollChanged">
-                <ItemsControl ItemsSource="{Binding Items}" VerticalAlignment="Top" Margin="0,0,0,8">
+                <ItemsControl x:Name="ItemsHost" ItemsSource="{Binding Items}" VerticalAlignment="Top" Margin="0,0,0,8">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"/>

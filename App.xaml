@@ -31,6 +31,25 @@
             </Canvas>
         </ControlTemplate>
 
+        <!-- Sabitlenmiş kart: mavi mandal ve raptiye düğmesi -->
+        <SolidColorBrush x:Key="PinnedBrush" Color="#3D6F99"/>
+        <ControlTemplate x:Key="PinTemplatePinned" TargetType="ContentControl">
+            <Canvas Width="14" Height="32" IsHitTestVisible="False">
+                <Rectangle Width="14" Height="32" RadiusX="3" RadiusY="3">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#86AED1" Offset="0"/>
+                            <GradientStop Color="#5584AE" Offset="0.5"/>
+                            <GradientStop Color="#3A6389" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Rectangle Canvas.Left="6.5" Canvas.Top="17" Width="1" Height="15" Fill="#2A4A68"/>
+                <Rectangle Canvas.Left="1.5" Canvas.Top="12" Width="11" Height="5" RadiusX="2.5" RadiusY="2.5"
+                           Fill="#B9BCC2" Stroke="#7F848C" StrokeThickness="0.8"/>
+            </Canvas>
+        </ControlTemplate>
+
         <!-- Beyaz çerçeveli kart gölgesi -->
         <DropShadowEffect x:Key="CardShadow" BlurRadius="12" ShadowDepth="3" Opacity="0.35"/>
 

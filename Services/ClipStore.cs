@@ -113,8 +113,79 @@ public sealed class ClipStore
         var fresh = ClipItem.Load(item.Path, _thumbHeight);
         fresh.Hotkey = item.Hotkey;
         int i = Items.IndexOf(item);
-        if (i >= 0) Items[i] = fresh; else Items.Insert(0, fresh);
+        if (i >= 0)
+        {
+            fresh.IsPinned = item.IsPinned;
+            Items[i] = fresh;
+        }
+        else
+        {
+            Items.Insert(PinnedCount, fresh);
+        }
         return fresh;
+    }
+
+    // ---------------- Sabitlenen kartlar: hep ipin başında ----------------
+
+    /// <summary>İpin başındaki sabit kartların sayısı. Sabitler hep önde durur, yeni alıntılar onların arkasına asılır.</summary>
+    public int PinnedCount
+    {
+        get
+        {
+            int n = 0;
+            while (n < Items.Count && Items[n].IsPinned) n++;
+            return n;
+        }
+    }
+
+    /// <summary>Yüklemeden sonra kayıtlı sabitleri verilen sırayla öne dizer; dosyası olmayan kayıtlar atlanır.</summary>
+    public void ApplyPins(IEnumerable<string> relativePaths)
+    {
+        int n = PinnedCount;
+        foreach (var rel in relativePaths)
+        {
+            var item = FindByRelativePath(rel);
+            if (item is null || item.IsPinned) continue;
+            item.IsPinned = true;
+            int from = Items.IndexOf(item);
+            if (from != n) Items.Move(from, n);
+            n++;
+        }
+    }
+
+    /// <summary>
+    /// Sabitler: kart sabitlerin sonuna geçer. Sabitlemeyi kaldır: kart zamanına göre yerine döner (yeni önde).
+    /// </summary>
+    public void SetPinned(ClipItem item, bool pinned)
+    {
+        int from = Items.IndexOf(item);
+        if (from < 0 || item.IsPinned == pinned) return;
+
+        if (pinned)
+        {
+            int end = PinnedCount;
+            if (from != end) Items.Move(from, end);
+            item.IsPinned = true;
+            return;
+        }
+
+        // Kendinden eski ilk sabit olmayan kartın önüne; yoksa en sona
+        int to = Items.Count - 1;
+        for (int i = PinnedCount; i < Items.Count; i++)
+        {
+            if (Items[i].Time < item.Time) { to = i - 1; break; }
+        }
+        item.IsPinned = false;
+        if (to != from) Items.Move(from, to);
+    }
+
+    /// <summary>Sabit kartı sabitler içinde başka sıraya taşır (sürükleyerek sıralama).</summary>
+    public void MovePinned(ClipItem item, int index)
+    {
+        int from = Items.IndexOf(item);
+        if (from < 0 || !item.IsPinned) return;
+        int to = Math.Clamp(index, 0, PinnedCount - 1);
+        if (to != from) Items.Move(from, to);
     }
 
     private ClipItem AddExistingOrDelete(string path)
@@ -133,7 +204,7 @@ public sealed class ClipStore
     private ClipItem AddExisting(string path)
     {
         var item = ClipItem.Load(path, _thumbHeight);
-        Items.Insert(0, item);
+        Items.Insert(PinnedCount, item);
         return item;
     }
 

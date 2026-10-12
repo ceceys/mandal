@@ -102,7 +102,8 @@ public partial class ClipItemView : UserControl
 
     private void RefreshTooltip()
     {
-        if (Item is { } it) ToolTip = it.Summary + "\n\n" + Loc.T("Item_Hint");
+        if (Item is { } it)
+            ToolTip = it.Summary + "\n\n" + Loc.T("Item_Hint") + (it.IsPinned ? "\n" + Loc.T("Item_PinnedHint") : "");
     }
 
     // ---------------- Kart gövdesi ----------------
@@ -141,11 +142,21 @@ public partial class ClipItemView : UserControl
             return;
 
         _pressed = false;
-        StartDrag();
+        StartDrag(d);
+    }
+
+    /// <summary>Sabit kart yana çekildiyse ipte sıralanır; aşağı çekildiyse (ya da tek sabitse) başka uygulamaya sürüklenir.</summary>
+    private void StartDrag(Vector moved)
+    {
+        if (Item is null) return;
+        if (Item.IsPinned && Math.Abs(moved.X) >= Math.Abs(moved.Y)
+            && Line is { } line && line.BeginReorder(this, Item, moved.X))
+            return;
+        DragOut();
     }
 
     /// <summary>Mandal kopar, kart sürüklenir; bitince mandal geri takılır.</summary>
-    private void StartDrag()
+    public void DragOut()
     {
         if (Item is null) return;
         SnapPin(true);
@@ -217,7 +228,7 @@ public partial class ClipItemView : UserControl
             Math.Abs(d.Y) < SystemParameters.MinimumVerticalDragDistance)
             return;
         _pinPressed = false;
-        StartDrag();
+        StartDrag(d);
     }
 
     private void Pin_MouseUp(object sender, MouseButtonEventArgs e)
@@ -266,6 +277,15 @@ public partial class ClipItemView : UserControl
     private void Menu_Opened(object sender, RoutedEventArgs e)
     {
         if (Line is { } l) l.PopupDepth++;
+        PinMenuItem.Header = Loc.T(Item is { IsPinned: true } ? "Item_Unpin" : "Item_Pin");
+    }
+
+    /// <summary>Sabitle / sabitlemeyi kaldır (sağ alttaki düğme ve sağ tık menüsü).</summary>
+    private void PinToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (Item is not { } item) return;
+        App.Current.SetPinned(item, !item.IsPinned);
+        RefreshTooltip();
     }
 
     private void Menu_Closed(object sender, RoutedEventArgs e)

@@ -1,3 +1,8 @@
+1.4.0 — 12.10.2026
+- Kartları sabitle: sağ alttaki raptiyeye tıkla ya da sağ tık → Sabitle. Sabit kartlar mavi mandalla ipin başında durur; yana sürükleyerek sıralanır, aşağı çekince başka uygulamaya taşınır. "Tümünü sil" ve otomatik temizlik sabit kartlara dokunmaz.
+- Mandal Windows açılınca kendiliğinden başlar (varsayılan açık; tepsi menüsünden veya Ayarlar'dan kapanır). Exe taşınırsa başlangıç kaydı yeni yolu gösterir.
+- Kısayol tek tuş olabilir: sayısal tuş takımındaki + (ör. bölge almak için), F1–F24 ya da PrintScreen.
+
 1.3.1 — 09.10.2026
 - Ayarlar'da kısayol değiştirme düzeltildi: kutu odaktayken sistem geneli kısayollar askıya alınır, basılan kombinasyon artık kutuya yazılır (karta kısayol atamada da).
 - Ayar dosyasındaki geçersiz kısayol değeri yok sayılır; köşe mandalı penceresi beklenmedik kapanırsa yeniden kurulur.

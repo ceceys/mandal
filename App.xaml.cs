@@ -16,6 +16,7 @@ public partial class App : Application
     public Settings Settings { get; private set; } = null!;
     public ClipStore Store { get; private set; } = null!;
     public ItemHotkeys ItemHotkeys { get; } = new();
+    public Pins Pins { get; } = new();
 
     /// <summary>Ayarlar penceresinden yeni ayarlar uygulandığında.</summary>
     public event Action? SettingsChanged;
@@ -69,6 +70,7 @@ public partial class App : Application
         Settings = Settings.Load();
         Loc.Current.SetLanguage(Settings.Language);
         _folderFallback = Settings.EnsureClipFolder();
+        SyncAutostart();
 
         Store = new ClipStore(Settings.ClipFolder, Settings.ThumbnailHeight);
         try { Store.Load(); }
@@ -76,6 +78,8 @@ public partial class App : Application
 
         ItemHotkeys.Load();
         ApplyItemHotkeysToItems();
+        Pins.Load();
+        ApplyPinsToItems();
 
         _msg = new MessageWindow();
         _hotkeys = new HotkeyManager(_msg);
@@ -174,6 +178,43 @@ public partial class App : Application
         foreach (var item in Store.Items)
             item.Hotkey = ItemHotkeys.Get(Store.RelativePath(item));
         ItemHotkeys.Save();
+    }
+
+    // ---------------- Sabitleme ----------------
+
+    /// <summary>Kayıtlı sabitleri ipin başına dizer; dosyası silinmişleri kayıttan düşer.</summary>
+    private void ApplyPinsToItems()
+    {
+        Store.ApplyPins(Pins.Order);
+        SavePins();
+    }
+
+    private void SavePins()
+    {
+        Pins.Set(Store.Items.Where(i => i.IsPinned).Select(Store.RelativePath));
+        Pins.Save();
+    }
+
+    /// <summary>Kartı sabitler (ipin başına, sabitlerin sonuna) ya da sabitlemeyi kaldırır.</summary>
+    public void SetPinned(ClipItem item, bool pinned)
+    {
+        try
+        {
+            Store.SetPinned(item, pinned);
+            SavePins();
+        }
+        catch (Exception ex) { Fail(ex, Loc.T(pinned ? "Item_Pin" : "Item_Unpin")); }
+    }
+
+    /// <summary>Sürükleyerek sıralama: sabit kartı sabitler içinde <paramref name="index"/> sırasına taşır.</summary>
+    public void MovePinned(ClipItem item, int index)
+    {
+        try
+        {
+            Store.MovePinned(item, index);
+            SavePins();
+        }
+        catch (Exception ex) { Fail(ex, Loc.T("Item_Pin")); }
     }
 
     /// <summary>Öğeye kısayol atar (null = kaldır). Çakışma varsa false.</summary>
@@ -282,7 +323,7 @@ public partial class App : Application
 
     /// <summary>
     /// Varsayılan: hiçbir şey kendiliğinden silinmez (KeepForever). Kullanıcı kapatırsa
-    /// AutoDeleteDays'den eski kartlar silinir; kısayol atanmış kartlar her zaman kalır.
+    /// AutoDeleteDays'den eski kartlar silinir; sabitlenen ve kısayol atanmış kartlar her zaman kalır.
     /// </summary>
     private void RunCleanup()
     {
@@ -290,7 +331,7 @@ public partial class App : Application
         try
         {
             var limit = DateTime.Now.AddDays(-Settings.AutoDeleteDays);
-            var old = Store.Items.Where(i => i.Time < limit && !i.HasHotkey).ToList();
+            var old = Store.Items.Where(i => i.Time < limit && !i.HasHotkey && !i.IsPinned).ToList();
             foreach (var item in old)
             {
                 try { Store.Delete(item); }
@@ -637,23 +678,29 @@ public partial class App : Application
         }
     }
 
-    /// <summary>İpteki tüm kartları ve dosyalarını siler; her zaman onay ister.</summary>
+    /// <summary>İpteki tüm kartları ve dosyalarını siler; sabitlenenler kalır. Her zaman onay ister.</summary>
     public void DeleteAll()
     {
         try
         {
-            if (Store.Items.Count == 0) return;
+            var targets = Store.Items.Where(i => !i.IsPinned).ToList();
+            if (targets.Count == 0) return;
             if (!Confirm(Loc.T("Msg_DeleteAllConfirm"))) return;
 
-            _preview?.Close();
-            foreach (var item in Store.Items.ToList())
+            if (_preview is { Item: { IsPinned: false } }) _preview.Close();
+            bool hotkeysChanged = false;
+            foreach (var item in targets)
             {
+                var rel = Store.RelativePath(item);
                 try { Store.Delete(item); }
                 catch (Exception ex) { Log.Write(ex, "Tümünü sil"); }
+                hotkeysChanged |= ItemHotkeys.Remove(rel);
             }
-            foreach (var rel in ItemHotkeys.All.Keys.ToList()) ItemHotkeys.Remove(rel);
-            ItemHotkeys.Save();
-            ApplyHotkeys();
+            if (hotkeysChanged)
+            {
+                ItemHotkeys.Save();
+                ApplyHotkeys();
+            }
         }
         catch (Exception ex) { Fail(ex, Loc.T("Card_DeleteAll")); }
     }
@@ -666,6 +713,7 @@ public partial class App : Application
             if (_preview is { Item: { } previewed } && ReferenceEquals(previewed, item)) _preview.Close();
             var rel = Store.RelativePath(item);
             Store.Delete(item);
+            if (item.IsPinned) SavePins();
             if (ItemHotkeys.Remove(rel))
             {
                 ItemHotkeys.Save();
@@ -759,6 +807,7 @@ public partial class App : Application
             {
                 Store.Reload(Settings.ClipFolder);
                 ApplyItemHotkeysToItems();
+                ApplyPinsToItems();
             }
             catch (Exception ex) { Fail(ex, Loc.T("Settings_Folder")); }
         }
@@ -830,8 +879,28 @@ public partial class App : Application
 
     public void SetAutostart(bool on)
     {
+        Settings.StartWithWindows = on;
+        Settings.Save();
         try { Autostart.Set(on); }
         catch (Exception ex) { Fail(ex, Loc.T("Menu_Autostart")); }
+    }
+
+    /// <summary>
+    /// İlk açılışta karar verir (kurulumla geldiyse kurulumdaki seçim, taşınabilirse açık), sonra kaydı ayara uydurur:
+    /// exe taşınınca veya güncellenince başlangıç kaydı yeni yolu gösterir.
+    /// </summary>
+    private void SyncAutostart()
+    {
+        try
+        {
+            if (Settings.StartWithWindows is null)
+            {
+                Settings.StartWithWindows = !Updater.IsInstalled || Autostart.IsEnabled();
+                Settings.Save();
+            }
+            Autostart.Sync(Settings.StartWithWindows.Value);
+        }
+        catch (Exception ex) { Log.Write(ex, "Windows ile başlat"); }
     }
 
     public void ExitApp() => Shutdown();

@@ -1,3 +1,8 @@
+1.4.0 — 12/10/2026
+- Fissare le schede: clic sulla puntina in basso a destra o clic destro → Fissa. Le schede fissate restano all'inizio del filo con una molletta blu; trascinale di lato per riordinarle, tirane una giù per portarla in un'altra app. «Elimina tutto» e l'eliminazione automatica non toccano le schede fissate.
+- Mandal si avvia con Windows (attivo per impostazione predefinita; si disattiva dal menu dell'area di notifica o dalle impostazioni). Se l'exe viene spostato, la voce di avvio lo segue.
+- Una scorciatoia può essere un solo tasto: + del tastierino numerico (ad es. per catturare un'area), F1–F24 o Stamp.
+
 1.3.1 — 09/10/2026
 - Cambiare le scorciatoie nelle Impostazioni funziona di nuovo: le scorciatoie globali vengono sospese mentre un campo scorciatoia ha il focus, così la combinazione premuta arriva al campo (anche assegnando una scorciatoia a una scheda).
 - I valori di scorciatoia non validi nel file delle impostazioni vengono ignorati; la molletta nell'angolo viene ricreata se la sua finestra si chiude inaspettatamente.

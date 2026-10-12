@@ -27,6 +27,8 @@
 - **Görseli metne çevir**: `Aa` düğmesi (Windows'un yerleşik OCR'ı, çevrimdışı). Metin kendi kartı olur.
 - **Notlar**: sağ karttan not yaz; alıntı gibi ipe asılır. Büyük aç, bir kısmını seçip bırak sadece o kopyalanır; ya da tümünü kopyala.
 - **Öğeye kısayol**: bir karta ör. `Ctrl+Alt+1` ata; basınca o kart kopyalanır, bilgisayar yeniden açılsa da.
+- **Sabitle**: sabitlenen alıntılar ve notlar mavi mandalla ipin başında durur. Yana sürükleyerek istediğin sıraya koy; "Tümünü sil" ve otomatik temizlik onlara dokunmaz.
+- **Windows ile başlar** (varsayılan açık; tepsi menüsü veya Ayarlar → Davranış).
 - **Uzayan ip**: öğe arttıkça kartlar küçülür (ekran başına 12 → 16 → 24 → 32 → 40 → 50 → 60); fazlası oklarla veya tekerlekle kaydırılır.
 - **Kalıcı**: alıntılar gün klasörlerinde PNG/TXT olarak durur, yeniden açılışta geri gelir.
 - **12 dil**: Türkçe, English, Deutsch, Français, Español, Italiano, Português, Русский, العربية, 中文, 日本語, 한국어.
@@ -54,10 +56,12 @@ Windows 10 sürüm 2004 veya üstü. Mandal kendini GitHub Releases üzerinden g
 | Büyük önizleme | Karta çift tıkla ya da üzerine gelip büyütece tıkla |
 | Görsel → metin | Kartın üzerine gel, `Aa`'ya tıkla |
 | Sil | Kartın üzerine gel, ✕'e tıkla |
+| Sabitle / sabitlemeyi kaldır | Kartın üzerine gel, sağ alttaki raptiyeye tıkla ya da sağ tık → Sabitle |
+| Sabit kartları sırala | Sabit kartı ip boyunca yana sürükle; aşağı çekersen başka uygulamaya taşınır. `Esc` iptal eder |
 | Aç, farklı kaydet, klasörde göster, kısayol ata | Karta sağ tık |
-| Al / Ayarlar / Kaldır | Sağ uçtaki sabit karttaki düğmeler |
+| Al / Ayarlar / Kaldır | Sağ uçtaki düğme kartı |
 
-Tüm kısayollar **Ayarlar**'dan (tepsi menüsü veya sağ uçtaki kart) değiştirilebilir.
+Tüm kısayollar **Ayarlar**'dan (tepsi menüsü veya sağ uçtaki kart) değiştirilebilir. Tek tuş da olur: `F1`–`F24`, `PrtScn` ya da sayısal tuş takımındaki `+`.
 
 ## Derleme
 
@@ -72,7 +76,7 @@ Kurulum paketi ([Inno Setup 6](https://jrsoftware.org/isinfo.php) gerekir):
 
 ```
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
-iscc /DAppVersion=1.3.1 setup\Mandal.iss
+iscc /DAppVersion=1.4.0 setup\Mandal.iss
 ```
 
 ## Dosyalar

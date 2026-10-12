@@ -1,3 +1,8 @@
+1.4.0 — 12/10/2026
+- Fixar cartões: clique no alfinete no canto inferior direito ou clique direito → Fixar. Os cartões fixados ficam no início do varal com um prendedor azul; arraste-os para o lado para reordenar e puxe um para baixo para levá-lo a outro app. "Excluir tudo" e a exclusão automática não mexem nos cartões fixados.
+- O Mandal inicia com o Windows (ativado por padrão; desative no menu da bandeja ou nas configurações). Se o exe for movido, a entrada de inicialização acompanha.
+- Um atalho pode ser uma única tecla: + do teclado numérico (por ex. para capturar uma região), F1–F24 ou PrintScreen.
+
 1.3.1 — 09/10/2026
 - Alterar atalhos nas Configurações volta a funcionar: os atalhos globais ficam suspensos enquanto uma caixa de atalho tem o foco, então a combinação pressionada chega à caixa (também ao atribuir um atalho a um cartão).
 - Valores de atalho inválidos no arquivo de configurações são ignorados; o pregador do canto é recriado se a janela dele fechar inesperadamente.

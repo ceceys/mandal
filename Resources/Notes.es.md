@@ -1,3 +1,8 @@
+1.4.0 — 12/10/2026
+- Fijar tarjetas: haz clic en la chincheta de abajo a la derecha o clic derecho → Fijar. Las tarjetas fijadas se quedan al principio del tendedero con una pinza azul; arrástralas de lado para reordenarlas y tira de una hacia abajo para llevarla a otra app. «Eliminar todo» y el borrado automático no tocan las tarjetas fijadas.
+- Mandal se inicia con Windows (activado por defecto; se desactiva en el menú de la bandeja o en los ajustes). Si mueves el exe, la entrada de inicio lo sigue.
+- Un atajo puede ser una sola tecla: + del teclado numérico (p. ej. para capturar una región), F1–F24 o Imprimir pantalla.
+
 1.3.1 — 09/10/2026
 - Cambiar atajos en Ajustes vuelve a funcionar: los atajos globales se suspenden mientras un cuadro de atajo tiene el foco, así la combinación pulsada llega al cuadro (también al asignar un atajo a una tarjeta).
 - Los valores de atajo no válidos del archivo de ajustes se ignoran; la pinza de la esquina se vuelve a crear si su ventana se cierra inesperadamente.

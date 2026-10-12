@@ -20,6 +20,12 @@ public sealed class Settings
     /// <summary>Tıkla-kopyala veya sürükle sonrası ip kendiliğinden kalksın.</summary>
     public bool HideLineAfterCopy { get; set; } = true;
 
+    /// <summary>
+    /// Windows açılınca Mandal da başlasın. null: henüz karar yok; ilk açılışta kurulumdaki seçim alınır
+    /// (taşınabilir exe'de açık). Kayıt defteri her açılışta buna uydurulur.
+    /// </summary>
+    public bool? StartWithWindows { get; set; }
+
     /// <summary>GitHub Releases'tan güncellemeleri otomatik denetle ve indir (varsayılan açık).</summary>
     public bool AutoUpdate { get; set; } = true;
 

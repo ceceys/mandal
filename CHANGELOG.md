@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.0 — 2026-10-12
+
+- Pin cards: hover a card and click the pushpin at the bottom right, or right-click → Pin. Pinned captures and notes stay at the start of the line with a blue clothespin and keep their order across restarts (`pins.json`). Drag a pinned card sideways to reorder it; pull it below the line to drag it into another app instead; `Esc` cancels. "Delete all" and auto-delete leave pinned cards alone.
+- Start with Windows is on by default (tray menu or Settings → Behavior). The choice is stored in `settings.json`, and at every start the startup entry is pointed at the running exe, so moving or updating the portable exe no longer breaks it. With the installer, its "start automatically" choice is kept; uninstalling removes the entry.
+- A shortcut can be the numpad `+` on its own (e.g. `"HotkeyRegionAlt": "+"`) or with modifiers (`Ctrl++`); the shortcut box now accepts it. Previously `+` was reported as an invalid shortcut.
+
 ## 1.3.1 — 2026-10-09
 
 - Fixed: changing shortcuts in Settings. Global hotkeys are suspended while a shortcut box has keyboard focus, so pressing e.g. Ctrl+Shift+F fills the box instead of triggering a capture (same for per-card shortcut assignment).

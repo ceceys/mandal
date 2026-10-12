@@ -27,6 +27,8 @@
 - **Convert an image to text** with the `Aa` button (Windows built-in OCR, offline). The text becomes its own card.
 - **Notes**: write a note from the right-hand card; it hangs on the line like a capture. Open it large, select a part and release to copy only that, or copy all.
 - **Per-item shortcuts**: assign e.g. `Ctrl+Alt+1` to a card; pressing it copies that card, even after a restart.
+- **Pin cards**: pinned captures and notes stay at the start of the line with a blue clothespin. Drag them sideways to put them in any order; "Delete all" and auto-delete leave them alone.
+- **Starts with Windows** (on by default; tray menu or Settings → Behavior).
 - **Stretching line**: cards shrink as you pin more (12 → 16 → 24 → 32 → 40 → 50 → 60 per screen); beyond that, slide with the arrows or the mouse wheel.
 - **Persistent**: captures are stored as PNG/TXT in day folders and come back after a restart.
 - **12 languages**: Türkçe, English, Deutsch, Français, Español, Italiano, Português, Русский, العربية, 中文, 日本語, 한국어.
@@ -54,10 +56,12 @@ Windows 10 version 2004 or newer. Mandal updates itself from GitHub Releases.
 | Preview large | Double-click the card, or hover and click the magnifier |
 | Image → text | Hover the card, click `Aa` |
 | Delete | Hover the card, click ✕ |
+| Pin / unpin | Hover the card, click the pushpin (bottom right), or right-click → Pin |
+| Reorder pinned cards | Drag a pinned card sideways along the line; pull it down to drag it into another app instead. `Esc` cancels |
 | Open, save as, show in folder, assign shortcut | Right-click the card |
 | Capture / Settings / Put away | Buttons on the fixed card at the right end |
 
-All shortcuts can be changed in **Settings** (tray menu or the right-end card).
+All shortcuts can be changed in **Settings** (tray menu or the right-end card). A single key works too: `F1`–`F24`, `PrtScn` or the numpad `+`.
 
 ## Build
 
@@ -72,7 +76,7 @@ Installer (needs [Inno Setup 6](https://jrsoftware.org/isinfo.php)):
 
 ```
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
-iscc /DAppVersion=1.3.1 setup\Mandal.iss
+iscc /DAppVersion=1.4.0 setup\Mandal.iss
 ```
 
 ## Files
