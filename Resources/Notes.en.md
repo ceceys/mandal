@@ -1,3 +1,8 @@
+1.5.0 — 2026-10-13
+- Nothing is ever deleted: ✕, "Clear line" and auto-cleanup only take cards off the line; the screenshot or note file stays in the folder. Put the last removed cards back with one click from the tray menu (Put back last removed).
+- On the right-hand card, "Clear line" replaces "Delete all" (unpinned cards come off; pinned cards and cards with a shortcut stay), plus a new "Clear clipboard" button.
+- The update and confirmation card fits every screen: notes scroll in their own area and the Yes/No buttons are never cut off at any resolution or scaling. Release notes are shown in the app's language.
+
 1.4.0 — 2026-10-12
 - Pin cards: click the pushpin at the bottom right or right-click → Pin. Pinned cards stay at the start of the line with a blue clothespin; drag them sideways to reorder, pull one down to drag it into another app. "Delete all" and auto-delete leave pinned cards alone.
 - Mandal starts with Windows (on by default; turn it off in the tray menu or Settings). If the exe is moved, the startup entry follows it.

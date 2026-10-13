@@ -16,16 +16,17 @@
         <!-- Kart: alıntılarla aynı beyaz çerçeve, içi kâğıt -->
         <Border Grid.Row="1" Background="White" Padding="4" CornerRadius="2" Margin="0,-6,0,0"
                 Effect="{StaticResource CardShadow}">
-            <Border Background="{StaticResource PaperBrush}" Width="128" Height="164">
+            <!-- Genişlik en uzun düğme yazısına göre büyür (dile göre); yükseklik ipin bandına sabit -->
+            <Border Background="{StaticResource PaperBrush}" MinWidth="140" Height="164">
                 <StackPanel VerticalAlignment="Center" Margin="4,0">
                     <StackPanel.Resources>
+                        <!-- Altı düğme 164 px'e sığsın diye dikey dolgu biraz dar -->
                         <Style TargetType="Button" BasedOn="{StaticResource CardButton}">
-                            <Setter Property="Padding" Value="8,3"/>
-                            <Setter Property="FontSize" Value="12"/>
+                            <Setter Property="Padding" Value="8,4"/>
                         </Style>
                     </StackPanel.Resources>
 
-                    <Button Style="{StaticResource CardButton}" Click="Capture_Click">
+                    <Button Click="Capture_Click">
                         <StackPanel Orientation="Horizontal">
                             <Path Width="16" Height="16" Stretch="Uniform" Fill="{StaticResource InkBrush}"
                                   Data="M4,7 L7,7 L9,4 L15,4 L17,7 L20,7 L20,19 L4,19 Z M12,16 A3.5,3.5 0 1 0 12,9 A3.5,3.5 0 1 0 12,16 Z"/>
@@ -34,7 +35,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource CardButton}" Click="AddNote_Click">
+                    <Button Click="AddNote_Click">
                         <StackPanel Orientation="Horizontal">
                             <Path Width="16" Height="16" Stretch="Uniform" Stroke="{StaticResource InkBrush}" StrokeThickness="1.8"
                                   StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
@@ -44,7 +45,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource CardButton}" Click="Settings_Click">
+                    <Button Click="Settings_Click">
                         <StackPanel Orientation="Horizontal">
                             <Canvas Width="16" Height="16">
                                 <Line X1="1" Y1="4" X2="15" Y2="4" Stroke="{StaticResource InkBrush}" StrokeThickness="1.6" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
@@ -59,7 +60,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource CardButton}" Click="Hide_Click">
+                    <Button Click="Hide_Click">
                         <StackPanel Orientation="Horizontal">
                             <Path Width="16" Height="16" Stretch="Uniform" Stroke="{StaticResource InkBrush}" StrokeThickness="2"
                                   StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
@@ -69,15 +70,32 @@
                         </StackPanel>
                     </Button>
 
-                    <!-- Tümünü sil: Kaldır'dan ayrı, bir satır aşağıda, ince çizgiyle -->
-                    <Rectangle Height="1" Fill="{StaticResource LineBrush}" Margin="8,6,8,4"/>
-                    <Button Style="{StaticResource CardButton}" Click="DeleteAll_Click" Foreground="{StaticResource DangerBrush}">
+                    <!-- Toplu işler: ince çizginin altında. Hiçbiri dosya silmez. -->
+                    <Rectangle Height="1" Fill="{StaticResource LineBrush}" Margin="8,4,8,3"/>
+                    <Button Click="ClearLine_Click"
+                            ToolTip="{Binding [Card_ClearLineTip], Source={x:Static svc:Loc.Current}}">
                         <StackPanel Orientation="Horizontal">
-                            <Path Width="16" Height="16" Stretch="Uniform" Stroke="{StaticResource DangerBrush}" StrokeThickness="2"
+                            <!-- İp ve aşağı inen ok -->
+                            <Path Width="16" Height="16" Stretch="Uniform" Stroke="{StaticResource InkBrush}" StrokeThickness="1.9"
                                   StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
-                                  Data="M4,7 L20,7 M9,7 L9,4 L15,4 L15,7 M6,7 L7,20 L17,20 L18,7 M10,11 L10,17 M14,11 L14,17"/>
+                                  Data="M3,5 L21,5 M12,9 L12,20 M7.5,15.5 L12,20 L16.5,15.5"/>
                             <TextBlock Margin="8,0,0,0" VerticalAlignment="Center"
-                                       Text="{Binding [Card_DeleteAll], Source={x:Static svc:Loc.Current}}"/>
+                                       Text="{Binding [Card_ClearLine], Source={x:Static svc:Loc.Current}}"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="ClearClipboard_Click"
+                            ToolTip="{Binding [Card_ClearClipboardTip], Source={x:Static svc:Loc.Current}}">
+                        <StackPanel Orientation="Horizontal">
+                            <!-- Pano ve içinde çarpı -->
+                            <Path Width="16" Height="16" Stretch="Uniform" Stroke="{StaticResource InkBrush}" StrokeThickness="1.7"
+                                  StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                  Data="M9,3.5 L15,3.5 L15,6.5 L9,6.5 Z M8,5 L5,5 L5,21 L19,21 L19,5 L16,5 M9.5,11.5 L14.5,16.5 M14.5,11.5 L9.5,16.5"/>
+                            <Grid Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock x:Name="ClipboardLabel"
+                                           Text="{Binding [Card_ClearClipboard], Source={x:Static svc:Loc.Current}}"/>
+                                <TextBlock x:Name="ClipboardDone" Visibility="Hidden" Foreground="{StaticResource OkBrush}"
+                                           Text="{Binding [Card_ClipboardCleared], Source={x:Static svc:Loc.Current}}"/>
+                            </Grid>
                         </StackPanel>
                     </Button>
 

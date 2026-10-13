@@ -4,7 +4,7 @@
         xmlns:svc="clr-namespace:Mandal.Services"
         Title="Mandal" WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         ResizeMode="NoResize" Topmost="True" ShowInTaskbar="False"
-        Width="520" Height="300" WindowStartupLocation="Manual"
+        Width="520" SizeToContent="Height" WindowStartupLocation="Manual"
         KeyDown="Window_KeyDown" MouseLeftButtonDown="Window_MouseDown">
 
     <Window.Resources>
@@ -37,10 +37,33 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Notlar alanının ince, kâğıt tonlu kaydırma çubuğu -->
+        <Style x:Key="ThinScrollBar" TargetType="ScrollBar">
+            <Setter Property="Width" Value="6"/>
+            <Setter Property="MinWidth" Value="6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Track x:Name="PART_Track" IsDirectionReversed="True" Orientation="{TemplateBinding Orientation}">
+                            <Track.Thumb>
+                                <Thumb Cursor="Hand">
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border Background="#D9CBB3" CornerRadius="3"/>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
-    <!-- Mandaldan sarkan kart; yukarıdan düşer, hafif sallanır -->
-    <Grid x:Name="Card" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,8,0,0" RenderTransformOrigin="0.5,0">
+    <!-- Mandaldan sarkan kart; yukarıdan düşer, hafif sallanır. Alt boşluk: eğim ve gölge kırpılmasın. -->
+    <Grid x:Name="Card" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,8,0,26" RenderTransformOrigin="0.5,0">
         <Grid.RenderTransform>
             <TransformGroup>
                 <RotateTransform x:Name="Swing" Angle="-1.5"/>
@@ -61,9 +84,23 @@
                             <TextBlock Text="?" Foreground="White" FontSize="18" FontWeight="Bold"
                                        HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0"/>
                         </Grid>
-                        <TextBlock x:Name="MessageText" Width="326" Margin="14,4,0,0" TextWrapping="Wrap" LineHeight="21"
+                        <TextBlock x:Name="MessageText" Width="322" Margin="14,4,0,0" TextWrapping="Wrap" LineHeight="21"
                                    FontSize="14" Foreground="{StaticResource InkBrush}"/>
                     </StackPanel>
+
+                    <!-- Ayrıntı (ör. sürüm notları): uzunsa kendi içinde kaydırılır, düğmeler hep görünür -->
+                    <Border x:Name="DetailsBox" Visibility="Collapsed" Margin="44,0,0,4" Padding="0,10,0,0"
+                            BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0">
+                        <ScrollViewer x:Name="DetailsScroll" MaxHeight="220" Focusable="False"
+                                      VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                            <ScrollViewer.Resources>
+                                <Style TargetType="ScrollBar" BasedOn="{StaticResource ThinScrollBar}"/>
+                            </ScrollViewer.Resources>
+                            <TextBlock x:Name="DetailsText" TextWrapping="Wrap" LineHeight="19" FontSize="12.5" Margin="0,0,10,0"
+                                       Foreground="{StaticResource InkBrush}"/>
+                        </ScrollViewer>
+                    </Border>
+
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
                         <Button x:Name="NoButton" Style="{StaticResource AnswerButton}" Margin="0,0,10,0" Click="No_Click"
                                 Content="{Binding [Dialog_No], Source={x:Static svc:Loc.Current}}"/>

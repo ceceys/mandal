@@ -27,7 +27,9 @@
 - **Convert an image to text** with the `Aa` button (Windows built-in OCR, offline). The text becomes its own card.
 - **Notes**: write a note from the right-hand card; it hangs on the line like a capture. Open it large, select a part and release to copy only that, or copy all.
 - **Per-item shortcuts**: assign e.g. `Ctrl+Alt+1` to a card; pressing it copies that card, even after a restart.
-- **Pin cards**: pinned captures and notes stay at the start of the line with a blue clothespin. Drag them sideways to put them in any order; "Delete all" and auto-delete leave them alone.
+- **Pin cards**: pinned captures and notes stay at the start of the line with a blue clothespin. Drag them sideways to put them in any order; "Clear line" and auto-cleanup leave them alone.
+- **Nothing is ever deleted**: ✕, "Clear line" and auto-cleanup only take cards off the line; the files stay in the folder. Put the last removed cards back with one click from the tray menu.
+- **Clear clipboard**: a button on the right-hand card empties the Windows clipboard.
 - **Starts with Windows** (on by default; tray menu or Settings → Behavior).
 - **Stretching line**: cards shrink as you pin more (12 → 16 → 24 → 32 → 40 → 50 → 60 per screen); beyond that, slide with the arrows or the mouse wheel.
 - **Persistent**: captures are stored as PNG/TXT in day folders and come back after a restart.
@@ -55,7 +57,9 @@ Windows 10 version 2004 or newer. Mandal updates itself from GitHub Releases.
 | Move a card into another app | Drag it |
 | Preview large | Double-click the card, or hover and click the magnifier |
 | Image → text | Hover the card, click `Aa` |
-| Delete | Hover the card, click ✕ |
+| Remove from the line (file stays) | Hover the card, click ✕ |
+| Clear line / clear clipboard | Buttons below the divider on the right-end card |
+| Put back last removed | Tray menu |
 | Pin / unpin | Hover the card, click the pushpin (bottom right), or right-click → Pin |
 | Reorder pinned cards | Drag a pinned card sideways along the line; pull it down to drag it into another app instead. `Esc` cancels |
 | Open, save as, show in folder, assign shortcut | Right-click the card |
@@ -76,7 +80,7 @@ Installer (needs [Inno Setup 6](https://jrsoftware.org/isinfo.php)):
 
 ```
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
-iscc /DAppVersion=1.4.0 setup\Mandal.iss
+iscc /DAppVersion=1.5.0 setup\Mandal.iss
 ```
 
 ## Files

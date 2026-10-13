@@ -3,7 +3,7 @@
 ; Önce: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
 
 #ifndef AppVersion
-  #define AppVersion "1.4.0"
+  #define AppVersion "1.5.0"
 #endif
 #define AppName "Mandal"
 #define AppPublisher "Cuma Ali Dirik"

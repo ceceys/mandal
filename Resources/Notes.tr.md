@@ -1,3 +1,8 @@
+1.5.0 — 13.10.2026
+- Hiçbir şey silinmez: ✕, "İpi boşalt" ve otomatik temizlik kartı yalnız ipten indirir; ekran görüntüsü ve notun dosyası klasörde kalır. Son indirilenler tepsi menüsünden (Son kaldırılanları ipe geri as) tek tıkla geri gelir.
+- Sağ kartta "Tümünü sil" yerine "İpi boşalt" (sabitlenmeyen kartlar iner; sabit ve kısayollu kartlar kalır) ve yeni "Panoyu temizle" düğmesi.
+- Güncelleme ve onay kartı her ekrana sığar: notlar kendi alanında kaydırılır, Evet/Hayır düğmeleri hiçbir çözünürlükte ya da ölçekte kesilmez. Sürüm notları uygulamanın dilinde gösterilir.
+
 1.4.0 — 12.10.2026
 - Kartları sabitle: sağ alttaki raptiyeye tıkla ya da sağ tık → Sabitle. Sabit kartlar mavi mandalla ipin başında durur; yana sürükleyerek sıralanır, aşağı çekince başka uygulamaya taşınır. "Tümünü sil" ve otomatik temizlik sabit kartlara dokunmaz.
 - Mandal Windows açılınca kendiliğinden başlar (varsayılan açık; tepsi menüsünden veya Ayarlar'dan kapanır). Exe taşınırsa başlangıç kaydı yeni yolu gösterir.

@@ -91,6 +91,8 @@ public sealed class TrayIcon : IDisposable
         menu.Items.Add(new WF.ToolStripMenuItem(Loc.T("Menu_Settings"), null, (_, _) => app.OpenSettings()));
         menu.Items.Add(new WF.ToolStripMenuItem(Loc.T("Menu_CheckUpdates"), null, (_, _) => _ = app.CheckForUpdatesAsync(manual: true)));
         menu.Items.Add(new WF.ToolStripMenuItem(Loc.T("Menu_OpenFolder"), null, (_, _) => app.OpenFolder()));
+        var restore = new WF.ToolStripMenuItem(Loc.T("Menu_RestoreRemoved"), null, (_, _) => app.RestoreRemoved());
+        menu.Items.Add(restore);
         menu.Items.Add(new WF.ToolStripMenuItem(Loc.T("Menu_OpenSettings"), null, (_, _) => app.OpenSettingsFile()));
         menu.Items.Add(new WF.ToolStripSeparator());
         menu.Items.Add(new WF.ToolStripMenuItem(Loc.T("Menu_Exit"), null, (_, _) => app.ExitApp()));
@@ -102,6 +104,9 @@ public sealed class TrayIcon : IDisposable
             hideAfterCopy.Checked = app.Settings.HideLineAfterCopy;
             cornerTab.Checked = app.Settings.CornerTab;
             autostart.Checked = Autostart.IsEnabled();
+            int n = app.Hidden.LastBatchCount;
+            restore.Enabled = n > 0;
+            restore.Text = n > 0 ? $"{Loc.T("Menu_RestoreRemoved")} ({n})" : Loc.T("Menu_RestoreRemoved");
         };
 
         return menu;

@@ -1,3 +1,8 @@
+1.5.0 — 13/10/2026
+- Plus rien n'est supprimé : ✕, « Vider la corde » et le nettoyage automatique retirent seulement les cartes de la corde ; le fichier de la capture ou de la note reste dans le dossier. Les dernières cartes retirées reviennent d'un clic depuis le menu de la barre (Raccrocher les dernières retirées).
+- Sur la carte de droite, « Vider la corde » remplace « Tout supprimer » (les cartes non épinglées sont retirées ; les cartes épinglées ou avec raccourci restent), et un nouveau bouton « Vider le presse-papiers ».
+- La carte de mise à jour et de confirmation tient sur tous les écrans : les notes défilent dans leur propre zone et les boutons Oui/Non ne sont jamais coupés, quelle que soit la résolution ou la mise à l'échelle. Les notes de version s'affichent dans la langue de l'appli.
+
 1.4.0 — 12/10/2026
 - Épingler des cartes : cliquez sur la punaise en bas à droite ou clic droit → Épingler. Les cartes épinglées restent au début de la corde avec une pince bleue ; glissez-les sur le côté pour les réordonner, tirez-en une vers le bas pour la déposer dans une autre appli. « Tout supprimer » et la suppression automatique ne touchent pas aux cartes épinglées.
 - Mandal démarre avec Windows (activé par défaut ; désactivable dans le menu de la zone de notification ou dans les paramètres). Si l'exe est déplacé, l'entrée de démarrage le suit.

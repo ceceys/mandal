@@ -17,6 +17,7 @@ public partial class App : Application
     public ClipStore Store { get; private set; } = null!;
     public ItemHotkeys ItemHotkeys { get; } = new();
     public Pins Pins { get; } = new();
+    public Hidden Hidden { get; } = new();
 
     /// <summary>Ayarlar penceresinden yeni ayarlar uygulandığında.</summary>
     public event Action? SettingsChanged;
@@ -72,8 +73,18 @@ public partial class App : Application
         _folderFallback = Settings.EnsureClipFolder();
         SyncAutostart();
 
+        Hidden.Load();
         Store = new ClipStore(Settings.ClipFolder, Settings.ThumbnailHeight);
-        try { Store.Load(); }
+        try
+        {
+            Store.Load(Hidden.All);
+            // Klasörden elle silinen dosyaların kaydı düşer; yedek klasöre dönüldüyse kayıt korunur
+            if (!_folderFallback)
+            {
+                Hidden.Prune(Store.SkippedFound.Contains);
+                Hidden.Save();
+            }
+        }
         catch (Exception ex) { Log.Write(ex, "Alıntı klasörü yüklenemedi"); }
 
         ItemHotkeys.Load();
@@ -299,14 +310,8 @@ public partial class App : Application
         bool yes;
         try
         {
-            var msg = Loc.F("Msg_UpdateReady", _readyUpdateVersion);
-            if (!string.IsNullOrWhiteSpace(_readyUpdateNotes))
-            {
-                var notes = _readyUpdateNotes.Replace("\r", "");
-                if (notes.Length > 420) notes = notes[..420] + "…";
-                msg += "\n\n" + notes;
-            }
-            yes = ConfirmWindow.Ask(msg, dangerous: false);
+            // Notlar ayrı, kaydırılabilir alanda: ne kadar uzun olursa olsun Evet/Hayır görünür kalır
+            yes = ConfirmWindow.Ask(Loc.F("Msg_UpdateReady", _readyUpdateVersion), dangerous: false, details: _readyUpdateNotes);
         }
         finally { if (_line is not null) _line.PopupDepth = Math.Max(0, _line.PopupDepth - 1); }
         if (!yes) return;
@@ -322,8 +327,8 @@ public partial class App : Application
     // ---------------- Saklama ----------------
 
     /// <summary>
-    /// Varsayılan: hiçbir şey kendiliğinden silinmez (KeepForever). Kullanıcı kapatırsa
-    /// AutoDeleteDays'den eski kartlar silinir; sabitlenen ve kısayol atanmış kartlar her zaman kalır.
+    /// Varsayılan: kartlar ipte kalır (KeepForever). Kullanıcı kapatırsa AutoDeleteDays'den eski kartlar ipten iner;
+    /// dosyaları klasörde kalır. Sabitlenen ve kısayol atanmış kartlar her zaman ipte kalır.
     /// </summary>
     private void RunCleanup()
     {
@@ -332,12 +337,9 @@ public partial class App : Application
         {
             var limit = DateTime.Now.AddDays(-Settings.AutoDeleteDays);
             var old = Store.Items.Where(i => i.Time < limit && !i.HasHotkey && !i.IsPinned).ToList();
-            foreach (var item in old)
-            {
-                try { Store.Delete(item); }
-                catch (Exception ex) { Log.Write(ex, "Otomatik temizlik"); }
-            }
-            if (old.Count > 0) Log.Write($"Otomatik temizlik: {old.Count} kart silindi ({Settings.AutoDeleteDays} günden eski)");
+            if (old.Count == 0) return;
+            TakeOffLine(old);
+            Log.Write($"Otomatik temizlik: {old.Count} kart ipten indi ({Settings.AutoDeleteDays} günden eski), dosyalar klasörde");
         }
         catch (Exception ex) { Log.Write(ex, "Otomatik temizlik"); }
     }
@@ -665,12 +667,12 @@ public partial class App : Application
     }
 
     /// <summary>Evet/Hayır sorusu; açıkken ip fare çıkışıyla kalkmaz.</summary>
-    private bool Confirm(string text)
+    private bool Confirm(string text, bool dangerous = true)
     {
         if (_line is not null) _line.PopupDepth++;
         try
         {
-            return ConfirmWindow.Ask(text, dangerous: true);
+            return ConfirmWindow.Ask(text, dangerous);
         }
         finally
         {
@@ -678,49 +680,93 @@ public partial class App : Application
         }
     }
 
-    /// <summary>İpteki tüm kartları ve dosyalarını siler; sabitlenenler kalır. Her zaman onay ister.</summary>
-    public void DeleteAll()
+    // ---------------- İpten indirme: dosyalar hiçbir zaman silinmez ----------------
+
+    /// <summary>
+    /// Kartları ipten indirir (tek işlem = tek geri alma grubu). Dosyalara dokunulmaz; hidden.json'a yazılır,
+    /// yeniden açılışta da ipe asılmaz. Tepsi menüsündeki "geri as" son grubu geri getirir.
+    /// </summary>
+    private void TakeOffLine(IReadOnlyCollection<ClipItem> items)
+    {
+        if (items.Count == 0) return;
+        if (_preview is { Item: { } previewed } && items.Contains(previewed)) _preview.Close();
+
+        Hidden.AddBatch(items.Select(Store.RelativePath));
+        Hidden.Save();
+
+        bool pinsChanged = false, hotkeysChanged = false;
+        foreach (var item in items)
+        {
+            var rel = Store.RelativePath(item);
+            Store.Remove(item);
+            pinsChanged |= item.IsPinned;
+            hotkeysChanged |= ItemHotkeys.Remove(rel);
+        }
+        if (pinsChanged) SavePins();
+        if (hotkeysChanged)
+        {
+            ItemHotkeys.Save();
+            ApplyHotkeys();
+        }
+    }
+
+    /// <summary>
+    /// İpi boşaltır: sabitlenmeyen kartlar ipten iner, dosyaları klasörde kalır.
+    /// Kısayol atanmış kartlar da ipte kalır (kısayolları bozulmasın). Onay istemez; işlem geri alınabilir.
+    /// </summary>
+    public void ClearLine()
     {
         try
         {
-            var targets = Store.Items.Where(i => !i.IsPinned).ToList();
+            var targets = Store.Items.Where(i => !i.IsPinned && !i.HasHotkey).ToList();
             if (targets.Count == 0) return;
-            if (!Confirm(Loc.T("Msg_DeleteAllConfirm"))) return;
-
-            if (_preview is { Item: { IsPinned: false } }) _preview.Close();
-            bool hotkeysChanged = false;
-            foreach (var item in targets)
-            {
-                var rel = Store.RelativePath(item);
-                try { Store.Delete(item); }
-                catch (Exception ex) { Log.Write(ex, "Tümünü sil"); }
-                hotkeysChanged |= ItemHotkeys.Remove(rel);
-            }
-            if (hotkeysChanged)
-            {
-                ItemHotkeys.Save();
-                ApplyHotkeys();
-            }
+            TakeOffLine(targets);
+            Log.Write($"İpi boşalt: {targets.Count} kart ipten indi, dosyalar klasörde");
+            _tray?.Balloon("Mandal", Loc.F("Msg_LineCleared", targets.Count), WF.ToolTipIcon.Info);
         }
-        catch (Exception ex) { Fail(ex, Loc.T("Card_DeleteAll")); }
+        catch (Exception ex) { Fail(ex, Loc.T("Card_ClearLine")); }
     }
 
+    /// <summary>Tek kartı ipten kaldırır; dosyası klasörde kalır.</summary>
     public void DeleteItem(ClipItem item)
     {
         try
         {
-            if (Settings.ConfirmDelete && !Confirm(Loc.T("Msg_DeleteConfirm"))) return;
-            if (_preview is { Item: { } previewed } && ReferenceEquals(previewed, item)) _preview.Close();
-            var rel = Store.RelativePath(item);
-            Store.Delete(item);
-            if (item.IsPinned) SavePins();
-            if (ItemHotkeys.Remove(rel))
-            {
-                ItemHotkeys.Save();
-                ApplyHotkeys();
-            }
+            if (Settings.ConfirmDelete && !Confirm(Loc.T("Msg_DeleteConfirm"), dangerous: false)) return;
+            TakeOffLine(new[] { item });
         }
         catch (Exception ex) { Fail(ex, Loc.T("Item_Delete")); }
+    }
+
+    /// <summary>Son ipten indirme işlemindeki kartları (tek kart ya da "İpi boşalt") yeniden asar.</summary>
+    public void RestoreRemoved()
+    {
+        try
+        {
+            var rels = Hidden.PopLastBatch();
+            if (rels.Count == 0) return;
+            Hidden.Save();
+            int n = Store.Restore(rels);
+            Log.Write($"Geri as: {n} kart ipe döndü");
+            if (n > 0) _line?.ShowAnimated();
+        }
+        catch (Exception ex) { Fail(ex, Loc.T("Menu_RestoreRemoved")); }
+    }
+
+    /// <summary>Windows panosundaki kopyayı temizler; ipteki kartlara ve dosyalara dokunmaz.</summary>
+    public bool ClearClipboard()
+    {
+        try
+        {
+            _clipboard?.SuppressFor(TimeSpan.FromSeconds(2));
+            Clipboard.Clear();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Fail(ex, Loc.T("Card_ClearClipboard"));
+            return false;
+        }
     }
 
     public void OpenItem(ClipItem item)
@@ -805,7 +851,7 @@ public partial class App : Application
         {
             try
             {
-                Store.Reload(Settings.ClipFolder);
+                Store.Reload(Settings.ClipFolder, Hidden.All);
                 ApplyItemHotkeysToItems();
                 ApplyPinsToItems();
             }

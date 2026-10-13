@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Mandal.Services;
 
@@ -68,8 +69,66 @@ public sealed class Updater
                 else if (name.Equals("SHA256SUMS.txt", StringComparison.OrdinalIgnoreCase)) sums = url;
             }
         }
-        var notes = root.TryGetProperty("body", out var body) ? body.GetString() ?? "" : "";
-        return new Release(ver, tag, installer, portable, sums, notes.Trim());
+        var notes = await FetchNotesAsync(http, tag, ver, ct)
+            ?? PlainText(root.TryGetProperty("body", out var body) ? body.GetString() ?? "" : "");
+        return new Release(ver, tag, installer, portable, sums, notes);
+    }
+
+    /// <summary>
+    /// Yeni sürümün notları, uygulamanın dilinde: o sürümün etiketindeki Resources\Notes.{dil}.md dosyasının ilk bölümü
+    /// (yoksa İngilizcesi). Böylece GitHub'daki sürüm açıklaması ne olursa olsun kısa ve çevrili notlar gösterilir.
+    /// Bulunamazsa null; çağıran sürüm açıklamasına döner.
+    /// </summary>
+    private static async Task<string?> FetchNotesAsync(HttpClient http, string tag, Version ver, CancellationToken ct)
+    {
+        foreach (var code in new[] { Loc.Current.Code, "en" }.Distinct())
+        {
+            try
+            {
+                var url = $"https://api.github.com/repos/{Owner}/{Repo}/contents/Resources/Notes.{code}.md?ref={Uri.EscapeDataString(tag)}";
+                using var doc = JsonDocument.Parse(await http.GetStringAsync(url, ct));
+                var b64 = doc.RootElement.GetProperty("content").GetString();
+                if (string.IsNullOrEmpty(b64)) continue;
+                var text = Encoding.UTF8.GetString(Convert.FromBase64String(b64.Replace("\n", "")));
+                var section = FirstSection(text, ver);
+                if (!string.IsNullOrWhiteSpace(section)) return section;
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                Log.Write($"Sürüm notu alınamadı ({code}): {ex.Message}");
+            }
+        }
+        return null;
+    }
+
+    /// <summary>Notes.xx.md biçimi: "1.5.0 — tarih" başlığı, altında "- " maddeleri, bölümler boş satırla ayrılır.</summary>
+    private static string FirstSection(string text, Version ver)
+    {
+        var lines = text.Replace("\r", "").Split('\n');
+        int i = 0;
+        while (i < lines.Length && string.IsNullOrWhiteSpace(lines[i])) i++;
+        if (i >= lines.Length || !lines[i].TrimStart().StartsWith($"{ver.Major}.{ver.Minor}.{ver.Build}", StringComparison.Ordinal))
+            return ""; // ilk bölüm bu sürümün değilse gösterme
+        var items = new List<string>();
+        for (i++; i < lines.Length && !string.IsNullOrWhiteSpace(lines[i]); i++)
+        {
+            var l = lines[i].Trim();
+            items.Add(l.StartsWith("- ", StringComparison.Ordinal) ? "•  " + l[2..] : l);
+        }
+        return string.Join("\n", items);
+    }
+
+    /// <summary>Markdown sürüm açıklamasını düz metne çevirir (yedek yol).</summary>
+    public static string PlainText(string markdown)
+    {
+        var s = markdown.Replace("\r", "");
+        s = Regex.Replace(s, @"\[([^\]]+)\]\([^)]+\)", "$1");                    // [metin](adres) → metin
+        s = Regex.Replace(s, @"(\*\*|__|`)", "");                                // kalın, kod
+        s = Regex.Replace(s, @"^#{1,6}\s*", "", RegexOptions.Multiline);         // başlıklar
+        s = Regex.Replace(s, @"^\s*[-*]\s+", "•  ", RegexOptions.Multiline);     // maddeler
+        s = Regex.Replace(s, @"\n{3,}", "\n\n");
+        s = s.Trim();
+        return s.Length <= 4000 ? s : s[..4000] + "…";
     }
 
     /// <summary>Uygun dosyayı geçici klasöre indirir ve SHA-256 özetini doğrular. Özet dosyası yoksa reddeder.</summary>

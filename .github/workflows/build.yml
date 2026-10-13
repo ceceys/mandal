@@ -66,6 +66,9 @@ jobs:
             dist/*.exe
             SHA256SUMS.txt
 
+      # Keep the description to one short line: Mandal up to 1.4.0 prints it inside a fixed-height
+      # update window, and a long text pushes the Yes/No buttons out of view. Newer versions read
+      # the localized notes from Resources/Notes.<lang>.md instead. Full notes: CHANGELOG.md.
       - name: Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v3
@@ -74,4 +77,5 @@ jobs:
             publish/Mandal.exe
             dist/*.exe
             SHA256SUMS.txt
-          generate_release_notes: true
+          body: "What's new: https://github.com/ceceys/mandal/blob/main/CHANGELOG.md"
+          generate_release_notes: false

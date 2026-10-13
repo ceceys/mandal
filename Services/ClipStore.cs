@@ -9,6 +9,7 @@ namespace Mandal.Services;
 /// <summary>
 /// Alıntı klasörü ile ipteki öğeler arasındaki köprü.
 /// Dosyalar gün klasörlerinde tutulur: Klasör\yyyy-MM-dd\HH-mm-ss.png (veya .txt).
+/// Mandal alıntı dosyalarını hiçbir zaman silmez: ipten kaldırılan kart yalnız ipten iner (<see cref="Hidden"/>).
 /// </summary>
 public sealed class ClipStore
 {
@@ -16,16 +17,21 @@ public sealed class ClipStore
     public string Folder { get; private set; }
     private readonly int _thumbHeight;
 
+    /// <summary>Son yüklemede klasörde bulunan ama ipe asılmayan (ipten indirilmiş) kartlar.</summary>
+    public HashSet<string> SkippedFound { get; } = new(StringComparer.OrdinalIgnoreCase);
+
     public ClipStore(string folder, int thumbHeight)
     {
         Folder = Path.GetFullPath(folder);
         _thumbHeight = thumbHeight;
     }
 
-    public void Load()
+    /// <param name="skip">İpten indirilmiş kartların bağıl yolları; dosyaları okunmaz, ipe asılmaz.</param>
+    public void Load(IReadOnlySet<string>? skip = null)
     {
         Directory.CreateDirectory(Folder);
         Items.Clear();
+        SkippedFound.Clear();
 
         var files = Directory.EnumerateFiles(Folder, "*.*", SearchOption.AllDirectories)
             .Select(f => new FileInfo(f))
@@ -35,6 +41,15 @@ public sealed class ClipStore
 
         foreach (var f in files)
         {
+            if (skip is { Count: > 0 })
+            {
+                var rel = Path.GetRelativePath(Folder, f.FullName);
+                if (skip.Contains(rel))
+                {
+                    SkippedFound.Add(rel);
+                    continue;
+                }
+            }
             if (f.Extension.Equals(".png", StringComparison.OrdinalIgnoreCase) && !Png.FileHasSignature(f.FullName))
             {
                 Log.Write($"PNG değil, atlandı: {f.Name}");
@@ -46,10 +61,10 @@ public sealed class ClipStore
     }
 
     /// <summary>Klasör değişince ipi yeni klasörden doldurur.</summary>
-    public void Reload(string folder)
+    public void Reload(string folder, IReadOnlySet<string>? skip = null)
     {
         Folder = Path.GetFullPath(folder);
-        Load();
+        Load(skip);
     }
 
     /// <summary>Klasöre göre bağıl yol (kısayol kayıtları için anahtar).</summary>
@@ -208,25 +223,34 @@ public sealed class ClipStore
         return item;
     }
 
-    public void Delete(ClipItem item)
+    /// <summary>Kartı ipten indirir; dosyası klasörde olduğu gibi kalır.</summary>
+    public void Remove(ClipItem item) => Items.Remove(item);
+
+    /// <summary>
+    /// İpten indirilmiş kartları yeniden asar: her biri zamanına göre sabitlerin arkasındaki yerine girer.
+    /// Dosyası artık olmayanlar atlanır. Asılan kart sayısını döner.
+    /// </summary>
+    public int Restore(IEnumerable<string> relativePaths)
     {
-        Items.Remove(item);
-        try
+        int n = 0;
+        foreach (var rel in relativePaths)
         {
-            if (File.Exists(item.Path)) File.Delete(item.Path);
-            // Gün klasörü boşaldıysa kaldır
-            var dir = Path.GetDirectoryName(item.Path);
-            if (dir is not null
-                && !string.Equals(Path.GetFullPath(dir), Folder, StringComparison.OrdinalIgnoreCase)
-                && Directory.Exists(dir)
-                && !Directory.EnumerateFileSystemEntries(dir).Any())
-                Directory.Delete(dir);
+            var path = Path.GetFullPath(Path.Combine(Folder, rel));
+            if (!IsOwnFile(path) || !File.Exists(path) || FindByRelativePath(rel) is not null) continue;
+            if (path.EndsWith(".png", StringComparison.OrdinalIgnoreCase) && !Png.FileHasSignature(path)) continue;
+            ClipItem item;
+            try { item = ClipItem.Load(path, _thumbHeight); }
+            catch (Exception ex) { Log.Write(ex, $"Geri asılamadı: {rel}"); continue; }
+
+            int at = Items.Count;
+            for (int i = PinnedCount; i < Items.Count; i++)
+            {
+                if (Items[i].Time < item.Time) { at = i; break; }
+            }
+            Items.Insert(at, item);
+            n++;
         }
-        catch (Exception ex)
-        {
-            Log.Write(ex, $"Silinemedi: {item.FileName}");
-            throw;
-        }
+        return n;
     }
 
     private string NewPath(string ext)

@@ -1,3 +1,8 @@
+1.5.0 — 13/10/2026
+- Non si elimina più nulla: ✕, «Svuota il filo» e la pulizia automatica tolgono le schede solo dal filo; il file della cattura o della nota resta nella cartella. Le ultime schede tolte tornano con un clic dal menu nell'area di notifica (Riappendi le ultime tolte).
+- Sulla scheda di destra «Svuota il filo» sostituisce «Elimina tutto» (le schede non fissate vengono tolte; quelle fissate e con scorciatoia restano), più il nuovo pulsante «Svuota Appunti».
+- La scheda di aggiornamento e conferma entra in ogni schermo: le note scorrono nella loro area e i pulsanti Sì/No non vengono mai tagliati, con qualsiasi risoluzione o scala. Le note di versione sono nella lingua dell'app.
+
 1.4.0 — 12/10/2026
 - Fissare le schede: clic sulla puntina in basso a destra o clic destro → Fissa. Le schede fissate restano all'inizio del filo con una molletta blu; trascinale di lato per riordinarle, tirane una giù per portarla in un'altra app. «Elimina tutto» e l'eliminazione automatica non toccano le schede fissate.
 - Mandal si avvia con Windows (attivo per impostazione predefinita; si disattiva dal menu dell'area di notifica o dalle impostazioni). Se l'exe viene spostato, la voce di avvio lo segue.

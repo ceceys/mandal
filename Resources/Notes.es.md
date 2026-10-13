@@ -1,3 +1,8 @@
+1.5.0 — 13/10/2026
+- Ya no se borra nada: ✕, «Vaciar tendedero» y la limpieza automática solo quitan las tarjetas del tendedero; el archivo de la captura o la nota sigue en la carpeta. Las últimas tarjetas quitadas vuelven con un clic desde el menú de la bandeja (Volver a colgar lo último quitado).
+- En la tarjeta de la derecha, «Vaciar tendedero» sustituye a «Eliminar todo» (se quitan las tarjetas no fijadas; las fijadas y las que tienen atajo se quedan), y hay un nuevo botón «Vaciar portapapeles».
+- La tarjeta de actualización y confirmación cabe en cualquier pantalla: las notas se desplazan en su propia zona y los botones Sí/No nunca se cortan, con cualquier resolución o escala. Las notas de la versión se muestran en el idioma de la app.
+
 1.4.0 — 12/10/2026
 - Fijar tarjetas: haz clic en la chincheta de abajo a la derecha o clic derecho → Fijar. Las tarjetas fijadas se quedan al principio del tendedero con una pinza azul; arrástralas de lado para reordenarlas y tira de una hacia abajo para llevarla a otra app. «Eliminar todo» y el borrado automático no tocan las tarjetas fijadas.
 - Mandal se inicia con Windows (activado por defecto; se desactiva en el menú de la bandeja o en los ajustes). Si mueves el exe, la entrada de inicio lo sigue.

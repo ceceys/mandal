@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.0 — 2026-10-13
+
+- Nothing is ever deleted from disk. ✕ (Remove from line), "Clear line" and the optional auto-cleanup only take cards off the line; the PNG/TXT stays in the capture folder. Removed cards are listed in `hidden.json` (relative paths, grouped per action) so they stay off the line after a restart and are not even decoded at startup. Tray menu → "Put back last removed" re-hangs the last group in time order. Entries whose file was deleted by hand are dropped at startup.
+- Right-hand card: "Delete all" became "Clear line" (no confirmation needed since nothing is lost; pinned cards and cards with a shortcut stay) and a new "Clear clipboard" button empties the Windows clipboard, briefly showing "Cleared ✓". The card grows with the longest label, so long translations are no longer cut off.
+- Fixed: the update question could be cut off on some PCs (fixed 300 px window; long release notes pushed Yes/No out of view, worse with display scaling). The confirmation card now sizes to its content, keeps long text in its own scrolling area and is placed inside the screen's work area, so the buttons are always visible.
+- The update question shows the new version's notes in the app's language, read from `Resources/Notes.<lang>.md` at the release tag (falls back to English, then to the release description as plain text instead of raw Markdown).
+- Release builds publish a one-line description, so versions up to 1.4.0 (which print the description in a fixed-height window) can show their Yes button too.
+
 ## 1.4.0 — 2026-10-12
 
 - Pin cards: hover a card and click the pushpin at the bottom right, or right-click → Pin. Pinned captures and notes stay at the start of the line with a blue clothespin and keep their order across restarts (`pins.json`). Drag a pinned card sideways to reorder it; pull it below the line to drag it into another app instead; `Esc` cancels. "Delete all" and auto-delete leave pinned cards alone.

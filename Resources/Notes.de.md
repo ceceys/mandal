@@ -1,3 +1,8 @@
+1.5.0 — 13.10.2026
+- Nichts wird gelöscht: ✕, „Leine leeren“ und die automatische Bereinigung nehmen Karten nur von der Leine; die Datei des Screenshots oder der Notiz bleibt im Ordner. Die zuletzt abgenommenen Karten kommen mit einem Klick im Tray-Menü zurück (Zuletzt abgenommene zurückhängen).
+- Auf der rechten Karte ersetzt „Leine leeren“ den Knopf „Alle löschen“ (nicht angeheftete Karten werden abgenommen; angeheftete und Karten mit Tastenkürzel bleiben), dazu neu „Zwischenablage leeren“.
+- Die Update- und Bestätigungskarte passt auf jeden Bildschirm: Notizen scrollen in einem eigenen Bereich, Ja/Nein wird bei keiner Auflösung oder Skalierung abgeschnitten. Versionshinweise erscheinen in der Sprache der App.
+
 1.4.0 — 12.10.2026
 - Karten anheften: auf die Pinnnadel unten rechts klicken oder Rechtsklick → Anheften. Angeheftete Karten bleiben mit einer blauen Wäscheklammer am Anfang der Leine; seitlich ziehen zum Sortieren, nach unten ziehen, um eine Karte in eine andere App zu ziehen. „Alle löschen“ und das automatische Löschen lassen angeheftete Karten in Ruhe.
 - Mandal startet mit Windows (standardmäßig an; im Tray-Menü oder in den Einstellungen abschaltbar). Wird die exe verschoben, folgt ihr der Autostart-Eintrag.

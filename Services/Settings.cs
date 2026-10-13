@@ -29,16 +29,16 @@ public sealed class Settings
     /// <summary>GitHub Releases'tan güncellemeleri otomatik denetle ve indir (varsayılan açık).</summary>
     public bool AutoUpdate { get; set; } = true;
 
-    /// <summary>Kart silerken "emin misin?" sorulsun (varsayılan kapalı).</summary>
+    /// <summary>Kartı ipten kaldırırken "emin misin?" sorulsun (varsayılan kapalı). Dosya hiçbir durumda silinmez.</summary>
     public bool ConfirmDelete { get; set; } = false;
 
     /// <summary>Not kartında metin doğrudan seçilebilsin; seçip bırakınca seçim kopyalanır (varsayılan açık).</summary>
     public bool SelectOnCard { get; set; } = true;
 
-    /// <summary>Alıntılar ve notlar kalıcı: kendiliğinden hiçbir şey silinmez (varsayılan açık).</summary>
+    /// <summary>Kartlar ipte kalır: hiçbir kart kendiliğinden inmez (varsayılan açık). Dosyalar zaten hiçbir zaman silinmez.</summary>
     public bool KeepForever { get; set; } = true;
 
-    /// <summary>KeepForever kapalıysa bu kadar günden eski kartlar silinir (kısayol atanmışlar hariç).</summary>
+    /// <summary>KeepForever kapalıysa bu kadar günden eski kartlar ipten iner, dosyaları klasörde kalır (sabit ve kısayollular hariç).</summary>
     public int AutoDeleteDays { get; set; } = 30;
 
     /// <summary>Fare ipin alanından çıkınca ip hemen yukarı kalksın.</summary>

@@ -27,7 +27,9 @@
 - **Görseli metne çevir**: `Aa` düğmesi (Windows'un yerleşik OCR'ı, çevrimdışı). Metin kendi kartı olur.
 - **Notlar**: sağ karttan not yaz; alıntı gibi ipe asılır. Büyük aç, bir kısmını seçip bırak sadece o kopyalanır; ya da tümünü kopyala.
 - **Öğeye kısayol**: bir karta ör. `Ctrl+Alt+1` ata; basınca o kart kopyalanır, bilgisayar yeniden açılsa da.
-- **Sabitle**: sabitlenen alıntılar ve notlar mavi mandalla ipin başında durur. Yana sürükleyerek istediğin sıraya koy; "Tümünü sil" ve otomatik temizlik onlara dokunmaz.
+- **Sabitle**: sabitlenen alıntılar ve notlar mavi mandalla ipin başında durur. Yana sürükleyerek istediğin sıraya koy; "İpi boşalt" ve otomatik temizlik onlara dokunmaz.
+- **Hiçbir şey silinmez**: ✕, "İpi boşalt" ve otomatik temizlik kartı yalnız ipten indirir; dosyası klasörde kalır. Son indirilenler tepsi menüsünden tek tıkla ipe geri asılır.
+- **Panoyu temizle**: sağ karttaki düğme Windows panosundaki kopyayı boşaltır.
 - **Windows ile başlar** (varsayılan açık; tepsi menüsü veya Ayarlar → Davranış).
 - **Uzayan ip**: öğe arttıkça kartlar küçülür (ekran başına 12 → 16 → 24 → 32 → 40 → 50 → 60); fazlası oklarla veya tekerlekle kaydırılır.
 - **Kalıcı**: alıntılar gün klasörlerinde PNG/TXT olarak durur, yeniden açılışta geri gelir.
@@ -55,7 +57,9 @@ Windows 10 sürüm 2004 veya üstü. Mandal kendini GitHub Releases üzerinden g
 | Kartı başka uygulamaya taşı | Sürükle |
 | Büyük önizleme | Karta çift tıkla ya da üzerine gelip büyütece tıkla |
 | Görsel → metin | Kartın üzerine gel, `Aa`'ya tıkla |
-| Sil | Kartın üzerine gel, ✕'e tıkla |
+| İpten kaldır (dosya kalır) | Kartın üzerine gel, ✕'e tıkla |
+| İpi boşalt / panoyu temizle | Sağ uçtaki düğme kartı, çizginin altı |
+| Son kaldırılanları geri as | Tepsi menüsü |
 | Sabitle / sabitlemeyi kaldır | Kartın üzerine gel, sağ alttaki raptiyeye tıkla ya da sağ tık → Sabitle |
 | Sabit kartları sırala | Sabit kartı ip boyunca yana sürükle; aşağı çekersen başka uygulamaya taşınır. `Esc` iptal eder |
 | Aç, farklı kaydet, klasörde göster, kısayol ata | Karta sağ tık |
@@ -76,7 +80,7 @@ Kurulum paketi ([Inno Setup 6](https://jrsoftware.org/isinfo.php) gerekir):
 
 ```
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish-setup
-iscc /DAppVersion=1.4.0 setup\Mandal.iss
+iscc /DAppVersion=1.5.0 setup\Mandal.iss
 ```
 
 ## Dosyalar
